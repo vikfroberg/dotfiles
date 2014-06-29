@@ -1,0 +1,10 @@
+echo "  p  Prompt"
+
+# Prompt
+function p {
+  echo "Prompt"
+  echo "  pe  Edit prompt"
+  echo "  pr  Reload prompt"
+}
+alias pe="vim ~/dotfiles/zsh/prompt"
+alias pr="source ~/dotfiles/zsh/prompt"

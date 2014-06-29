@@ -1,0 +1,10 @@
+echo "  a  Aliases"
+
+# Aliases
+function a {
+  echo "Aliases"
+  echo "  ae  Edit aliases"
+  echo "  ar  Reload aliases"
+}
+alias ae="vim ~/dotfiles/zsh/aliases"
+alias ar="aliases"
