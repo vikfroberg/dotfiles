@@ -1,0 +1,22 @@
+echo "  r  Rails"
+
+function r {
+  echo "Rails"
+  echo ""
+  echo "  Server:"
+  echo "    rs    rails s"
+  echo ""
+  echo "  Generate:"
+  echo "    rgm   rails g migration"
+  echo ""
+  echo "  Rake:"
+  echo "    rdbm  rake db:migrate"
+  echo "    rr    rake routes"
+  echo "    rrb   rake routes grep"
+}
+
+alias rs="rails s"
+alias rgm="rails g migration"
+alias rdbm="rake db:migrate"
+alias rr="rake routes"
+alias rrg="rake routes | grep"

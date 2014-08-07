@@ -1,0 +1,18 @@
+if &compatible
+  set nocompatible
+end
+
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" Let Vundle manage Vundle
+Bundle 'gmarik/vundle'
+
+" Vundles
+Bundle 'mattn/emmet-vim'
+Bundle 'kien/ctrlp.vim'
+Bundle 'thoughtbot/vim-rspec'
+Bundle 'danro/rename.vim'
+
+filetype on
