@@ -7,6 +7,7 @@ alias ...='cd ...'
 alias e="$EDITOR"
 alias v="$VISUAL"
 alias topten="history | commands | sort -rn | head"
+alias c="clear"
 
 # git
 alias gs="git status"
@@ -14,6 +15,8 @@ alias ga="git add"
 alias gap="git add -p"
 alias gaa="git add --all"
 alias gc="git commit -v"
+alias gd="git diff"
+alias gcam="git commit --amend"
 
 # bundler
 alias b="bundle"
