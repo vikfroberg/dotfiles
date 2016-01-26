@@ -39,3 +39,21 @@ dotfiles
 `gl` git pull
 
 `gp` git push
+
+`l` simple commit log
+
+`hist` extensive commit log
+
+`churn` most changed files
+
+`grep` search commits
+
+`stage` add file to commit
+
+`unstage` remove file from commit
+
+`staged` files added to commit
+
+`undo` undo last commit
+
+`pop` stash pop
