@@ -25,7 +25,7 @@ dotfiles
 
 `c` clear window
 
-`r` refresh `bash_profile`
+`r` refresh bash profile
 
 
 #### Git
