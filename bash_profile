@@ -14,6 +14,7 @@ alias km-dev="mkdir -p /Volumes/dev; mount 192.168.120.9:/export/dev /Volumes/de
 alias km-stage="ssh dev@192.168.10.4"
 
 alias sub='open -a "/Applications/Sublime Text.app"'
+alias e="sub"
 
 alias c="clear"
 
