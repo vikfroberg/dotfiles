@@ -9,9 +9,9 @@ export CLICOLOR=1
 export GITAWAREPROMPT=~/.bash/git-aware-prompt
 source "${GITAWAREPROMPT}/main.sh"
 
-alias vci='cd ~/Code/www/vci'
-alias km-dev='mkdir -p /Volumes/dev; mount 192.168.120.9:/export/dev /Volumes/dev > /dev/null 2>&1'
-alias km-stage='ssh dev@192.168.10.4'
+alias km-vci="cd ~/Code/www/vci"
+alias km-dev="mkdir -p /Volumes/dev; mount 192.168.120.9:/export/dev /Volumes/dev > /dev/null 2>&1"
+alias km-stage="ssh dev@192.168.10.4"
 
 alias sub='open -a "/Applications/Sublime Text.app"'
 
