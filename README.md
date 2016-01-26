@@ -40,20 +40,20 @@ dotfiles
 
 `gp` git push
 
-`l` simple commit log
+`git l` simple commit log
 
-`hist` extensive commit log
+`git hist` extensive commit log
 
-`churn` most changed files
+`git churn` most changed files
 
-`grep` search commits
+`git grep` search commits
 
-`stage` add file to commit
+`git stage` add file to commit
 
-`unstage` remove file from commit
+`git unstage` remove file from commit
 
-`staged` files added to commit
+`git staged` files added to commit
 
-`undo` undo last commit
+`git undo` undo last commit
 
-`pop` stash pop
+`git pop` stash pop
