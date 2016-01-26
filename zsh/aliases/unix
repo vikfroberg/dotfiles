@@ -1,5 +1,0 @@
-echo " Unix:"
-echo "   c  Clear"
-
-# UNIX
-alias c="clear"
