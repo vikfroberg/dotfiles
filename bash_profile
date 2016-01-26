@@ -19,8 +19,7 @@ alias e="sub"
 alias c="clear"
 alias r="source ~/.bash_profile; clear"
 
-alias ebp="sub ~/.bash_profile"
-alias rbp="source ~/.bash_profile"
+alias dotfiles="cd ~/Code/unix/dotfiles"
 
 alias ..="cd .."
 alias ...="..;.."
