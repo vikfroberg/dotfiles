@@ -50,15 +50,3 @@ function git() {
 }
 
 export PS1="\[$txtgrn\]\w \[$txtylw\]\$git_branch\[$txtrst\]\\n$ "
-
-
-
-
-
-
-
-
-
-
-
-
