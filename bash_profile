@@ -1,6 +1,4 @@
-export PATH=~"/bin:/usr/local/bin:/usr/local/mysql/bin:$PATH"
-export PATH="$HOME/.composer/vendor/bin:$PATH"
-export PATH=/Applications/MAMP/Library/bin/:$PATH
+export PATH="/usr/local/sbin:$PATH"
 export GIT_MERGE_AUTOEDIT=no
 
 export CLICOLOR=1
