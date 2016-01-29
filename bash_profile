@@ -11,6 +11,9 @@ alias km-vci="cd ~/Code/www/vci"
 alias km-dev="mkdir -p /Volumes/dev; mount 192.168.120.9:/export/dev /Volumes/dev > /dev/null 2>&1"
 alias km-stage="ssh dev@192.168.10.4"
 
+alias services="brew services"
+alias bs="services"
+
 alias sub='open -a "/Applications/Sublime Text.app"'
 alias e="sub"
 
