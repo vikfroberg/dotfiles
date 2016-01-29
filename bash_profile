@@ -14,6 +14,10 @@ alias km-stage="ssh dev@192.168.10.4"
 alias services="brew services"
 alias bs="services"
 
+alias www-start="bs start mysql55; bs start php54; bs start httpd22; bs start dnsmasq"
+alias www-restart="bs restart mysql55; bs restart php54; bs restart httpd22; bs restart dnsmasq"
+alias www-stop="bs stop mysql55; bs stop php54; bs stop httpd22; bs stop dnsmasq"
+
 alias sub='open -a "/Applications/Sublime Text.app"'
 alias e="sub"
 
