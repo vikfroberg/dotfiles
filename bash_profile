@@ -49,6 +49,8 @@ function git() {
     command git "$@"
 }
 
+eval "$(direnv hook bash)"
+
 if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
