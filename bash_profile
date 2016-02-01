@@ -49,6 +49,11 @@ function git() {
     command git "$@"
 }
 
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
 eval "$(direnv hook bash)"
 
 if [ -f ~/.git-completion.bash ]; then
