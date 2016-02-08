@@ -33,9 +33,9 @@ alias ....="..;..;.."
 alias gs="git status"
 alias ga="git add"
 alias gc="git commit"
-alias gl="git stash; git pull; git stash pop"
+alias gl="git pull"
 alias gp="git push"
-alias gcp="git cherry-pick"
+alias go="git checkout"
 
 function git() {
     if [[ $1 = "pull" || $1 = "checkout" || $1 = "stash" ]]
