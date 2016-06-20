@@ -12,6 +12,10 @@
   staged = !git diff --cached
   undo = !git reset --soft 'HEAD^'
   pop = !git stash pop
+  wip = !git add . && git add -u . && git commit -m "wip"
+  amend = !git add . && git add -u . && git commit --amend
+  lg = !git log master.. --oneline
+  lgg = !git log --oneline
 [user]
 	email = vikfroberg@gmail.com
 	name = Viktor Froberg

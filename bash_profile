@@ -35,7 +35,10 @@ alias ga="git add"
 alias gc="git commit"
 alias gl="git pull"
 alias gp="git push"
-alias go="git checkout"
+alias gg="git lg"
+alias ggg="git lgg"
+
+alias lint="git diff master --name-status | grep '^\(A\|M\).*\.jsx\?$' | sed 's/^[AM]//g' | xargs ./node_modules/.bin/eslint"
 
 function git() {
     if [[ $1 = "pull" || $1 = "checkout" || $1 = "stash" ]]
@@ -49,6 +52,18 @@ function git() {
     command git "$@"
 }
 
+function repeat() {
+    number=$1
+    shift
+    for n in $(seq $number); do
+      $@
+    done
+}
+
+function get_pwd() {
+    echo $(basename $PWD)
+}
+
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
@@ -60,4 +75,4 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
-export PS1="\[$txtgrn\]\w \[$txtylw\]\$git_branch\[$txtrst\]\\n$ "
+export PS1="\[$txtgrn\]\$(get_pwd)\[$txtrst\] ≈ "
