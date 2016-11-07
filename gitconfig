@@ -5,17 +5,12 @@
 [alias]
   l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --no-merges
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-  churn = "!git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -40"
-  grep = !git l -i --grep
   stage = !git add
   unstage = !git reset
   staged = !git diff --cached
-  undo = !git reset --soft 'HEAD^'
   pop = !git stash pop
-  wip = !git add . && git add -u . && git commit -m "wip"
   amend = !git add . && git add -u . && git commit --amend
-  lg = !git log master.. --oneline
-  lgg = !git log --oneline
+  squash = !git rebase -i master
 [user]
 	email = vikfroberg@gmail.com
 	name = Viktor Froberg
@@ -26,4 +21,5 @@
 [core]
   excludesfile = ~/.gitignore
   fileMode = false
+	editor = /usr/bin/vim
 

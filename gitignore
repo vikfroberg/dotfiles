@@ -1,1 +1,6 @@
+TODO.md
+tags
+.transifexrc
 .DS_Store
+*.swp
+*.dump
