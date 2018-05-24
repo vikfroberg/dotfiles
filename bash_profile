@@ -1,7 +1,6 @@
 export GIT_MERGE_AUTOEDIT=no
 export EDITOR=vim
 export CLICOLOR=1
-export HOMEBREW_GITHUB_API_TOKEN="8aa8aaad344669540a4b108cfc4c02dbda5c78f3"
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 export NODE_ENV="development"
 
