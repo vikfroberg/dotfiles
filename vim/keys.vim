@@ -1,13 +1,31 @@
 nnoremap B ^
+onoremap B ^
 nnoremap E $
-nnoremap ^ <NOP>
-nnoremap $ <NOP>
+onoremap E $
 
 nnoremap V v$h
 vnoremap v V
 
-nnoremap gi viio<Esc>
-nnoremap gI viioo<Esc>
+onoremap n :<c-u>normal! f=bviw<cr>
+vnoremap n :<c-u>normal! f=bviw<cr>
+onoremap N :<c-u>normal! f=wvt;<cr>
+vnoremap N :<c-u>normal! f=wvt;<cr>
+
+onoremap p :<c-u>normal! f(vi(<cr>
+
+onoremap b :<c-u>normal! f[vi[<cr>
+vnoremap b :<c-u>normal! f[vi[<cr>
+
+onoremap B :<c-u>normal! f{vi{<cr>
+vnoremap B :<c-u>normal! f{vi{<cr>
+
+onoremap iq i"
+vnoremap iq i"
+onoremap q i"
+vnoremap q i"
+
+" nnoremap gi viio<Esc>
+" nnoremap gI viioo<Esc>
 
 nnoremap gp `[v`]
 
@@ -21,29 +39,14 @@ nnoremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-nnoremap - 0i             A--------------0f-x~f-x~f-x~f-x~0f:la'AF;r,i'llD==
-nnoremap '' viwa'hviwoi'l
-
 nnoremap , ;
 nnoremap ; ,
-
-inoremap <Up> <NOP>
-inoremap <Down> <NOP>
-inoremap <Left> <NOP>
-inoremap <Right> <NOP>
-
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
 
 nnoremap Y y$
 
 nnoremap j gj
 nnoremap k gk
 
-nnoremap H b
-nnoremap L e
 noremap J 5j
 noremap K 5k
 
@@ -52,6 +55,7 @@ nnoremap U <C-R>
 nnoremap <C-J> f<Space>a<Cr><Esc>
 nnoremap <C-K> :join<CR>
 
+nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>f :BLines!<CR>
 nnoremap <leader>F :Ag!<CR>

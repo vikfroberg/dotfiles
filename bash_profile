@@ -25,6 +25,7 @@ alias v="vim ."
 alias r="source ~/.bash_profile; clear"
 alias d="(cd ~/Code/dotfiles && vim .)"
 alias p="cd ~/Code; cd \$(tree -L 2 -idf | ramda -srSR 'drop 1' 'dropLast 2' 'map drop 2' | fzf)"
+alias n="cd ~/Code; cd \$(tree -L 2 -idf | ramda -srSR 'drop 1' 'dropLast 2' 'map drop 2' | fzf); vim NOTES.md"
 
 # Carvanro
 alias db="psql carvanro_development"
@@ -136,11 +137,7 @@ get_pwd() {
     fi
 }
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-
-eval "$(direnv hook bash)"
+# eval "$(direnv hook bash)"
 
 # Colors
 RED="$(tput setaf 1)"

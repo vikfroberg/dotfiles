@@ -1,12 +1,7 @@
 
 
-# 50-character subject line
-#
-# 72-character wrapped longer description. This should answer:
-#
-# * Why was this change necessary?
-# * How does it address the problem?
-# * Are there any side effects?
-#
-# Include a link to the ticket, if any.
+# Should be easy to delete
+# Make the change easy
+# Make invalid state impossible
+# Duplication is far cheaper than using the wrong abstraction
 
