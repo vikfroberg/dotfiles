@@ -1,26 +1,27 @@
 [filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
 [alias]
   l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --no-merges
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
   stage = !git add
   unstage = !git reset
   staged = !git diff --cached
+  undo = !git reset --soft HEAD~1
   pop = !git stash pop
   amend = !git add . && git add -u . && git commit --amend
   squash = !git rebase -i master
 [user]
-	email = vikfroberg@gmail.com
-	name = Viktor Froberg
+  email = vikfroberg@gmail.com
+  name = Viktor Froberg
 [commit]
   template = ~/.gitmessage
 [push]
-	default = simple
+  default = simple
 [core]
   excludesfile = ~/.gitignore
   fileMode = false
-	editor = /usr/bin/vim
+  editor = /usr/bin/vim
 

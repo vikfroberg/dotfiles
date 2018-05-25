@@ -97,7 +97,7 @@ git_branch() {
 }
 
 get_pwd() {
-    if [[ $(basename $PWD) = "vikfroberg" ]]
+    if [[ $(basename $PWD) = "vikfrobe" ]]
     then
         echo "~"
     else

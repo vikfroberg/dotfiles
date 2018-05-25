@@ -1,4 +1,3 @@
-" 808080808080808080808080808080808080808080808080808080808080808080808080808080
 set incsearch
 set ignorecase
 set smartindent
@@ -40,7 +39,7 @@ set nobackup
 set nowb
 set noswapfile
 set nowrap
-set clipboard=unnamed
+set clipboard+=unnamed
 set iskeyword+=-
 
 let g:netrw_banner=0
