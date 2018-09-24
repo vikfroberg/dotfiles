@@ -1,5 +1,8 @@
 set nocompatible
 
+scriptencoding utf-8
+set encoding=utf-8
+
 filetype plugin indent on
 
 syntax enable
