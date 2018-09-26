@@ -1,11 +1,11 @@
 highlight CursorLine cterm=NONE ctermbg=0 ctermfg=NONE
-highlight Visual ctermfg=NONE ctermbg=0
-highlight Statement ctermfg=1
-highlight PreProc ctermfg=3
-highlight Type ctermfg=3
-highlight Comment ctermfg=5 ctermbg=NONE
-highlight Todo ctermfg=5 ctermbg=NONE
-highlight Noise ctermfg=NONE ctermbg=NONE
+" highlight Visual ctermfg=NONE ctermbg=15
+" highlight Statement ctermfg=1
+" highlight PreProc ctermfg=3
+" highlight Type ctermfg=3
+" highlight Comment ctermfg=5 ctermbg=NONE
+" highlight Todo ctermfg=5 ctermbg=NONE
+" highlight Noise ctermfg=NONE ctermbg=NONE
 " highlight Normal ctermfg=white ctermbg=NONE
 
 " highlight Number ctermfg=white
