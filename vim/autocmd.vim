@@ -21,6 +21,7 @@ augroup vimrc
 
   autocmd FileType netrw setlocal nocursorline
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
 
   autocmd BufRead,BufNewFile *.nunjs setfiletype html
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
