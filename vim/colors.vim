@@ -1,16 +1,16 @@
 highlight CursorLine cterm=NONE ctermbg=0 ctermfg=NONE
-" highlight Visual ctermfg=NONE ctermbg=15
+highlight Visual ctermfg=NONE ctermbg=8
+highlight Type ctermfg=2
+highlight Comment ctermfg=7 ctermbg=NONE
+highlight PreProc ctermfg=2
+highlight Special ctermfg=11
 " highlight Statement ctermfg=1
-" highlight PreProc ctermfg=3
-" highlight Type ctermfg=3
-" highlight Comment ctermfg=5 ctermbg=NONE
 " highlight Todo ctermfg=5 ctermbg=NONE
 " highlight Noise ctermfg=NONE ctermbg=NONE
 " highlight Normal ctermfg=white ctermbg=NONE
 
 " highlight Number ctermfg=white
 " highlight Identifier ctermfg=white
-" highlight Special ctermfg=white
 
 " highlight jsStorageClass ctermfg=8
 " highlight jsVariableDef ctermfg=6
