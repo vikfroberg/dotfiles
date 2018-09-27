@@ -21,7 +21,7 @@ alias gs="git status"
 alias ga="git add \$(fgs)"
 alias gaa="git add --all"
 alias gap="git add --all --intent-to-add && git add --patch"
-alias gr="git reset HEAD \$(fgs)"
+alias grs="git reset HEAD"
 alias grm="git rm \$(fgls)"
 alias gd="git diff"
 alias gc="git commit"
@@ -33,7 +33,7 @@ alias gpr="git pull --rebase"
 alias gco="git checkout \$(fgs)"
 alias gb="git checkout \$(fgb)"
 alias gbd="git branch -D \$(fgb)"
-alias grs="danger && git reset HEAD && git checkout . && git clean -d --force"
+# alias grs="danger && git reset HEAD && git checkout . && git clean -d --force"
 
 fkill() {
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
