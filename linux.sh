@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-echo "Starting..."
+echo "Bootstrapping..."
 
 # Check for Linuxbrew, install if we don't have it
 if test ! $(which brew); then
@@ -8,17 +6,8 @@ if test ! $(which brew); then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 fi
 
-# Update homebrew recipes
-echo "Updating Linuxbrew..."
-brew update
+~/dotfiles/brew.sh
+~/dotfiles/npm.sh
+~/dotfiles/symlink.sh
 
-# Installs
-echo "Installing programs..."
-brew install bash
-brew install node
-brew install vim
-brew install tree
-brew install fzf
-
-echo "Installing node modules"
-sudo npm install -g ramda-cli
+cat ~/dotfiles/enjoy
