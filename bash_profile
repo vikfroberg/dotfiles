@@ -38,7 +38,8 @@ alias gbd="git branch -D \$(fgb)"
 alias vbox="ssh $USER@192.168.56.101"
 
 # Webbhuset
-alias dd="/var/www/tools/dev-docker/start"
+alias whd="/var/www/tools/dev-docker/start"
+alias whp="cd /var/www; cd \$(tree -L 2 -idf | ramda -srSR 'drop 1' 'dropLast 2' 'map drop 2' | fzf)"
 
 # Helpers
 fkill() {
