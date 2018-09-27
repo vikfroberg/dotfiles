@@ -33,7 +33,6 @@ alias gpr="git pull --rebase"
 alias gco="git checkout \$(fgs)"
 alias gb="git checkout \$(fgb)"
 alias gbd="git branch -D \$(fgb)"
-# alias grs="danger && git reset HEAD && git checkout . && git clean -d --force"
 
 # Virtual box
 alias vbox="ssh $USER@192.168.56.101"
