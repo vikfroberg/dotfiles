@@ -18,3 +18,7 @@ for f in split(glob('~/dotfiles/vim/*.vim'), '\n')
     exe 'source' f
   endif
 endfor
+
+" Fix Ag for fzf
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+
