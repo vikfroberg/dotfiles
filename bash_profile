@@ -35,6 +35,13 @@ alias gb="git checkout \$(fgb)"
 alias gbd="git branch -D \$(fgb)"
 # alias grs="danger && git reset HEAD && git checkout . && git clean -d --force"
 
+# Virtual box
+alias vbox="ssh $USER@192.168.56.101"
+
+# Webbhuset
+alias dd="/var/www/tools/dev-docker/start"
+
+# Helpers
 fkill() {
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
 
