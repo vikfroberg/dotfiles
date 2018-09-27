@@ -3,7 +3,7 @@ echo "Updating Homebrew..."
 brew update
 
 # Installs
-echo "Installing shell scripts..."
+echo "Installing brew packages..."
 brew install bash
 brew install node
 brew install vim
