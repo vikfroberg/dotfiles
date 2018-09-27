@@ -4,16 +4,16 @@ echo "Starting..."
 
 # Check for Homebrew, install if we don't have it
 if test ! $(which brew); then
-    echo "Installing homebrew..."
+    echo "Installing Homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
 # Update homebrew recipes
-echo "Updating homebrew..."
+echo "Updating Homebrew..."
 brew update
 
 # Installs
-echo "Installing brew programs..."
+echo "Installing programs..."
 brew install bash
 brew install node
 brew install vim
