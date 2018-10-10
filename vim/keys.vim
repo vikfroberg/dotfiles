@@ -11,6 +11,7 @@ nnoremap :: :
 nnoremap : <NOP>
 nnoremap :q <NOP>
 nnoremap :b <NOP>
+nnoremap :wq <NOP>
 
 nnoremap B ^
 onoremap B ^
@@ -19,6 +20,23 @@ onoremap E $
 
 nnoremap V v$h
 vnoremap v V
+
+nnoremap <C-J> gj
+nnoremap <C-K> gk
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+nnoremap s :w<CR>
+nnoremap S :wq<CR>
+
+" nnoremap m :e %:h<CR>
+
+" nnoremap q <NOP>
+" nnoremap Q <NOP>
+" nnoremap qq :bd<CR>
+" nnoremap QQ :q<CR>
+nnoremap q :bd<CR>
+nnoremap Q :q<CR>
 
 onoremap n :<c-u>normal! f=bviw<cr>
 vnoremap n :<c-u>normal! f=bviw<cr>
@@ -66,8 +84,8 @@ noremap K 5k
 
 nnoremap U <C-R>
 
-nnoremap <C-J> f<Space>a<Cr><Esc>
-nnoremap <C-K> :join<CR>
+" nnoremap <C-J> f<Space>a<Cr><Esc>
+" nnoremap <C-K> :join<CR>
 
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>p :GitMRUFiles<CR>

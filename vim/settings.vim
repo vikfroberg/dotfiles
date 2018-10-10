@@ -22,7 +22,8 @@ set backspace=indent,eol,start
 set scrolloff=7
 set noshowmatch
 set splitbelow
-set splitright
+set nosplitright
+" set splitright
 set ttimeout
 set ttimeoutlen=20
 set notimeout
