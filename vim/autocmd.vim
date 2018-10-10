@@ -7,8 +7,21 @@ function! Preserve(command)
   call cursor(l, c)
 endfunction
 
+function! NetrwMapping()
+    noremap <buffer> S <NOP>
+    noremap <buffer> s <NOP>
+    noremap <buffer> q :bd<CR>
+    noremap <buffer> Q :q<CR>
+endfunction
+
 augroup vimrc
   autocmd!
+  " Do netrw mappings
+  autocmd filetype netrw call NetrwMapping()
+
+  " https://github.com/tpope/vim-vinegar/issues/13#issuecomment-47133890
+  autocmd FileType netrw setl bufhidden=delete
+
   " Don't add comment when using o/O
   autocmd FileType * setlocal formatoptions-=o
 

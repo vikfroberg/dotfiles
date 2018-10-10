@@ -42,7 +42,8 @@ set nowrap
 set clipboard+=unnamed
 set iskeyword+=-
 
-let g:netrw_banner=0
+let g:netrw_banner = 0
+
 let g:html_indent_tags = 'li\|p'
 let g:loaded_matchparen = 1
 let g:ackprg = 'ag --vimgrep --smart-case'
