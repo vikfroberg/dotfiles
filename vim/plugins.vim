@@ -23,7 +23,7 @@ Plug 'ervandew/supertab'
 Plug 'vim-scripts/SyntaxAttr.vim'
 Plug 'tpope/vim-eunuch'
 " Plug 'AndrewRadev/splitjoin.vim'
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
 " Plug 'w0rp/ale'
 Plug 'ElmCast/elm-vim'
 Plug 'prettier/vim-prettier', {
