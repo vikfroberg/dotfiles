@@ -1,3 +1,10 @@
+" TO LEARN:
+" Ctrl + v - start visual block mode
+" :vimgrep /pattern/ {file}
+" :cn - jump to the next match
+" :cp - jump to the previous match
+" :copen - open a window containing the list of matches
+
 nnoremap B ^
 onoremap B ^
 nnoremap E $
