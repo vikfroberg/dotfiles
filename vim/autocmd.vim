@@ -14,6 +14,15 @@ function! NetrwMapping()
     noremap <buffer> Q :q<CR>
 endfunction
 
+function! MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+
 augroup vimrc
   autocmd!
   " Do netrw mappings
@@ -21,6 +30,9 @@ augroup vimrc
 
   " https://github.com/tpope/vim-vinegar/issues/13#issuecomment-47133890
   autocmd FileType netrw setl bufhidden=delete
+
+  " Create directories on write
+  autocmd BufWritePre * :call MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 
   " Don't add comment when using o/O
   autocmd FileType * setlocal formatoptions-=o
