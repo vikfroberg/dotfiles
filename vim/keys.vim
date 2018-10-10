@@ -4,6 +4,13 @@
 " :cn - jump to the next match
 " :cp - jump to the previous match
 " :copen - open a window containing the list of matches
+" bind sS to something
+" bind mM to something
+
+nnoremap :: :
+nnoremap : <NOP>
+nnoremap :q <NOP>
+nnoremap :b <NOP>
 
 nnoremap B ^
 onoremap B ^
