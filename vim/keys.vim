@@ -85,7 +85,7 @@ noremap K 5k
 nnoremap U <C-R>
 
 " nnoremap <C-J> f<Space>a<Cr><Esc>
-" nnoremap <C-K> :join<CR>
+nnoremap m :join<CR>
 
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>p :GitMRUFiles<CR>

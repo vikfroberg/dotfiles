@@ -1,9 +1,13 @@
+" Use colorbox for colorscheme
+" https://www.colorbox.io/
+
 highlight CursorLine cterm=NONE ctermbg=0 ctermfg=NONE
 highlight Visual ctermfg=NONE ctermbg=8
 highlight Type ctermfg=2
 highlight Comment ctermfg=7 ctermbg=NONE
 highlight PreProc ctermfg=2
 highlight Special ctermfg=11
+
 " highlight Statement ctermfg=1
 " highlight Todo ctermfg=5 ctermbg=NONE
 " highlight Noise ctermfg=NONE ctermbg=NONE
