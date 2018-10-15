@@ -9,7 +9,7 @@ if test ! $(which brew); then
 fi
 
 ~/dotfiles/brew.sh
-~/dotfiles/npm.sh
+~/dotfiles/npm-mac.sh
 ~/dotfiles/symlink.sh
 
 cat ~/dotfiles/enjoy

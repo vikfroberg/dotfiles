@@ -1,3 +1,4 @@
+export PATH='/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin':"$PATH"
 export GIT_MERGE_AUTOEDIT=no
 export EDITOR=vim
 export CLICOLOR=1
