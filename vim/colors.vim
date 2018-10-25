@@ -7,9 +7,9 @@ highlight Type ctermfg=2
 highlight Comment ctermfg=7 ctermbg=NONE
 highlight PreProc ctermfg=2
 highlight Special ctermfg=11
+highlight Todo ctermfg=7 ctermbg=NONE
 
 " highlight Statement ctermfg=1
-" highlight Todo ctermfg=5 ctermbg=NONE
 " highlight Noise ctermfg=NONE ctermbg=NONE
 " highlight Normal ctermfg=white ctermbg=NONE
 

@@ -164,7 +164,7 @@ let s:p.normal.warning = [ [0, 3] ]
 let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
 
 " Elm
-let g:elm_format_autosave = 1
+let g:elm_format_autosave = 0
 
 " Pretttier
 " single quotes over double quotes

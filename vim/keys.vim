@@ -7,11 +7,16 @@
 " bind sS to something
 " bind mM to something
 
-nnoremap :: :
-nnoremap : <NOP>
-nnoremap :q <NOP>
-nnoremap :b <NOP>
-nnoremap :wq <NOP>
+" nnoremap :: :
+" nnoremap : <NOP>
+" nnoremap :q <NOP>
+" nnoremap :b <NOP>
+" nnoremap :wq <NOP>
+
+" nnoremap <C-Y> "+y
+" vnoremap <C-Y> "+y
+" nnoremap <C-P> "+gP
+" vnoremap <C-P> "+gP
 
 nnoremap B ^
 onoremap B ^
@@ -21,8 +26,8 @@ onoremap E $
 nnoremap V v$h
 vnoremap v V
 
-nnoremap <C-J> gj
-nnoremap <C-K> gk
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
