@@ -36,7 +36,7 @@ alias gb="git checkout \$(fgb)"
 alias gbd="git branch -D \$(fgb)"
 
 # Virtual box
-alias vbox="ssh $USER@192.168.56.101"
+alias vbox="ssh -XY $USER@192.168.56.101"
 
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
