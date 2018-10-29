@@ -6,6 +6,6 @@ brew update
 echo "Installing brew packages..."
 brew install bash
 brew install node
-brew install vim
+# brew install vim
 brew install tree
 brew install fzf

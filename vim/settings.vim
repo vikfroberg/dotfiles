@@ -30,7 +30,7 @@ set notimeout
 set history=500
 set noshowmode
 set noshowcmd
-set mouse=a
+set mouse=i
 set visualbell
 set t_vb=
 set autoread

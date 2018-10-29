@@ -32,7 +32,7 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 nnoremap s :w<CR>
-nnoremap S :wq<CR>
+nnoremap S :w<CR>
 
 " nnoremap m :e %:h<CR>
 
@@ -43,23 +43,28 @@ nnoremap S :wq<CR>
 nnoremap q :bd<CR>
 nnoremap Q :q<CR>
 
-onoremap n :<c-u>normal! f=bviw<cr>
-vnoremap n :<c-u>normal! f=bviw<cr>
-onoremap N :<c-u>normal! f=wvt;<cr>
-vnoremap N :<c-u>normal! f=wvt;<cr>
+" onoremap n :<c-u>normal! f=bviw<cr>
+" vnoremap n :<c-u>normal! f=bviw<cr>
+" onoremap N :<c-u>normal! f=wvt;<cr>
+" vnoremap N :<c-u>normal! f=wvt;<cr>
 
-onoremap p :<c-u>normal! f(vi(<cr>
+" onoremap p :<c-u>normal! f(vi(<cr>
 
-onoremap b :<c-u>normal! f[vi[<cr>
-vnoremap b :<c-u>normal! f[vi[<cr>
+" onoremap b :<c-u>normal! f[vi[<cr>
+" vnoremap b :<c-u>normal! f[vi[<cr>
 
-onoremap B :<c-u>normal! f{vi{<cr>
-vnoremap B :<c-u>normal! f{vi{<cr>
+" onoremap B :<c-u>normal! f{vi{<cr>
+" vnoremap B :<c-u>normal! f{vi{<cr>
 
 onoremap iq i"
 vnoremap iq i"
 onoremap q i"
 vnoremap q i"
+
+" onoremap iQ i'
+" vnoremap iQ i'
+" onoremap Q i'
+" vnoremap Q i'
 
 " nnoremap gi viio<Esc>
 " nnoremap gI viioo<Esc>

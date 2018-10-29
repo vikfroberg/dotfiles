@@ -5,6 +5,9 @@ export CLICOLOR=1
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 export NODE_ENV="development"
 
+set -o vi
+# set -o emux
+
 # Bash
 alias ..="cd .."
 alias ...="..;.."
