@@ -13,6 +13,7 @@
   pop = !git stash pop
   amend = !git add . && git add -u . && git commit --amend
   squash = !git rebase -i master
+  solve = !${EDITOR} $(git diff --name-only --relative --diff-filter=U | uniq)
 [user]
   email = vikfroberg@gmail.com
   name = Viktor Froberg
