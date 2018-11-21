@@ -108,11 +108,11 @@ git_branch() {
 }
 
 get_pwd() {
-    if [[ $(basename $PWD) = "vikfrobe" ]]
+    if [[ $PWD = $HOME ]]
     then
         echo "~"
     else
-        echo $(basename $PWD)
+        echo $PWD
     fi
 }
 
@@ -130,4 +130,4 @@ UNDERLINE="$(tput sgr 0 1)"
 INVERT="$(tput sgr 1 0)"
 NOCOLOR="$(tput sgr0)"
 
-export PS1="$CYAN\$(get_pwd) $GRAY\$(git_branch)\$(git_dirty)$MAGENTA\n❯ $NOCOLOR"
+export PS1="\[${MAGENTA}\]\h\[${NOCOLOR}\]:\[${CYAN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "

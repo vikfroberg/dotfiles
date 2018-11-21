@@ -79,28 +79,6 @@ augroup fzf_mru_files
   autocmd BufDelete * call s:delete_mru_files(expand('%'))
 augroup END
 
-function! s:open_folder(folder)
-  if a:folder ==# '.'
-    execute 'Ex ' . getcwd()
-  else
-    execute 'Ex ' . a:folder
-  endif
-endfunction
-
-function! s:git_folders(...)
-  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
-  if v:shell_error
-    return s:warn('Not in git repo')
-  endif
-  let ls_tree = split(system('git ls-tree -rd HEAD'), '\n')
-  let ls_tree_clean = map(copy(ls_tree), 'split(v:val, ''\t'')[1]')
-  let source = ['.'] + ls_tree_clean
-  return fzf#run({
-        \'source': source,
-        \'sink': function('s:open_folder'),
-        \'options': '--no-sort --exact'})
-endfunction
-
 function! s:git_files(...)
   let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
   if v:shell_error
@@ -130,12 +108,14 @@ let g:lightline = {
       \ 'colorscheme': 'custom',
       \ 'active': {
       \   'left': [ [ 'filename' ] ],
-      \   'right': [ [ 'mode' ] ]
+      \   'right': [ [ 'branch' ] ]
       \ },
       \ 'component_function': {
       \   'filename': 'LightlineFilename',
+      \   'branch': 'FugitiveStatusline',
       \ }
       \ }
+
 function! LightlineFilename()
   return expand('%')
 endfunction

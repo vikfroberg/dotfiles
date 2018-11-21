@@ -18,6 +18,13 @@
 " nnoremap <C-P> "+gP
 " vnoremap <C-P> "+gP
 
+nnoremap gs :!git status<CR>
+nnoremap ga :w<CR>:!git add %<CR><CR>
+nnoremap gd :!git diff %<CR>
+nnoremap gD :!git diff<CR>
+
+" nnoremap g gg
+
 nnoremap B ^
 onoremap B ^
 nnoremap E $
