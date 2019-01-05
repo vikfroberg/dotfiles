@@ -36,6 +36,7 @@ alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gpr="git pull --rebase"
 alias gco="git checkout \$(fgs)"
 alias gb="git checkout \$(fgb)"
+alias gbr="git checkout \$(fgbr)"
 alias gbd="git branch -D \$(fgb)"
 
 # Virtual box
@@ -78,6 +79,11 @@ fgs() {
 
 fgb() {
   git branch --color=always | grep -v '/HEAD\s' |
+  fzf --multi --ansi --tac | sed 's/^..//' | awk '{print $1}'
+}
+
+fgbr() {
+  git branch -r --color=always | grep -v '/HEAD\s' |
   fzf --multi --ansi --tac | sed 's/^..//' | awk '{print $1}'
 }
 
