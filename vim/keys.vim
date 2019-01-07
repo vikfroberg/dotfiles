@@ -27,8 +27,10 @@ nnoremap gD :!git diff<CR>
 
 nnoremap B ^
 onoremap B ^
+vnoremap B ^
 nnoremap E $
 onoremap E $
+vnoremap E $
 
 nnoremap V v$h
 vnoremap v V
@@ -104,7 +106,7 @@ nnoremap U <C-R>
 " nnoremap <C-J> f<Space>a<Cr><Esc>
 nnoremap m :join<CR>
 
-nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>b :Buffers!<CR>
 nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>f :BLines!<CR>
 nnoremap <leader>F :Ag!<CR>

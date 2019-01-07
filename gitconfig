@@ -14,6 +14,7 @@
   amend = !git add . && git add -u . && git commit --amend
   squash = !git rebase -i master
   solve = !${EDITOR} $(git diff --name-only --relative --diff-filter=U | uniq)
+  conflicts = diff --name-only --diff-filter=U
 [user]
   email = vikfroberg@gmail.com
   name = Viktor Froberg
