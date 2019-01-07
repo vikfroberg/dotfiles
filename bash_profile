@@ -17,8 +17,6 @@ alias la="ls -la"
 alias c="clear"
 alias v="vim ."
 alias r="source ~/.bash_profile; clear"
-alias p="cd ~/Code; cd \$(tree -L 2 -idf | ramda -srSR 'drop 1' 'dropLast 2' 'map drop 2' | fzf)"
-alias n="cd ~/Code; cd \$(tree -L 2 -idf | ramda -srSR 'drop 1' 'dropLast 2' 'map drop 2' | fzf); vim NOTES.md"
 
 # Git
 alias gs="git status"
@@ -44,7 +42,6 @@ alias vbox="ssh -XY $USER@192.168.56.101"
 
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
-alias whp="cd /var/www; cd \$(tree -L 2 -idf | ramda -srSR 'drop 1' 'dropLast 2' 'map drop 2' | fzf)"
 
 # Helpers
 fkill() {
@@ -57,15 +54,11 @@ fkill() {
 }
 
 fgl() {
-  git log master.. --oneline | fzf --ansi | ramda -rsRS 'map split " "' 'map head'
+  git log master.. --oneline | fzf --ansi | awk '{print $1}'
 }
 
 fgll() {
-  git log --oneline -100 | fzf --ansi | ramda -rsRS 'map split " "' 'map head'
-}
-
-fbs() {
-  brew services list | ramda -rsRS 'drop 1' 'map split " "' 'map head' | fzf
+  git log --oneline -50 | fzf --ansi --preview 'echo {}' | awk '{print $1}'
 }
 
 fgls() {
