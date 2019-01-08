@@ -46,6 +46,14 @@ is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
+gg() {
+  is_in_git_repo || return
+  git grep -n $1 |
+  fzf -d: --with-nth 1,2 --ansi --preview 'echo {3..}'
+  # cut -d: -f1
+  # fzf -d: --with-nth 2,3.. --preview 'bat {1} --color=always' --ansi
+}
+
 gf() {
   is_in_git_repo || return
   git -c color.status=always status --short |
