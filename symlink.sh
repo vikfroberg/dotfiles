@@ -1,6 +1,6 @@
 # Create symbolic links
 
-files="bash_profile vimrc gitconfig gitmessage gitignore git-completion.bash"
+files="bash_profile bashrc vimrc gitconfig gitmessage gitignore"
 
 echo "Moving existing dotfiles to ~/.dotfiles_old..."
 mkdir -p ~/.dotfiles_old
@@ -16,4 +16,3 @@ for file in $files; do
 done
 
 source ~/.bash_profile
-source ~/.git-completion.bash
