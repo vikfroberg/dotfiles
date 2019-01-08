@@ -8,8 +8,8 @@ if test ! $(which brew); then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
-~/dotfiles/brew.sh
-~/dotfiles/npm-mac.sh
-~/dotfiles/symlink.sh
+~/dotfiles/install/brew.sh
+~/dotfiles/install/npm-mac.sh
+~/dotfiles/install/symlink.sh
 
-cat ~/dotfiles/enjoy
+cat ~/dotfiles/install/enjoy.txt

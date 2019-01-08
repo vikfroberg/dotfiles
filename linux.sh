@@ -6,8 +6,8 @@ if test ! $(which brew); then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 fi
 
-~/dotfiles/brew.sh
-~/dotfiles/npm-linux.sh
-~/dotfiles/symlink.sh
+~/dotfiles/install/brew.sh
+~/dotfiles/install/npm-linux.sh
+~/dotfiles/install/symlink.sh
 
-cat ~/dotfiles/enjoy
+cat ~/dotfiles/install/enjoy.txt
