@@ -5,34 +5,33 @@ export CLICOLOR=1
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 export NODE_ENV="development"
 
+# Alias
+# -------------
+
 # Bash
 alias ..="cd .."
 alias ...="..;.."
 alias ....="..;..;.."
 alias l="ls -l"
+alias ll="ls -l"
 alias la="ls -la"
 alias c="clear"
 alias v="vim ."
-alias r="source ~/.bash_profile; clear"
+alias r="source ~/.bash_profile"
 
 # Git
 alias gs="git status"
-alias ga="git add \$(fgs)"
+alias ga="git add"
 alias gaa="git add --all"
 alias gap="git add --all --intent-to-add && git add --patch"
-alias grs="git reset HEAD"
-alias grm="git rm \$(fgls)"
 alias gd="git diff"
 alias gc="git commit"
 alias gca="git add --all && git commit"
-alias gl="git show \$(fgl)"
-alias gll="git show \$(fgll)"
+alias gl="gh"
 alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gpr="git pull --rebase"
-alias gco="git checkout \$(fgs)"
-alias gb="git checkout \$(fgb)"
-alias gbr="git checkout \$(fgbr)"
-alias gbd="git branch -D \$(fgb)"
+alias go="git checkout"
+alias gco="git checkout"
 
 # Virtual box
 alias vbox="ssh -XY $USER@192.168.56.101"
@@ -40,51 +39,62 @@ alias vbox="ssh -XY $USER@192.168.56.101"
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
 
-# Helpers
-fkill() {
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+# GIT heart FZF
+# -------------
 
-  if [ "x$pid" != "x" ]
-  then
-    kill -${1:-9} $pid
-  fi
+is_in_git_repo() {
+  git rev-parse HEAD > /dev/null 2>&1
 }
 
-fgl() {
-  git log master.. --oneline | fzf --ansi | awk '{print $1}'
-}
-
-fgll() {
-  git log --oneline -50 | fzf --ansi --preview 'echo {}' | awk '{print $1}'
-}
-
-fgls() {
-  git ls-files -oc --exclude-standard | sort | fzf --ansi --multi | awk '{print $1}'
-}
-
-fgs() {
+gf() {
+  is_in_git_repo || return
   git -c color.status=always status --short |
-  fzf --multi --ansi --nth 2..,.. | awk '{print $2}'
+  fzf -m --ansi --nth 2..,.. \
+    --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
+  cut -c4- | sed 's/.* -> //'
 }
 
-fgb() {
-  git branch --color=always | grep -v '/HEAD\s' |
-  fzf --multi --ansi --tac | sed 's/^..//' | awk '{print $1}'
+gb() {
+  is_in_git_repo || return
+  git branch -a --color=always | grep -v '/HEAD\s' | sort |
+  fzf --ansi --multi --tac --preview-window right:70% \
+    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -200' |
+  sed 's/^..//' | cut -d' ' -f1 |
+  sed 's#^remotes/##'
 }
 
-fgbr() {
-  git branch -r --color=always | grep -v '/HEAD\s' |
-  fzf --multi --ansi --tac | sed 's/^..//' | awk '{print $1}'
+gt() {
+  is_in_git_repo || return
+  git tag --sort -version:refname |
+  fzf --multi --preview-window right:70% \
+    --preview 'git show --color=always {} | head -200'
 }
 
-danger() {
-  read -p "Are you sure? " -n 1 -r
-  echo    # (optional) move to a new line
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
-    return 1
-  fi
+gh() {
+  is_in_git_repo || return
+  git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
+  fzf --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
+    --header 'Press CTRL-S to toggle sort' \
+    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
+  grep -o "[a-f0-9]\{7,\}"
 }
+
+gr() {
+  is_in_git_repo || return
+  git remote -v | awk '{print $1 "\t" $2}' | uniq |
+  fzf --tac \
+    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
+  cut -d$'\t' -f1
+}
+
+gst() {
+  is_in_git_repo || return
+  git stash list | fzf --reverse -d: --preview 'git show --color=always {1}' |
+  cut -d: -f1
+}
+
+# Prompt
+# -------------
 
 git_dirty() {
   local status=$(git status --porcelain 2> /dev/null)
