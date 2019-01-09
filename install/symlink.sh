@@ -1,6 +1,6 @@
 # Create symbolic links
 
-files="bash_profile bashrc vimrc gitconfig gitmessage gitignore"
+files="bash_profile ctags bashrc vimrc gitconfig gitmessage gitignore"
 
 echo "Moving existing dotfiles to ~/.dotfiles_old..."
 mkdir -p ~/.dotfiles_old

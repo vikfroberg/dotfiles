@@ -255,7 +255,7 @@ augroup vimrc
   autocmd FileType * setlocal formatoptions-=o
 
   " Strip whitespace
-  autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
+  " autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
 
   autocmd BufWritePost .vimrc source %
   autocmd BufWritePost vimrc source %
@@ -392,7 +392,6 @@ noremap K 5k
 nnoremap U <C-R>
 
 nnoremap <leader>p :GitMRUFiles<CR>
-nnoremap <leader>P :GitMRUFiles<CR>
-nnoremap <leader>F :Ag!<CR>
+nnoremap <leader>F :Ag! 
 
 nnoremap gj J
