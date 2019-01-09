@@ -25,13 +25,15 @@ alias ga="git add"
 alias gaa="git add --all"
 alias gap="git add --all --intent-to-add && git add --patch"
 alias gd="git diff"
-alias gc="git commit"
-alias gca="git add --all && git commit"
+alias gc="git commit -v"
+alias gca="git add --all && git commit -v"
 alias gl="gh"
+alias gll="gh"
 alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
-alias gpr="git pull --rebase"
+alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias go="git checkout"
 alias gco="git checkout"
+alias gst="git stash --include-untracked"
 
 # Virtual box
 alias vbox="ssh -XY $USER@192.168.56.101"
@@ -81,8 +83,7 @@ gt() {
 gh() {
   is_in_git_repo || return
   git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
-  fzf --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
-    --header 'Press CTRL-S to toggle sort' \
+  fzf --ansi --no-sort --reverse --multi \
     --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
   grep -o "[a-f0-9]\{7,\}"
 }
@@ -95,7 +96,7 @@ gr() {
   cut -d$'\t' -f1
 }
 
-gst() {
+gsl() {
   is_in_git_repo || return
   git stash list | fzf --reverse -d: --preview 'git show --color=always {1}' |
   cut -d: -f1
