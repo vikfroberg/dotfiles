@@ -149,9 +149,10 @@ command! GitMRUFiles :call s:git_files()
 
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --with-nth 4..'}, 'right:50%')
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter :'}, 'right:50%')
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \                 <bang>0)
+
 
 " Lightline
 
@@ -386,6 +387,8 @@ nnoremap Y y$
 nnoremap j gj
 nnoremap k gk
 
+nnoremap gk J
+
 noremap J 5j
 noremap K 5k
 
@@ -394,4 +397,3 @@ nnoremap U <C-R>
 nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>F :Ag! 
 
-nnoremap gj J
