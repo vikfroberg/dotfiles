@@ -143,7 +143,8 @@ gsl() {
 # https://davidebove.com/blog/2016/04/29/persistent-bash-history-an-experiment/
 # -------------
 
-alias h="cat ~/.persistent_history | fzf"
+alias h="tail -200 ~/.persistent_history"
+alias hf="tac ~/.persistent_history | fzf"
 
 HISTTIMEFORMAT="%d/%m/%y %T "
 
