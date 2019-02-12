@@ -28,6 +28,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
 Plug 'vim-scripts/SyntaxAttr.vim'
 Plug 'tpope/vim-eunuch'
@@ -256,7 +257,7 @@ augroup vimrc
   autocmd FileType * setlocal formatoptions-=o
 
   " Strip whitespace
-  " autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
+  autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
 
   autocmd BufWritePost .vimrc source %
   autocmd BufWritePost vimrc source %
@@ -270,7 +271,6 @@ augroup vimrc
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
 augroup END
-
 
 " Use colorbox for colorscheme
 " https://www.colorbox.io/
@@ -340,6 +340,27 @@ command! SyntaxAttr :call SyntaxAttr()
 command! Diff :w !diff % -
 command! Changes :w !diff % -
 command! TestFile !py.test %
+command! Gist :e ~/dotfiles/gist
+command! W write|bdelete
+
+function! Bye()
+     if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+         :w|:q
+     else
+         :w|:bdelete
+    endif
+endfunction
+
+augroup netrw_mapping
+    autocmd!
+    autocmd filetype netrw call NetrwMapping()
+augroup END
+
+function! NetrwMapping()
+    noremap <buffer> q :bd<CR>
+    nnoremap <buffer> Q :q<CR>
+    nnoremap <buffer> . :e .<CR>
+endfunction
 
 nnoremap B ^
 onoremap B ^
@@ -357,8 +378,9 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 nnoremap s :w<CR>
-nnoremap S :w<CR>
+nnoremap S :call Bye()<CR>
 
+nnoremap g@ q
 nnoremap q :bd<CR>
 nnoremap Q :q<CR>
 
@@ -389,11 +411,18 @@ nnoremap k gk
 
 nnoremap gk J
 
+nnoremap _ :e .<CR>
+nnoremap - :e %:h<CR>
+
 noremap J 5j
 noremap K 5k
 
 nnoremap U <C-R>
 
 nnoremap <leader>p :GitMRUFiles<CR>
-nnoremap <leader>F :Ag! 
+nnoremap <leader>P :Files<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>P :Files<CR>
+nnoremap <leader>F :Ag!
+nnoremap <leader>f :BLines!<CR>
 

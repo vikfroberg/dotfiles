@@ -1,4 +1,4 @@
-export PATH='/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin':"$PATH"
+export PATH='/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:~/dotfiles/bin':"$PATH"
 export GIT_MERGE_AUTOEDIT=no
 export EDITOR=vim
 export CLICOLOR=1
@@ -32,8 +32,11 @@ alias gll="gh"
 alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias go="git checkout"
-alias gco="git checkout"
+alias gco="alias"
+alias gob="git checkout \$(gb)"
+alias gof="git checkout \$(gf)"
 alias gst="git stash --include-untracked"
+alias ge="vim \$(gf)"
 
 # Virtual box
 alias vbox="ssh -XY $USER@192.168.56.101"
@@ -41,19 +44,31 @@ alias vbox="ssh -XY $USER@192.168.56.101"
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
 
-# GIT heart FZF
+# Magento
+alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/bin/magento"
+
+
+# FZF
 # -------------
+
+# Grep
+
+gg() {
+  if [ -z "$1" ]
+    then
+      echo "usage: gg QUERY"
+      return
+  fi
+  is_in_git_repo || return
+  git grep -n $1 |
+  fzf -d: --preview="preview {1}:{2}" |
+  awk -F: '{print $1":"$2}'
+}
+
+# Git
 
 is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
-}
-
-gg() {
-  is_in_git_repo || return
-  git grep -n $1 |
-  fzf -d: --with-nth 1,2 --ansi --preview 'echo {3..}'
-  # cut -d: -f1
-  # fzf -d: --with-nth 2,3.. --preview 'bat {1} --color=always' --ansi
 }
 
 gf() {
@@ -70,7 +85,7 @@ gb() {
   fzf --ansi --multi --tac --preview-window right:70% \
     --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -200' |
   sed 's/^..//' | cut -d' ' -f1 |
-  sed 's#^remotes/##'
+  sed 's/.*\///'
 }
 
 gt() {
