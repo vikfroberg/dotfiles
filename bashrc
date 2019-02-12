@@ -16,7 +16,7 @@ alias l="ls -l"
 alias ll="ls -l"
 alias la="ls -la"
 alias c="clear"
-alias v="vim ."
+alias v="vimmer"
 alias r="source ~/.bash_profile"
 
 # Git
@@ -51,6 +51,22 @@ alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/
 # FZF
 # -------------
 
+# Vim
+vimmer() {
+  if [ -z "$1" ]
+    then
+      vim .
+      return
+  fi
+  if [ -z "$2" ]
+    then
+      vim $1
+      return
+  fi
+  vim +$2 $1
+  return
+}
+
 # Grep
 
 gg() {
@@ -62,7 +78,7 @@ gg() {
   is_in_git_repo || return
   git grep -n $1 |
   fzf -d: --preview="preview {1}:{2}" |
-  awk -F: '{print $1":"$2}'
+  awk -F: '{print $1, $2}'
 }
 
 # Git
