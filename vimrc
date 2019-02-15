@@ -18,6 +18,9 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'mbbill/undotree'
+Plug 'junegunn/vim-slash'
+Plug 'junegunn/vim-after-object'
 Plug 'itchyny/lightline.vim'
 Plug 'hdima/python-syntax'
 Plug 'tpope/vim-commentary'
@@ -67,10 +70,9 @@ set listchars=nbsp:¬
 set autoindent
 set backspace=indent,eol,start
 set scrolloff=7
-set noshowmatch
+set showmatch
 set splitbelow
 set nosplitright
-" set splitright
 set ttimeout
 set ttimeoutlen=20
 set notimeout
@@ -215,6 +217,10 @@ let g:prettier#config#trailing_comma = 'all'
 " Autoformat
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.babelrc Prettier
+
+
+" After Object
+autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
 
 
 function! Preserve(command)
