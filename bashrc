@@ -60,6 +60,24 @@ alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/
 # Cd
 # -------------
 
+m2() {
+  if [ -z "$1" ]
+    then
+      cd /var/www/m2/$(basename $PWD)
+      return
+  fi
+  cd /var/www/m2/$1
+}
+
+elm() {
+  if [ -z "$1" ]
+    then
+      cd /var/www/elm/$(basename $PWD)
+      return
+  fi
+  cd /var/www/elm/$1
+}
+
 push_cd() {
   pushd "$1" > /dev/null
 }
@@ -100,7 +118,7 @@ gg() {
       return
   fi
   is_in_git_repo || return
-  git grep -n $1 |
+  git grep -n "$1" |
   fzf -d: --preview="preview {1}:{2}" |
   awk -F: '{print $1, $2}'
 }
