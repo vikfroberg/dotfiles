@@ -270,6 +270,9 @@ augroup vimrc
   autocmd BufRead,BufNewFile *.nunjs setfiletype html
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
+
+  " Unset paste on InsertLeave
+  autocmd InsertLeave * silent! set nopaste
 augroup END
 
 " Use colorbox for colorscheme
@@ -409,7 +412,10 @@ nnoremap Y y$
 nnoremap j gj
 nnoremap k gk
 
-nnoremap gk J
+nnoremap gk :SplitjoinJoin<CR>
+nnoremap gK :SplitjoinJoin<CR>
+nnoremap gj :SplitjoinSplit<CR>
+nnoremap gJ :SplitjoinSplit<CR>
 
 nnoremap _ :e .<CR>
 nnoremap - :e %:h<CR>

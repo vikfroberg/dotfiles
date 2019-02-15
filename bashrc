@@ -10,10 +10,14 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_TYPE=en_US.UTF-8
 
+export CDPATH=/var/www:~
+
 # Alias
 # -------------
 
 # Bash
+alias cd="push_cd"
+alias dc="pop_cd"
 alias ..="cd .."
 alias ...="..;.."
 alias ....="..;..;.."
@@ -53,10 +57,21 @@ alias whd="/var/www/tools/dev-docker/start"
 alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/bin/magento"
 
 
-# FZF
+# Cd
 # -------------
 
+push_cd() {
+  pushd "$1" > /dev/null
+}
+
+pop_cd() {
+  popd > /dev/null
+}
+
+
 # Vim
+# -------------
+
 vimmer() {
   if [ -z "$1" ]
     then
@@ -71,6 +86,10 @@ vimmer() {
   vim +$2 $1
   return
 }
+
+
+# FZF
+# -------------
 
 # Grep
 
