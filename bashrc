@@ -10,7 +10,6 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_TYPE=en_US.UTF-8
 
-export CDPATH=/var/www:~
 
 # Alias
 # -------------
@@ -118,7 +117,19 @@ gg() {
       return
   fi
   is_in_git_repo || return
-  git grep -n "$1" |
+  grep -ir -n "$1" . |
+  fzf -d: --preview="preview {1}:{2}" |
+  awk -F: '{print $1, $2}'
+}
+
+ggI() {
+  if [ -z "$1" ]
+    then
+      echo "usage: gg QUERY"
+      return
+  fi
+  is_in_git_repo || return
+  grep -r -n "$1" . |
   fzf -d: --preview="preview {1}:{2}" |
   awk -F: '{print $1, $2}'
 }
