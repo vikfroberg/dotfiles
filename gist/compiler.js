@@ -1,65 +1,148 @@
+// Array
+
+const flatten = xs => xs.reduce((acc, xs) => acc.concat(xs), []);
+
 // Result
 
-const Result = {}
+const Result = {};
 
-Result.Ok = x => ({
+Result.Ok = result => ({
   _type: "Result.Ok",
-  toString: () => `Result.Ok (${x.toString()})`,
-  andThen: fn => fn(x),
-})
+  _result: result,
+  cata: case_ => case_.Ok(result),
+  map: fn => Result.Ok(fn(result)),
+  mapError: fn => Result.Ok(result),
+});
 
-Result.Error = x => ({
+Result.Error = error => ({
   _type: "Result.Error",
-  toString: () => `Result.Error (${x.toString()})`,
-  andThen: fn => Result.Error(x),
-})
+  _error: error,
+  cata: case_ => case_.Error(error),
+  map: fn => Result.Error(error),
+  mapError: fn => Result.Error(fn(error)),
+});
 
 // Parser Combinator
 
-const Parser = (result, context) => ({
+const ParserContext = (input, result) => ({
+  _type: "ParserContext",
+  _input: input,
+  _result: result,
+  map: fn => ParserContext(input, fn(result)),
+  fold: fn => fn(input, result),
+});
+
+const Parser = fn => ({
   _type: "Parser",
-  toString: () => `Parser (${result.toString()}, ${context.toString()})`,
-})
+  parse: (input, state) => fn(input),
+  andThen: andThenFn =>
+    Parser(input =>
+      fn(input).fold((input, result) =>
+        result.cata({
+          Ok: x => andThenFn(x).parse(input),
+          Error: _ => ParserContext(input, result),
+        }),
+      ),
+    ),
+  map: mapFn => Parser(input => fn(input).map(result => result.map(mapFn))),
+  mapError: mapFn =>
+    Parser(input => fn(input).map(result => result.mapError(mapFn))),
+});
 
-const int = context =>
-  context[0].match(/\d/)
-    ? Parser(Result.Ok(context[0]), context.slice(1))
-    : Parser(Result.Error(), context)
+const regex = re =>
+  Parser(input =>
+    input.length && input[0].match(re)
+      ? ParserContext(input.slice(1), Result.Ok(input[0]))
+      : ParserContext(
+          input,
+          Result.Error(`expected to match ${re.toString()}`),
+        ),
+  );
 
+const string = str =>
+  Parser(input =>
+    input.length && input.startsWith(str)
+      ? ParserContext(input.slice(str.length), Result.Ok(str))
+      : ParserContext(input, Result.Error(`expected it to match ${str}`)),
+  );
+const s = string;
 
-const literal = context =>
-  context[0].match(/[a-z]/)
-    ? Parser(Result.Ok(context[0]), context.slice(1))
-    : Parser(Result.Error(), context)
+const int = regex(/\d/).mapError(_ => "expected an int");
+const literal = regex(/[a-zA-Z]/).mapError(_ => "expected a literal");
+const space = string(" ").mapError(_ => "expected a space");
 
-const space = context => {
-  return context[0] === " "
-    ? Parser(Result.Ok(context[0]), context.slice(1))
-    : Parser(Result.Error(), context)
-}
+const succeed = x => Parser(input => ParserContext(input, Result.Ok(x)));
 
-const many = fn => input => {
-  let nextInput
-  let currentInput = input
-  while (nextInput = fn(currentInput)) {
-    currentInput = nextInput
-  }
-  return currentInput
-}
+const trace = tag => x => {
+  console.log(tag, x);
+  return x;
+};
 
-const and = (f1, f2) => context => {
-  return ""
-  // return f1(context).andThen(x => f2
-}
+const many = parser => {
+  const accumulate = (acc, input) =>
+    parser.parse(input).fold((nextInput, result) =>
+      result.cata({
+        Ok: x => accumulate(acc.map(xs => [...xs, x]), nextInput),
+        Error: _ => ParserContext(input, acc),
+      }),
+    );
+  return Parser(input => accumulate(Result.Ok([]), input));
+};
 
-const seq = fs => input => fs.reduce((acc, fn) => acc ? fn(acc) : acc, input)
+// const and = (leftParser, rightParser) =>
+//   leftParser.andThen(x => rightParser.map(y => [x, y]));
+
+const seq = (...parsers) =>
+  parsers.reduce(
+    (acc, parser) => acc.andThen(xs => parser.map(y => [...xs, y])),
+    succeed([]),
+  );
+
+const or = (leftParser, rightParser) =>
+  Parser(input =>
+    leftParser.parse(input).fold((newInput, result) =>
+      result.cata({
+        Ok: _ => ParserContext(newInput, result),
+        Error: _ => rightParser(input),
+      }),
+    ),
+  );
 
 // Compiler
 
-const parse = and(literal, literal) //seq([many(literal), space, int, space, int])
+const ints = many(int).map(xs => xs.join(""));
 
-console.log(
-  "program",
-  parse("add 1 1").toString()
-)
+const call = seq(
+  many(literal).map(xs => xs.join("")),
+  many(seq(space, or(ints, seq(s("("), call, s(")")))).map(xs => xs[1])),
+);
 
+const expr = or(call);
+
+const parser = seq(
+  many(literal).map(xs => xs.join("")),
+  many(seq(space, many(int).map(xs => xs.join(""))).map(xs => xs[1])),
+).map(([name, args]) => ({ name, args }));
+
+parser.parse("subtract (add 20 32) 10").fold((_, result) =>
+  result
+    .map(x => {
+      if (x.name === "add") {
+        return parseInt(x.args[0]) + parseInt(x.args[1]);
+      } else if (x.name === "subtract") {
+        return parseInt(x.args[0]) - parseInt(x.args[1]);
+      } else if (x.name === "divideInt") {
+        return Math.round(parseInt(x.args[0]) / parseInt(x.args[1]));
+      } else if (x.name === "multiply") {
+        return parseInt(x.args[0]) * parseInt(x.args[1]);
+      } else if (x.name === "modBy") {
+        return parseInt(x.args[0]) % parseInt(x.args[1]);
+      } else if (x.name === "exponentBy") {
+        return Math.pow(parseInt(x.args[0]), parseInt(x.args[1]));
+      }
+    })
+    .cata({
+      Ok: x => console.log(x),
+      Error: x => console.log(x),
+    }),
+);
