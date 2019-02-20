@@ -4,6 +4,8 @@ brew update
 
 # Installs
 echo "Installing brew packages..."
-brew install bash
-brew install node
+# brew install bash
+# brew install node
 brew install fzf
+brew install git
+brew install ag

@@ -263,3 +263,5 @@ INVERT="$(tput sgr 1 0)"
 NOCOLOR="$(tput sgr0)"
 
 export PS1="\[${MAGENTA}\]\h\[${NOCOLOR}\]:\[${CYAN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

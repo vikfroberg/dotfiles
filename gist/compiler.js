@@ -117,16 +117,15 @@ const betweenParens = parser => seq(
 )
 
 const int = many(digit).map(xs => xs.join(""));
-const id = many(literal).map(xs => xs.join("")),
+const id = many(literal).map(xs => xs.join(""));
 
 const call = () => seq(
   id,
-  many(seq(space, expression).map(xs => xs[1])),
+  many(seq(space, expression()).map(xs => xs[1])),
 )
-      
-const rootExpression = or(int, call())
 
-const expression = or(int, betweenParens(call()))
+const expression = () => or(int, betweenParens(call()))
+// const rootExpression = or(int, call())
 
 const parser = seq(
   many(literal).map(xs => xs.join("")),

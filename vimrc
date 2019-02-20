@@ -36,7 +36,7 @@ Plug 'ervandew/supertab'
 Plug 'vim-scripts/SyntaxAttr.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'ElmCast/elm-vim'
+Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm-format' }
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
@@ -134,13 +134,11 @@ function! s:git_files(...)
     return s:warn('Not in git repo')
   endif
   let mru = reverse(copy(g:fzf_mru_files))
-  let files = sort(split(system('git ls-files -oc --exclude-standard')))
-  let deleted_files = split(system('git ls-files -d'))
-  let files_without_deleted = filter(copy(files), 'index(deleted_files, v:val) == -1')
-  let relative_mru = filter(copy(mru), 'index(files_without_deleted, v:val) != -1')
+  let files = sort(split(system('ag -l')))
+  let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
   let filename = fnamemodify(expand('%'), ":~:.")
   let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# filename')
-  let files_without_mru = filter(copy(files_without_deleted), 'index(relative_mru, v:val) == -1')
+  let files_without_mru = filter(copy(files), 'index(relative_mru, v:val) == -1')
   let source = extend(relative_mru_without_current, files_without_mru)
   return fzf#run({
         \'source': source,

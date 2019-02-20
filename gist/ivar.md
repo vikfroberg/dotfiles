@@ -1,5 +1,11 @@
 # Ivar
 
+## Frågor
+* Varför kör ni med 3d vectors, för z-index?
+* Tar gärna en genomgång på shape/draw
+* TreeLayout
+* Parprogrammera en issue
+
 ## To-do's
 * Sticky header
 * Pilar för att indikera flöde
