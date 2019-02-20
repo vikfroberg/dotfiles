@@ -91,9 +91,6 @@ set noswapfile
 set nowrap
 set clipboard+=unnamed
 set iskeyword+=-
-
-let g:netrw_banner = 0
-
 let g:html_indent_tags = 'li\|p'
 let g:loaded_matchparen = 1
 let g:ackprg = 'ag --vimgrep --smart-case'
@@ -200,6 +197,7 @@ let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
 let g:elm_format_autosave = 0
 
 " Pretttier
+
 " single quotes over double quotes
 let g:prettier#config#single_quote = 'false'
 
@@ -212,7 +210,7 @@ let g:prettier#config#jsx_bracket_same_line = 'false'
 " none|es5|all
 let g:prettier#config#trailing_comma = 'all'
 
-" Autoformat
+" autoformat
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.babelrc Prettier
 
@@ -248,9 +246,10 @@ endfunction
 
 augroup vimrc
   autocmd!
-  " Do netrw mappings
+  " Netrw mappings
   autocmd filetype netrw call NetrwMapping()
 
+  " Netrw hack
   " https://github.com/tpope/vim-vinegar/issues/13#issuecomment-47133890
   autocmd FileType netrw setl bufhidden=delete
 
@@ -265,9 +264,7 @@ augroup vimrc
 
   autocmd BufWritePost .vimrc source %
   autocmd BufWritePost vimrc source %
-  autocmd BufWritePost *.vim source %
 
-  autocmd FileType netrw setlocal nocursorline
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
 
@@ -341,22 +338,11 @@ highlight Todo ctermfg=7 ctermbg=NONE
 " highlight pythonInclude ctermfg=8
 " highlight pythonFunction ctermfg=4
 
-command! SourceVim :source $MYVIMRC
 command! Dotfiles :FZF! ~/dotfiles
 command! SyntaxAttr :call SyntaxAttr()
 command! Diff :w !diff % -
-command! Changes :w !diff % -
-command! TestFile !py.test %
 command! Gist :e ~/dotfiles/gist
 command! W write|bdelete
-
-function! Bye()
-     if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
-         :w|:q
-     else
-         :w|:bdelete
-    endif
-endfunction
 
 augroup netrw_mapping
     autocmd!
@@ -385,9 +371,10 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 nnoremap s :w<CR>
-nnoremap S :call Bye()<CR>
+nnoremap S :wq<CR>
 
 nnoremap g@ q
+
 nnoremap q :bd<CR>
 nnoremap Q :q<CR>
 
@@ -396,12 +383,11 @@ vnoremap iq i"
 onoremap q i"
 vnoremap q i"
 
-nnoremap gp `[v`]
+nnoremap gp :set paste<CR>o
+nnoremap gP :set paste<CR>O
 
 nmap \ gcc
 vmap \ gc
-
-nnoremap ! :!
 
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
@@ -416,13 +402,9 @@ nnoremap Y y$
 nnoremap j gj
 nnoremap k gk
 
-nnoremap gk :SplitjoinJoin<CR>
-nnoremap gK :SplitjoinJoin<CR>
-nnoremap gj :SplitjoinSplit<CR>
-nnoremap gJ :SplitjoinSplit<CR>
+nnoremap gj J
 
 nnoremap _ :e .<CR>
-nnoremap - :e %:h<CR>
 
 noremap J 5j
 noremap K 5k
@@ -430,9 +412,5 @@ noremap K 5k
 nnoremap U <C-R>
 
 nnoremap <leader>p :GitMRUFiles<CR>
-nnoremap <leader>P :Files<CR>
-nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>P :Files<CR>
 nnoremap <leader>F :Ag!
 nnoremap <leader>f :BLines!<CR>
-
