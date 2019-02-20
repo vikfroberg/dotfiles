@@ -67,7 +67,7 @@ const string = str =>
   );
 const s = string;
 
-const int = regex(/\d/).mapError(_ => "expected an int");
+const digit = regex(/\d/).mapError(_ => "expected an int");
 const literal = regex(/[a-zA-Z]/).mapError(_ => "expected a literal");
 const space = string(" ").mapError(_ => "expected a space");
 
@@ -103,21 +103,30 @@ const or = (leftParser, rightParser) =>
     leftParser.parse(input).fold((newInput, result) =>
       result.cata({
         Ok: _ => ParserContext(newInput, result),
-        Error: _ => rightParser(input),
+        Error: _ => rightParser.parse(input),
       }),
     ),
   );
 
 // Compiler
 
-const ints = many(int).map(xs => xs.join(""));
+const betweenParens = parser => seq(
+  string("("),
+  parser,
+  string(")"),
+)
 
-const call = seq(
-  many(literal).map(xs => xs.join("")),
-  many(seq(space, or(ints, seq(s("("), call, s(")")))).map(xs => xs[1])),
-);
+const int = many(digit).map(xs => xs.join(""));
+const id = many(literal).map(xs => xs.join("")),
 
-const expr = or(call);
+const call = () => seq(
+  id,
+  many(seq(space, expression).map(xs => xs[1])),
+)
+      
+const rootExpression = or(int, call())
+
+const expression = or(int, betweenParens(call()))
 
 const parser = seq(
   many(literal).map(xs => xs.join("")),
