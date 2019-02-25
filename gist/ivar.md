@@ -1,17 +1,17 @@
 # Ivar
 
-## Frågor
-* Varför kör ni med 3d vectors, för z-index?
-* Tar gärna en genomgång på shape/draw
-* TreeLayout
-* Parprogrammera en issue
+## Sticky header
+* White header and color logo for layers not area of concern
+* Breadcrumb "User story -> Kernel -> Solution"
+
+
+## Meeting thirsday
+Header should say Essence in Practice, not Essence
 
 ## To-do's
 * Sticky header
-* Pilar för att indikera flöde
 * Linjer för att indikera heirarki
-* Dynamisk area of concern
 
-
+## Noterat
 * Onödigt komplicerat?
 * Ui för mobil, enklare med bara select istället för drag n drop?

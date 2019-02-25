@@ -59,22 +59,13 @@ alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/
 # Cd
 # -------------
 
-m2() {
-  if [ -z "$1" ]
+cdd() {
+  if [ -z "$2" ]
     then
-      cd /var/www/m2/$(basename $PWD)
+      cd /var/www/$1/$2
       return
   fi
-  cd /var/www/m2/$1
-}
-
-elm() {
-  if [ -z "$1" ]
-    then
-      cd /var/www/elm/$(basename $PWD)
-      return
-  fi
-  cd /var/www/elm/$1
+  cd /var/www/$1/$(basename $PWD)
 }
 
 push_cd() {
@@ -117,7 +108,8 @@ gg() {
       return
   fi
   is_in_git_repo || return
-  grep -ir -n "$1" . |
+  # TODO: Fix so that it doesn't print multi col hits
+  ag "$1" --vimgrep |
   fzf -d: --preview="preview {1}:{2}" |
   awk -F: '{print $1, $2}'
 }

@@ -36,7 +36,7 @@ Plug 'ervandew/supertab'
 Plug 'vim-scripts/SyntaxAttr.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm-format' }
+Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
@@ -125,11 +125,7 @@ augroup fzf_mru_files
   autocmd BufDelete * call s:delete_mru_files(expand('%'))
 augroup END
 
-function! s:git_files(...)
-  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
-  if v:shell_error
-    return s:warn('Not in git repo')
-  endif
+function! s:mru_files(...)
   let mru = reverse(copy(g:fzf_mru_files))
   let files = sort(split(system('ag -l')))
   let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
@@ -143,7 +139,7 @@ function! s:git_files(...)
         \'options': '--color 16 --no-sort --exact'})
 endfunction
 
-command! GitMRUFiles :call s:git_files()
+command! GitMRUFiles :call s:mru_files()
 
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>,
@@ -403,6 +399,7 @@ nnoremap j gj
 nnoremap k gk
 
 nnoremap gj J
+nnoremap gk kJ
 
 nnoremap _ :e .<CR>
 
