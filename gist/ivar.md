@@ -1,8 +1,15 @@
 # Ivar
 
+## Meeting
+* Close card when clicking anything
+* Replace card history when clicking?
+* Adjust graph when card is shown (desktop)
+* Open/close sections trigger card, annoying
+
+
 ## Sticky header
-* White header and color logo for layers not area of concern
-* Breadcrumb "User story -> Kernel -> Solution"
+* Add margin top for svg map
+* Toggle animation on area (doesn't work because animation doesn't have a callback)
 
 
 ## Meeting thirsday
