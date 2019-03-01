@@ -25,6 +25,49 @@ type Substitution = {
     [key: string]: Type;
 };
 
+function infer(ctx: Context, e: Expression): [Type, Substitution] {
+    const env = ctx.env;
+    switch (e.nodeType) {
+    case "Int": return [{ nodeType: "Type Named", name: "Int" }, {}];
+    case "Var":
+        if (env[e.name]) {
+            return [env[e.name], {}]
+        } else {
+            throw `Unbound var ${e.name}`;
+        }
+    case "Function":
+        {
+            const varType = newTVar(ctx);
+            const newCtx = addToContext(ctx, e.param, varType);
+            const [bodyType, subst] = infer(newCtx, e.body);
+            const inferredType: Type = applySubstToType(subst, {
+                nodeType: "Type Function",
+                from: varType,
+                to: bodyType
+            };
+            return [inferredType, subst];
+        }
+    case "Call":
+        {
+            const [funcType, s1] = infer(ctx, e.func);
+            const [argType, s2] = infer(applySubstToCtx(s1, ctx), e.arg);
+            const newVar = newTVar(ctx);
+            const s3 = composeSubst(s1, s2);
+            const s4 = unify({
+                nodeType: "Type Function",
+                from: argType,
+                to: newVar
+            }, funcType);
+            const funcType1 = applySubstToType(s4, funcType);
+            const s5 = composeSubst(s3, s4);
+            const s6 = unify(applySubstToType(s5, (funcType1 as TFun).from), argType);
+            const resultSubst = composeSubst(s5, s6);
+            return [applySubstToType(resultSubst, (funcType1 as TFun).to), resultSubst];
+        }
+    }
+  default: throw "Unimplemented";
+}
+
 // replace the type variables in a type that are
 // present in the given substitution and return the
 // type with those variables with their substituted values
@@ -69,50 +112,6 @@ function newTVar(ctx: Context): Type {
         name: `T${newVarNum}`
     };
 }
-
-function infer(ctx: Context, e: Expression): [Type, Substitution] {
-    const env = ctx.env;
-    switch (e.nodeType) {
-    case "Int": return [{ nodeType: "Type Named", name: "Int" }, {}];
-    case "Var":
-        if (env[e.name]) {
-            return [env[e.name], {}]
-        } else {
-            throw `Unbound var ${e.name}`;
-        }
-    case "Function":
-        {
-            const newType = newTVar(ctx);
-            const newCtx = addToContext(ctx, e.param, newType);
-            const [bodyType, subst] = infer(newCtx, e.body);
-            const inferredType: Type = {
-                nodeType: "Type Function",
-                from: applySubstToType(subst, newType),
-                to: bodyType
-            };
-            return [inferredType, subst];
-        }
-    case "Call":
-        {
-            const [funcType, s1] = infer(ctx, e.func);
-            const [argType, s2] = infer(applySubstToCtx(s1, ctx), e.arg);
-            const newVar = newTVar(ctx);
-            const s3 = composeSubst(s1, s2);
-            const s4 = unify({
-                nodeType: "Type Function",
-                from: argType,
-                to: newVar
-            }, funcType);
-            const funcType1 = applySubstToType(s4, funcType);
-            const s5 = composeSubst(s3, s4);
-            const s6 = unify(applySubstToType(s5, (funcType1 as TFun).from), argType);
-            const resultSubst = composeSubst(s5, s6);
-            return [applySubstToType(resultSubst, (funcType1 as TFun).to), resultSubst];
-        }
-    }
-  default: throw "Unimplemented";
-}
-
 
 function unify(t1: Type, t2: Type): Substitution {
     if (t1.nodeType === "Type Named"
@@ -229,7 +228,7 @@ const initialEnv = {
     "True": typeNamed("Bool"),
     "add": typeFn(typeNamed("Int"), typeFn(typeNamed("Int"), typeNamed("Int"))),
     "identity": typeFn(typeVar("Ta"), typeVar("Ta")),
-    "if": typeFn(typeNamed("Bool"), typeFn(typeVar("Ta"), typeFn(typeVar("Ta"), typeVar("Ta")))),
+    "if": typeFn(typeNamed("Bool"), typeFn(typeVar("Tb"), typeFn(typeVar("Tb"), typeVar("Tb")))),
 };
 
 console.log(
