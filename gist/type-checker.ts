@@ -186,30 +186,26 @@ function applySubstToCtx(subst: Substitution, ctx: Context): Context {
     return newContext;
 }
 
-function i(value: number): Expression {
+function int(value: number): Expression {
     return {
         nodeType: "Int",
         value: value
     };
 }
 
-function v(name: string): Expression {
+function var(name: string): Expression {
     return {
         nodeType: "Var",
         name: name
     };
 }
 
-function c(f: Expression | string, ..._args: (Expression | string)[]): Expression {
-    const args = _args.map(a => typeof a === "string" ? v(a) : a);
-    return args.reduce(
-        (func, arg) => ({
-            nodeType: "Call",
-            func: typeof func === "string" ? v(func) : func,
-            arg: typeof arg === "string" ? v(arg) : arg
-        }),
-        typeof f === "string" ? v(f) : f
-    );
+function call(func: Expression, arg: Expression): Expression {
+    return {
+        nodeType: "Call",
+        func: func,
+        arg: arg
+    }
 }
 
 function tn(name: string): Type {
@@ -240,11 +236,15 @@ const initialEnv = {
 };
 
 console.log(
-    typeToString(
-        infer({
-            next: 0,
-            env: initialEnv
-        },
-        c("add", i(1), i(2)),
-    )[0]
-));
+    infer(
+        { next: 0, env: initialEnv },
+        call(
+            var("identity"), 
+            call(
+                  call(var("add"), int(1)), 
+                  int(2)
+                  )
+            ),
+        )
+    )
+);
