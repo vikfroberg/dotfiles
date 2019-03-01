@@ -193,6 +193,13 @@ function i(value: number): Expression {
     };
 }
 
+function v(name: string): Expression {
+    return {
+        nodeType: "Var",
+        name: name
+    };
+}
+
 function c(f: Expression | string, ..._args: (Expression | string)[]): Expression {
     const args = _args.map(a => typeof a === "string" ? v(a) : a);
     return args.reduce(
@@ -211,6 +218,7 @@ function tn(name: string): Type {
         name: name
     };
 }
+
 function tv(name: string): Type {
     return {
         nodeType: "Type Var",
