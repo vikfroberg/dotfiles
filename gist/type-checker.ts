@@ -225,8 +225,11 @@ function typeFn(paramType: Type, bodyType: Type): Type {
 }
 
 const initialEnv = {
+    "False": typeNamed("Bool"),
+    "True": typeNamed("Bool"),
     "add": typeFn(typeNamed("Int"), typeFn(typeNamed("Int"), typeNamed("Int"))),
-    "identity": typedFn(typeVar("Ta"), typeVar("Ta")),
+    "identity": typeFn(typeVar("Ta"), typeVar("Ta")),
+    "if": typeFn(typeNamed("Bool"), typeFn(typeVar("Ta"), typeFn(typeVar("Ta"), typeVar("Ta")))),
 };
 
 console.log(
