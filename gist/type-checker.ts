@@ -208,21 +208,21 @@ function call(func: Expression, arg: Expression): Expression {
     }
 }
 
-function tn(name: string): Type {
+function typeNamed(name: string): Type {
     return {
         nodeType: "Type Named",
         name: name
     };
 }
 
-function tv(name: string): Type {
+function typeVar(name: string): Type {
     return {
         nodeType: "Type Var",
         name: name
     };
 }
 
-function tf(paramType: Type, bodyType: Type): Type {
+function typeFn(paramType: Type, bodyType: Type): Type {
     return {
         nodeType: "Type Function",
         from: paramType,
@@ -231,19 +231,13 @@ function tf(paramType: Type, bodyType: Type): Type {
 }
 
 const initialEnv = {
-    "add": tf(tn("Int"), tf(tn("Int"), tn("Int"))),
-    "identity": tf(tv("Ta"), tv("Ta")),
+    "add": typeFn(typeNamed("Int"), typeFn(typeNamed("Int"), typeNamed("Int"))),
+    "identity": typedFn(typeVar("Ta"), typeVar("Ta")),
 };
 
 console.log(
     infer(
         { next: 0, env: initialEnv },
-        call(
-            var("identity"), 
-            call(
-                  call(var("add"), int(1)), 
-                  int(2)
-            )
-        )
+        call(var("identity"), call(call(var("add"), int(1)), int(2)))
     )
 );
