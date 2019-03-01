@@ -186,25 +186,10 @@ function applySubstToCtx(subst: Substitution, ctx: Context): Context {
     return newContext;
 }
 
-function v(name: string): Expression {
-    return {
-        nodeType: "Var",
-        name: name
-    };
-}
-
 function i(value: number): Expression {
     return {
         nodeType: "Int",
         value: value
-    };
-}
-
-function f(param: string, body: Expression | string): Expression {
-    return {
-        nodeType: "Function",
-        param: param,
-        body: typeof body === "string" ? v(body) : body
     };
 }
 
@@ -222,33 +207,36 @@ function c(f: Expression | string, ..._args: (Expression | string)[]): Expressio
 
 function tn(name: string): Type {
     return {
-        nodeType: "Named",
+        nodeType: "Type Named",
         name: name
     };
 }
 function tv(name: string): Type {
     return {
-        nodeType: "Var",
+        nodeType: "Type Var",
         name: name
     };
 }
-function tfunc(...types: Type[]): Type {
-    return types.reduceRight((to, from) => ({
-        nodeType: "Function",
-        from: from,
-        to: to
-    }));
+
+function tf(paramType: Type, bodyType: Type): Type {
+    return {
+        nodeType: "Type Function",
+        from: paramType,
+        to: bodyType,
+    }
 }
 
 const initialEnv = {
-    "+": tfunc(tn("Int"), tn("Int"), tn("Int"))
+    "add": tf(tn("Int"), tf(tn("Int"), tn("Int"))),
+    "identity": tf(tv("a"), tv("a")),
 };
+
 console.log(
     typeToString(
         infer({
             next: 0,
             env: initialEnv
         },
-        c("+", i(1), i(2)),
+        c("add", i(1), i(2)),
     )[0]
 ));
