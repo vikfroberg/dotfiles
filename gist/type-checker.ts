@@ -243,8 +243,7 @@ console.log(
             call(
                   call(var("add"), int(1)), 
                   int(2)
-                  )
-            ),
+            )
         )
     )
 );
