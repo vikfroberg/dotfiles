@@ -236,7 +236,7 @@ function tf(paramType: Type, bodyType: Type): Type {
 
 const initialEnv = {
     "add": tf(tn("Int"), tf(tn("Int"), tn("Int"))),
-    "identity": tf(tv("a"), tv("a")),
+    "identity": tf(tv("Ta"), tv("Ta")),
 };
 
 console.log(
