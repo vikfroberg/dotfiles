@@ -44,7 +44,7 @@ function infer(ctx: Context, e: Expression): [Type, Substitution] {
                 nodeType: "Type Function",
                 from: varType,
                 to: bodyType
-            };
+            });
             return [inferredType, subst];
         }
     case "Call":
