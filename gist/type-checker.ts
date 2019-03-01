@@ -186,3 +186,69 @@ function applySubstToCtx(subst: Substitution, ctx: Context): Context {
     return newContext;
 }
 
+function v(name: string): Expression {
+    return {
+        nodeType: "Var",
+        name: name
+    };
+}
+
+function i(value: number): Expression {
+    return {
+        nodeType: "Int",
+        value: value
+    };
+}
+
+function f(param: string, body: Expression | string): Expression {
+    return {
+        nodeType: "Function",
+        param: param,
+        body: typeof body === "string" ? v(body) : body
+    };
+}
+
+function c(f: Expression | string, ..._args: (Expression | string)[]): Expression {
+    const args = _args.map(a => typeof a === "string" ? v(a) : a);
+    return args.reduce(
+        (func, arg) => ({
+            nodeType: "Call",
+            func: typeof func === "string" ? v(func) : func,
+            arg: typeof arg === "string" ? v(arg) : arg
+        }),
+        typeof f === "string" ? v(f) : f
+    );
+}
+
+function tn(name: string): Type {
+    return {
+        nodeType: "Named",
+        name: name
+    };
+}
+function tv(name: string): Type {
+    return {
+        nodeType: "Var",
+        name: name
+    };
+}
+function tfunc(...types: Type[]): Type {
+    return types.reduceRight((to, from) => ({
+        nodeType: "Function",
+        from: from,
+        to: to
+    }));
+}
+
+const initialEnv = {
+    "+": tfunc(tn("Int"), tn("Int"), tn("Int"))
+};
+console.log(
+    typeToString(
+        infer({
+            next: 0,
+            env: initialEnv
+        },
+        c("+", i(1), i(2)),
+    )[0]
+));
