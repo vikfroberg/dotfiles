@@ -16,9 +16,9 @@ type EIf = {
 
 
 type Type = TNamed | TVar | TFun;
-type TNamed = { nodeType: "Named", name: string }
-type TVar = { nodeType: "Var", name: string }
-type TFun = { nodeType: "Function", from: Type, to: Type };
+type TNamed = { nodeType: "Type Named", name: string }
+type TVar = { nodeType: "Type Var", name: string }
+type TFun = { nodeType: "Type Function", from: Type, to: Type };
 
 
 type Context = {
@@ -38,16 +38,16 @@ type Substitution = {
 // to a type (a -> b) will give type (Bool -> Int)
 function applySubstToType(subst: Substitution, type: Type): Type {
     switch (type.nodeType) {
-    case "Named": return type;
-    case "Var":
+    case "Type Named": return type;
+    case "Type Var":
         if (subst[type.name]) {
             return subst[type.name];
         } else {
             return type;
         }
-    case "Function":
+    case "Type Function":
         return {
-            nodeType: "Function",
+            nodeType: "Type Function",
             from: applySubstToType(subst, type.from),
             to: applySubstToType(subst, type.to)
         };
@@ -58,18 +58,20 @@ function applySubstToType(subst: Substitution, type: Type): Type {
  * Add a new binding to the context's environment
  */
 function addToContext(ctx: Context, name: string, type: Type): Context {
-    const newEnv = Object.assign({}, ctx, {
-        env: Object.assign({}, ctx.env)
-    };
-    newEnv.env[name] = type;
-    return newEnv;
+    return {
+        ...ctx,
+        env: { 
+            ...ctx.env, 
+            [name]: type 
+        }
+    }
 }
 
 function newTVar(ctx: Context): Type {
     const newVarNum = ctx.next;
     ctx.next++;
     return {
-        nodeType: "Var",
+        nodeType: "Type Var",
         name: `T${newVarNum}`
     };
 }
@@ -77,7 +79,7 @@ function newTVar(ctx: Context): Type {
 function infer(ctx: Context, e: Expression): [Type, Substitution] {
     const env = ctx.env;
     switch (e.nodeType) {
-    case "Int": return [{ nodeType: "Named", name: "Int" }, {}];
+    case "Int": return [{ nodeType: "Type Named", name: "Int" }, {}];
     case "Var":
         if (env[e.name]) {
             return [env[e.name], {}]
@@ -90,7 +92,7 @@ function infer(ctx: Context, e: Expression): [Type, Substitution] {
             const newCtx = addToContext(ctx, e.param, newType);
             const [bodyType, subst] = infer(newCtx, e.body);
             const inferredType: Type = {
-                nodeType: "Function",
+                nodeType: "Type Function",
                 from: applySubstToType(subst, newType),
                 to: bodyType
             };
@@ -103,7 +105,7 @@ function infer(ctx: Context, e: Expression): [Type, Substitution] {
             const newVar = newTVar(ctx);
             const s3 = composeSubst(s1, s2);
             const s4 = unify({
-                nodeType: "Function",
+                nodeType: "Type Function",
                 from: argType,
                 to: newVar
             }, funcType);
@@ -119,15 +121,15 @@ function infer(ctx: Context, e: Expression): [Type, Substitution] {
 
 
 function unify(t1: Type, t2: Type): Substitution {
-    if (t1.nodeType === "Named"
-        && t2.nodeType === "Named"
+    if (t1.nodeType === "Type Named"
+        && t2.nodeType === "Type Named"
         && t2.name === t1.name) {
         return {};
-    } else if (t1.nodeType === "Var") {
+    } else if (t1.nodeType === "Type Var") {
         return varBind(t1.name, t2);
-    } else if (t2.nodeType === "Var") {
+    } else if (t2.nodeType === "Type Var") {
         return varBind(t2.name, t1);
-    } else if (t1.nodeType === "Function" && t2.nodeType === "Function") {
+    } else if (t1.nodeType === "Type Function" && t2.nodeType === "Type Function") {
         const s1 = unify(t1.from, t2.from);
         const s2 = unify(
             applySubstToType(s1, t1.to),
@@ -149,7 +151,7 @@ function composeSubst(s1: Substitution, s2: Substitution): Substitution {
 }
 
 function varBind(name: string, t: Type): Substitution {
-    if (t.nodeType === "Var" && t.name === name)  {
+    if (t.nodeType === "Type Var" && t.name === name)  {
         return {};
     } else if (contains(t, name)) {
         throw `Type ${typeToString(t)} contains a reference to itself`;
@@ -162,9 +164,9 @@ function varBind(name: string, t: Type): Substitution {
 
 function contains(t: Type, name: string): boolean {
     switch (t.nodeType) {
-    case "Named": return false;
-    case "Var": return t.name === name;
-    case "Function": return contains(t.from, name) || contains(t.to, name);
+    case "Type Named": return false;
+    case "Type Var": return t.name === name;
+    case "Type Function": return contains(t.from, name) || contains(t.to, name);
     }
 }
 
