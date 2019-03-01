@@ -53,16 +53,9 @@ function infer(ctx: Context, e: Expression): [Type, Substitution] {
             const [argType, s2] = infer(applySubstToCtx(s1, ctx), e.arg);
             const newVar = newTVar(ctx);
             const s3 = composeSubst(s1, s2);
-            const s4 = unify({
-                nodeType: "Type Function",
-                from: argType,
-                to: newVar
-            }, funcType);
-            const funcType1 = applySubstToType(s4, funcType);
-            const s5 = composeSubst(s3, s4);
-            const s6 = unify(applySubstToType(s5, (funcType1 as TFun).from), argType);
-            const resultSubst = composeSubst(s5, s6);
-            return [applySubstToType(resultSubst, (funcType1 as TFun).to), resultSubst];
+            const s4 = unify(applySubstToType(s3, funcType.from), argType);
+            const resultSubst = composeSubst(s3, s4);
+            return [applySubstToType(resultSubst, funcType.to), resultSubst];
         }
     }
   default: throw "Unimplemented";
