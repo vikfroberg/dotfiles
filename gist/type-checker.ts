@@ -7,12 +7,6 @@ type EFunc =
       { nodeType: "Function", param: string, body: Expression }
 type ECall =
       { nodeType: "Call", func: Expression, arg: Expression }
-type EIf = {
-      nodeType: "If",
-      cond: Expression,
-      trueBranch: Expression,
-      falseBranch: Expression
-};
 
 
 type Type = TNamed | TVar | TFun;
