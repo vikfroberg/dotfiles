@@ -37,6 +37,7 @@ Plug 'vim-scripts/SyntaxAttr.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
+Plug 'leafgarland/typescript-vim'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
@@ -208,7 +209,7 @@ let g:prettier#config#trailing_comma = 'all'
 
 " autoformat
 let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.babelrc Prettier
+autocmd BufWritePre *.js,*.jsx Prettier
 
 
 " After Object
