@@ -1,5 +1,13 @@
 # Ivar
 
+## Ux improv
+* When clicking on a circle (alpha) in the kernel, expand that alpha in area of concern view
+* Let the card view cover header
+* Card view arrows should not push url
+* Closing card view should keep it closed
+* Opening card view should push map to the right
+
+
 ## Meeting
 * Close card when clicking anything
 * Replace card history when clicking?
