@@ -113,6 +113,9 @@ gg() {
   is_in_git_repo || return
   # TODO: Fix so that it doesn't print multi col hits
   ag "$1" --vimgrep |
+  sed -E "s/([^\:]+:[^\:]+:)[^\:]+:[[:space:]]*(.+$)/\1\2/" |
+  sort |
+  uniq |
   fzf -d: --preview="preview {1}:{2}" |
   awk -F: '{print $1, $2}'
 }

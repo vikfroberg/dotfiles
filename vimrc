@@ -341,6 +341,12 @@ command! Diff :w !diff % -
 command! Gist :e ~/dotfiles/gist
 command! W write|bdelete
 
+function! GitConflicts()
+  :cexpr system('ag "<<<<" --vimgrep') | copen
+endfunction
+
+command! Gconflicts :call GitConflicts()
+
 augroup netrw_mapping
     autocmd!
     autocmd filetype netrw call NetrwMapping()
@@ -401,6 +407,13 @@ nnoremap k gk
 
 nnoremap gj J
 nnoremap gk kJ
+
+nnoremap gn :cnext<CR>
+nnoremap gN :cprevious<CR>
+nnoremap gq :cclose<CR>
+
+map <C-j> :cn<CR>
+map <C-k> :cp<CR>
 
 nnoremap _ :e .<CR>
 
