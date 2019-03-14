@@ -20,6 +20,7 @@ export LC_TYPE=en_US.UTF-8
 # Bash
 alias cd="push_cd"
 alias dc="pop_cd"
+alias -- -='cd -'
 alias ..="cd .."
 alias ...="..;.."
 alias ....="..;..;.."
@@ -33,21 +34,17 @@ alias r="source ~/.bash_profile"
 # Git
 alias gs="git status"
 alias ga="git add"
-alias gaa="git add --all"
 alias gap="git add --all --intent-to-add && git add --patch"
 alias gd="git diff"
 alias gc="git commit -v"
 alias gca="git add --all && git commit -v"
 alias gl="gh"
-alias gll="gh"
 alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
-alias go="git checkout"
-alias gco="alias"
-alias gob="git checkout \$(gb)"
-alias gof="git checkout \$(gf)"
-alias gst="git stash --include-untracked"
-alias ge="vim \$(gf)"
+alias gcb="git checkout \$(gb)"
+alias gcf="git checkout \$(gf)"
+alias gsp="git stash pop"
+alias gsu="git stash --include-untracked"
 
 # Virtual box
 alias vbox="ssh -XY $USER@192.168.56.101"
@@ -62,17 +59,12 @@ alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/
 # Cd
 # -------------
 
-cdd() {
-  if [ -z "$2" ]
-    then
-      cd /var/www/$1/$2
-      return
-  fi
-  cd /var/www/$1/$(basename $PWD)
-}
-
 push_cd() {
-  pushd "$1" > /dev/null
+  if [ $1 = "." ]; then
+    pushd ~/dotfiles > /dev/null
+  else
+    pushd "$1" > /dev/null
+  fi
 }
 
 pop_cd() {
@@ -111,23 +103,10 @@ gg() {
       return
   fi
   is_in_git_repo || return
-  # TODO: Fix so that it doesn't print multi col hits
   ag "$1" --vimgrep |
   sed -E "s/([^\:]+:[^\:]+:)[^\:]+:[[:space:]]*(.+$)/\1\2/" |
   sort |
   uniq |
-  fzf -d: --preview="preview {1}:{2}" |
-  awk -F: '{print $1, $2}'
-}
-
-ggI() {
-  if [ -z "$1" ]
-    then
-      echo "usage: gg QUERY"
-      return
-  fi
-  is_in_git_repo || return
-  grep -r -n "$1" . |
   fzf -d: --preview="preview {1}:{2}" |
   awk -F: '{print $1, $2}'
 }
@@ -148,19 +127,19 @@ gf() {
 
 gb() {
   is_in_git_repo || return
-  git branch -a --color=always | grep -v '/HEAD\s' | sort |
-  fzf --ansi --multi --tac --preview-window right:70% \
+  git branch -a --color=always | grep -v '/HEAD\s' |
+  fzf --ansi --multi --preview-window right:60% \
     --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -200' |
   sed 's/^..//' | cut -d' ' -f1 |
   sed 's/.*\///'
 }
 
-gt() {
-  is_in_git_repo || return
-  git tag --sort -version:refname |
-  fzf --multi --preview-window right:70% \
-    --preview 'git show --color=always {} | head -200'
-}
+# gt() {
+#   is_in_git_repo || return
+#   git tag --sort -version:refname |
+#   fzf --multi --preview-window right:70% \
+#     --preview 'git show --color=always {} | head -200'
+# }
 
 gh() {
   is_in_git_repo || return
@@ -170,13 +149,13 @@ gh() {
   grep -o "[a-f0-9]\{7,\}"
 }
 
-gr() {
-  is_in_git_repo || return
-  git remote -v | awk '{print $1 "\t" $2}' | uniq |
-  fzf --tac \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
-  cut -d$'\t' -f1
-}
+# gr() {
+#   is_in_git_repo || return
+#   git remote -v | awk '{print $1 "\t" $2}' | uniq |
+#   fzf --tac \
+#     --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
+#   cut -d$'\t' -f1
+# }
 
 gsl() {
   is_in_git_repo || return
