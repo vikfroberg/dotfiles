@@ -347,6 +347,12 @@ endfunction
 
 command! Gconflicts :call GitConflicts()
 
+function! Todos()
+  :cexpr system('ag "todo" --vimgrep') | copen
+endfunction
+
+command! Todos :call Todos()
+
 augroup netrw_mapping
     autocmd!
     autocmd filetype netrw call NetrwMapping()
