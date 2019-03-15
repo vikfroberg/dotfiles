@@ -1,27 +1,45 @@
-const log = (k, x) => {
-  console.log(k, JSON.stringify(x, null, 2))
+const logger = []
+const log = (k, x, level = 0, indent = 0) => {
+  if (logger[level]) {
+    logger[level].unshift([k.padStart(indent * 2, " "), x])
+  } else {
+    logger[level] = [[k.padStart(indent * 2, " "), x]]
+  }
   return x
 }
-console.log("----------------------------------------------------")
-const toList = x => Object.keys(x).map(k => [k, x[k]])
+const toKeyedList = x => Object.keys(x).map(k => [k, x[k]])
+const toList = x => Object.keys(x).map(k => x[k])
 
 let tVarId = 0
 const t = {
-  named: x => ["TNamed", x],
+  num: ["TNamed", "Num"],
   func: (x, y) => ["TFunc", x, y],
   var: () => ["TVar", "T" + (++tVarId)],
 }
 
 const n = x => ["Num", x]
 const v = x => ["Var", x]
-const f = (x, y) => ["Func", x, y]
-const c = (x, y) => ["Call", x, y]
+const f = (x, y) => [
+  "Func",
+  x,
+  typeof y === "string" ? v(y) : typeof y === "number" ? n(y) : y,
+]
+const c = (f, ...rest) => {
+  return rest
+    .map(x => typeof x === "string" ? v(x) : typeof x === "number" ? n(x) : x)
+    .reverse()
+    .reduce((x, y) => ([
+      "Call",
+      typeof x === "string" ? v(x) : typeof x === "number" ? n(x) : x,
+      typeof y === "string" ? v(y) : typeof y === "number" ? n(y) : y,
+    ]), f)
+}
 
-function infer (env, expr) {
+function infer (env, expr, level = 0, indent = 0) {
   const [id, ...rest] = expr
   switch (id) {
     case "Num": {
-      return [t.named("Num"), {}]
+      return [t.num, {}]
     }
     case "Var": {
       const [name] = rest
@@ -33,49 +51,57 @@ function infer (env, expr) {
     }
     case "Func" : {
       const [param, body] = rest
-      const paramTypeVar = t.var()
-      const funcEnv = { ...env, [param]: paramTypeVar }
-      const [bodyType, bodySubst] = infer(funcEnv, body)
+      const paramType = t.var()
+      const funcEnv = { ...env, [param]: paramType }
+      const [bodyType, bodySubst] = infer(funcEnv, body, level + 1)
       const inferedType = t.func(
-        applySubstToType(bodySubst, paramTypeVar),
+        applySubstToType(bodySubst, paramType),
         bodyType
       )
-      return [inferedType, bodySubst]
+      const res = [inferedType, bodySubst]
+      // log("Func", [param, typeToString(inferedType)], level)
+      return res
     }
     case "Call": {
       const [func, arg] = rest
-      const [funcType, funcSubst] = infer(env, func)
+      const [funcType, funcSubst] = infer(env, func, level + 1)
       const [argType, argSubst] = infer(
         applySubstToEnv(funcSubst, env),
-        arg
-      )
-      // const callSubst = unionSubst(funcSubst, argSubst)
-      // const toTypeVar = t.var()
-      // const unifiedSubst = unify(
-      //   t.func(argType, toTypeVar),
-      //   funcType
-      // )
-      // const [id, from, to]  = applySubstToType(unifiedSubst, funcType)
-      // const s5 = unionSubst(callSubst, unifiedSubst)
-      // const s6 = unify(applySubstToType(s5, from), argType)
-      // const resultSubst = unionSubst(s5, s6)
-      // const res = [applySubstToType(resultSubst, to), resultSubst]
-
-      log("Call", {
-        func,
         arg,
-        funcType,
-        funcSubst,
-        argType,
-        argSubst,
-        // callSubst,
-        // toTypeVar,
-        // unifiedSubst,
-        // id, from, to,
-        // s5,s6,resultSubst
-      })
+        level + 1,
+        indent + 1
+      )
+      const toTypeVar = t.var()
+      const s3 = unify(
+        t.func(argType, toTypeVar),
+        funcType
+      )
+      const [_, from, to] = funcType1 = applySubstToType(s3, funcType)
+      const s4 = unionSubst(funcSubst, argSubst)
+      const s5 = unionSubst(s4, s3)
+      const s6 = unify(applySubstToType(s5, from), argType)
+      const s7 = unionSubst(s5, s6)
+      const res = [applySubstToType(s5, to), s5]
 
-      return [ funcType[2], funcSubst ]
+      // log("Call", [arg[1], typeToString(["TFunc", from, res[0]])], level)
+      // log("Call", {
+      //   func,
+      //   arg,
+      //   funcType,
+      //   funcSubst,
+      //   argType,
+      //   argSubst,
+      //   toTypeVar,
+      //   s3,
+      //   from,
+      //   to,
+      //   s4,
+      //   s5,
+      //   s6,
+      //   s7
+      // }, indent)
+
+      return res
     }
     default: {
       throw "Error" + expr
@@ -115,6 +141,19 @@ function unify(t1, t2) {
   }
 }
 
+function typeToString(type) {
+  const [id, ...rest] = type
+  switch (id) {
+    case "TNamed":
+      return rest[0]
+    case "TVar":
+      return rest[0]
+    case "TFunc":
+      return rest.map(typeToString).join(" -> ")
+  }
+  return id
+}
+
 function varBind(name, type) {
   const [id, ...rest] = type
   if (id === "Var" ) {
@@ -144,21 +183,21 @@ function contains(type, name) {
 }
 
 // function unionWith(fn, xs, ys, start) {
-//   return toList(ys).reduce(
+//   return toKeyedList(ys).reduce(
 //     (acc, ([k, y]) => ({ ...acc, [k] = applySubstToType(xs, y) })),
 //     start
 //   )
 // }
 
 function applySubstToEnv(subst, env) {
-  return toList(env).reduce(
+  return toKeyedList(env).reduce(
     (acc, [key, type]) => ({ ...acc, [key]: applySubstToType(subst, type) }),
     {}
   )
 }
 
 function unionSubst(s1, s2) {
-  return toList(s2).reduce(
+  return toKeyedList(s2).reduce(
     (acc, [key, type]) => ({ ...acc, [key]: applySubstToType(s1, type) }),
     s1
   )
@@ -187,13 +226,44 @@ function applySubstToType(subst, type) {
   }
 }
 
-const inc = f("x", c(c(v("add"), v("x")), n(1)))
-const dec = f("x", c(c(v("add"), v("x")), n(-1)))
+function exprToString(expr) {
+  const [id, ...rest] = expr
+  switch (id) {
+    case "Num":
+    case "Var":
+      return rest[0]
+    case "Func":
+      return "(" + rest[0] + " -> " + exprToString(rest[1]) + ")"
+    case "Call":
+      return exprToString(rest[0]) + "(" + exprToString(rest[1]) + ")"
+  }
+}
 
-log("infered",
-  infer(
-    { add: t.func(t.named("Num"), t.func(t.named("Num"), t.named("Num")))
-    },
-    log("ast", f("x", c(dec, c(inc, v("x")))))
-  )
+const env = {
+  add: t.func(t.num, t.func(t.num, t.num)),
+  random: t.num
+}
+
+const pipe = f("f", f("g", f("x", c("g", c("f", "x")))))
+const id = f("x", "x")
+
+const add2 = f("x", f("y", c("add", "y", "x")))
+const inc = f("x", c(add2, "x", 1))
+const dec = f("x", c(add2, "x", -1))
+const same = c(pipe, inc, dec)
+
+const expr = c(add2, 1, 2)
+log("expr", exprToString(expr))
+
+indent = 0
+const infered = infer(
+  env,
+  expr,
+  1
 )
+
+
+indent = 0
+log("type", typeToString(infered[0]))
+
+logger.flat().forEach(x => console.log(x))
