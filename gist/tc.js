@@ -1,7 +1,5 @@
-// log : k -> a -> a
-const log = (k, x) => {
-  console.log(k, x)
-  return x
+const log = (...rest) => {
+  console.log(rest)
 }
 
 const logLevel = (level, ...rest) => {
@@ -19,7 +17,12 @@ Object.prototype.map = function(f) {
 }
 
 Object.prototype.toString = function(sep = ", ", ksep = ": ") {
-  return ["{", toKeyedList(this).map(x => x.join(ksep)).join(sep), "}"].join(" ")
+  const keyedList = toKeyedList(this)
+  if (keyedList.length) {
+    return ["{", keyedList.map(x => x.join(ksep)).join(sep), "}"].join(" ")
+  } else {
+    return "{}"
+  }
 }
 
 // toList : Dict k a -> List a
@@ -91,11 +94,12 @@ const c = (f, ...rest) => {
 // infer : Env -> Expr -> Type | Error
 function infer (env, expr, level = 0) {
   const [id, ...rest] = expr
-  logLevel(level, "in", id, exprToString(expr), { env: env.map(typeToString) })
+  console.group(id, exprToString(expr))
   switch (id) {
     case "Num": {
       const res = [tnum, {}]
-      logLevel(level, "out", id, exprToString(expr), typeToString(res[0]), res[1].map(typeToString).toString())
+      log(typeToString(res[0]), res[1].map(typeToString).toString())
+      console.groupEnd()
       return res
     }
     case "Var": {
@@ -105,11 +109,13 @@ function infer (env, expr, level = 0) {
         const [tid, ...rest] = envType
         if (tid === "Forall") {
           const res = [instantiate(envType), {}]
-          logLevel(level, "out", id, exprToString(expr), typeToString(res[0]), res[1].map(typeToString).toString())
+          log(typeToString(res[0]), res[1].map(typeToString).toString())
+          console.groupEnd()
           return res
         } else {
           const res = [envType, {}]
-          logLevel(level, "out", id, exprToString(expr), typeToString(res[0]), res[1].map(typeToString).toString())
+          log(typeToString(res[0]), res[1].map(typeToString).toString())
+          console.groupEnd()
           return res
         }
       } else {
@@ -127,7 +133,8 @@ function infer (env, expr, level = 0) {
         bodyType
       )
       const res = [inferedType, bodySubst]
-      logLevel(level, "out", id, exprToString(expr), typeToString(res[0]), res[1].map(typeToString).toString())
+      log(typeToString(res[0]), res[1].map(typeToString).toString())
+      console.groupEnd()
       return res
     }
     case "Call": {
@@ -144,7 +151,7 @@ function infer (env, expr, level = 0) {
         funcType
       )
       const [_, from, to] = funcType1 = applySubstToType(s3, funcType)
-      // logLevel(level, "step", id, exprToString(expr), { data: {
+      // log("step", id, exprToString(expr), { data: {
       //   func: exprToString(func),
       //   arg: exprToString(arg),
       //   tmpFunc: typeToString(tmpFunc),
@@ -161,7 +168,8 @@ function infer (env, expr, level = 0) {
       // const s6 = unify(applySubstToType(s5, from), argType)
       // const s7 = composeSubst(s5, s6)
       // const res = [applySubstToType(s7, to), s7]
-      logLevel(level, "out", id, exprToString(expr), [typeToString(funcType[2]), typeToString(res[0])], res[1].map(typeToString).toString())
+      log(typeToString(res[0]), res[1].map(typeToString).toString(), { before: typeToString(funcType), _after: typeToString(funcType1) })
+      console.groupEnd()
       return res
     }
     default: {
@@ -361,10 +369,14 @@ const dec = f("x", c("add", "x", -1))
 // const expr = c("eq", 2, c("id", c("add", "random", "random")))
 const expr = c("pipe", c("add", 1), c("add", 1), c("id", 1))
 
+console.group("Infer")
+
 const infered = infer(
   env,
   expr,
 )
+
+console.group("Result")
 
 log("expr", exprToString(expr))
 log("type", typeToString(infered[0]))
