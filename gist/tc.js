@@ -376,6 +376,8 @@ const infered = infer(
   expr,
 )
 
+console.groupEnd()
+
 console.group("Result")
 
 log("expr", exprToString(expr))
