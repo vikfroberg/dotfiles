@@ -57,12 +57,16 @@ const n = x => ["Num", x]
 // v : String -> Expr
 const v = x => ["Var", x]
 
+// fn : List String|Number|Expr -> Expr
+const fn = (...args) => {
+  const [body, arg, ...restArgs] = args.reverse()
+  return restArgs.reduce((acc, x) => f(x, acc), f(arg, body))
+}
+
 // f : String -> String|Number|Expr -> Expr
-const f = (x, y) => [
-  "Func",
-  x,
-  typeof y === "string" ? v(y) : typeof y === "number" ? n(y) : y,
-]
+const f = (param, body) => {
+  return ["Func", param, typeof body === "string" ? v(body) : typeof body === "number" ? n(body) : body ]
+}
 
 // c : List (String|Number|Expr) -> Expr
 const c = (f, ...rest) => {
@@ -151,17 +155,6 @@ function infer (env, expr, level = 0) {
         funcType
       )
       const [_, from, to] = funcType1 = applySubstToType(s3, funcType)
-      // log("step", id, exprToString(expr), { data: {
-      //   func: exprToString(func),
-      //   arg: exprToString(arg),
-      //   tmpFunc: typeToString(tmpFunc),
-      //   funcType: typeToString(funcType),
-      //   funcSubst: funcSubst.map(typeToString),
-      //   argEnv: argEnv.map(typeToString),
-      //   argType: typeToString(argType),
-      //   argSubst: argSubst.map(typeToString),
-      //   s3: s3.map(typeToString),
-      // }})
       const res = [to, s3 ]
       // const s4 = composeSubst(funcSubst, argSubst)
       // const s5 = composeSubst(s4, s3)
@@ -362,12 +355,14 @@ const env = {
   // random: tnum,
 }
 
-const add2 = f("x", f("y", c("add", "y", "x")))
+const add2 = fn("x", "y", c("add", "y", "x"))
 const inc = f("x", c("add", "x", 1))
 const dec = f("x", c("add", "x", -1))
+const pipe = fn("f", "g", "x", c("g", c("f", "x")))
 
 // const expr = c("eq", 2, c("id", c("add", "random", "random")))
-const expr = c("pipe", c("add", 1), c("add", 1), c("id", 1))
+// const expr = c("pipe", c("add", 1), c("add", 1), c("id", 1))
+const expr = c(pipe, c(add2, 1), c(add2, 1), 1)
 
 console.group("Infer")
 
