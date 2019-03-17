@@ -41,6 +41,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
+Plug 'neovimhaskell/haskell-vim'
 " Plug 'tpope/vim-fugitive'
 " Plug 'w0rp/ale'
 " Plug 'kana/vim-textobj-user'

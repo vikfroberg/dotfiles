@@ -25,8 +25,45 @@ Object.prototype.toString = function(sep = ", ", ksep = ": ") {
   }
 }
 
-// toList : Dict k a -> List a
-const toList = x => Object.keys(x).map(k => x[k])
+const TVar = (id, kind) => ["Tvar", id, kind]
+const TCon = (id, kind) => ["TCon", id, kind]
+const TAp = (t1, t2) => ["TAp", t1, t2]
+const TGen = i => ["TGen", i]
+
+const tInt = TCon("Int", 0)
+const tBool = TCon("Bool", 0)
+const tArrow = TCon("(->)", 2)
+
+const makeFunc = (...types) => {
+  return types.reduceRight((to, from) => TAp(TAp(tArrow, from), to))
+}
+
+const tAdd = makeFunc(tInt, tInt, tInt)
+
+function typeToString_([type, ...rest]) {
+  if (type === "TCon") {
+    const [id, kind] = rest
+    if (kind === 1) {
+      return x => `${id} ${x}`
+    } else if (kind === 2) {
+      const match = id.match(/\((.+)\)$/)
+      if (match) {
+        return x => y => `${x} ${match[1]} ${y}`
+      } else {
+        return x => y => `${id} ${x} ${y}`
+      }
+    } else {
+      return id
+    }
+  } else if (type === "TAp") {
+    const [t1, t2] = rest
+    return typeToString_(t1)(typeToString_(t2))
+  } else {
+    throw "unknown type"
+  }
+}
+
+console.log(typeToString_(tAdd))
 
 // tnum : Type
 const tnum = ["TNamed", "Num"]
@@ -85,7 +122,7 @@ const c = (f, ...rest) => {
 // | Call Expr Expr
 
 // Type
-// : TNamed String
+// : TNamed String Int
 // | TFunc Type Type
 // | TVar String
 
@@ -155,12 +192,16 @@ function infer (env, expr, level = 0) {
         funcType
       )
       const [_, from, to] = funcType1 = applySubstToType(s3, funcType)
-      const res = [to, s3 ]
-      // const s4 = composeSubst(funcSubst, argSubst)
-      // const s5 = composeSubst(s4, s3)
-      // const s6 = unify(applySubstToType(s5, from), argType)
-      // const s7 = composeSubst(s5, s6)
-      // const res = [applySubstToType(s7, to), s7]
+      // const res = [to, s3 ]
+
+      // TODO: Understand this part
+      // pipe(add, (add 1), 1) breaks with this correctly
+      const s4 = composeSubst(funcSubst, argSubst)
+      const s5 = composeSubst(s4, s3)
+      const s6 = unify(applySubstToType(s5, from), argType)
+      const s7 = composeSubst(s5, s6)
+      const res = [applySubstToType(s7, to), s7]
+
       log(typeToString(res[0]), res[1].map(typeToString).toString(), { before: typeToString(funcType), _after: typeToString(funcType1) })
       console.groupEnd()
       return res
@@ -297,11 +338,11 @@ function applySubstToType(subst, type) {
 }
 
 // typeToString : Type -> String
-function typeToString(type = ["TNamed", "undefined"], r = false) {
+function typeToString(type, r = false) {
   const [id, ...rest] = type
   switch (id) {
     case "TNamed":
-      return rest[0]
+      return [rest[0], ...[...Array(rest[1]).keys()].map(x => String.fromCharCode(97 + x))].join(" ")
     case "TVar":
       return rest[0]
     case "TFunc":
@@ -362,7 +403,7 @@ const pipe = fn("f", "g", "x", c("g", c("f", "x")))
 
 // const expr = c("eq", 2, c("id", c("add", "random", "random")))
 // const expr = c("pipe", c("add", 1), c("add", 1), c("id", 1))
-const expr = c(pipe, c(add2, 1), c(add2, 1), 1)
+const expr = c(pipe, "add", c("add", 1), 1)
 
 console.group("Infer")
 
