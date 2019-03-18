@@ -23,70 +23,78 @@ Object.prototype.toString = function(sep = ", ", ksep = ": ") {
   } else {
     return "{}"
   }
-}
+};
 
-const TVar = (id, kind) => ["Tvar", id, kind]
-const TCon = (id, kind) => ["TCon", id, kind]
-const TAp = (t1, t2) => ["TAp", t1, t2]
-const TGen = i => ["TGen", i]
+(function v2() {
+  const TVar = (id, kind) => ["Tvar", id, kind]
+  const TCon = (id, types) => ["TCon", id, types]
+  const TAp = (t1, t2) => ["TAp", t1, t2]
+  const TGen = i => ["TGen", i]
 
-const tInt = TCon("Int", 0)
-const tBool = TCon("Bool", 0)
-const tArrow = TCon("(->)", 2)
+  const tInt = TCon("Int", 0)
+  const tBool = TCon("Bool", 0)
+  const tArrow = TCon("(->)", 2)
+  const tList = TCon("List", 1)
 
-const makeFunc = (...types) => {
-  return types.reduceRight((to, from) => TAp(TAp(tArrow, from), to))
-}
-
-const tAdd = makeFunc(tInt, tInt, tInt)
-
-function typeToString_([type, ...rest]) {
-  if (type === "TCon") {
-    const [id, kind] = rest
-    if (kind === 1) {
-      return x => `${id} ${x}`
-    } else if (kind === 2) {
-      const match = id.match(/\((.+)\)$/)
-      if (match) {
-        return x => y => `${x} ${match[1]} ${y}`
-      } else {
-        return x => y => `${id} ${x} ${y}`
-      }
-    } else {
-      return id
-    }
-  } else if (type === "TAp") {
-    const [t1, t2] = rest
-    return typeToString_(t1)(typeToString_(t2))
-  } else {
-    throw "unknown type"
+  const makeFunc = (...types) => {
+    return types.reduceRight((to, from) => TAp(TAp(tArrow, from), to))
   }
-}
 
-console.log(typeToString_(tAdd))
+  const tAdd = makeFunc(tInt, tInt, tInt)
 
-// tnum : Type
-const tnum = ["TNamed", "Num"]
+  function typeToString([type, ...rest]) {
+    if (type === "TCon") {
+      const [id, kind] = rest
+      if (kind === 1) {
+        return x => `${id} ${x}`
+      } else if (kind === 2) {
+        const match = id.match(/\((.+)\)$/)
+        if (match) {
+          return x => y => `${x} ${match[1]} ${y}`
+        } else {
+          return x => y => `${id} ${x} ${y}`
+        }
+      } else {
+        return id
+      }
+    } else if (type === "TAp") {
+      const [t1, t2] = rest
+      return typeToString(t1)(typeToString(t2))
+    } else {
+      throw "unknown type"
+    }
+  }
 
-// tbool : Type
-const tbool = ["TNamed", "Bool"]
+  console.log(typeToString(tAdd))
+})();
 
-// tvar : () -> Type
+// tNum : Type
+const tNum = ["TNamed", "Num", []]
+
+// tBool : Type
+const tBool = ["TNamed", "Bool", []]
+
+// tVar : () -> Type
 let tVarId = 0
-const tvar = name => ["TVar", name ? name : "T" + (++tVarId)]
+const tVar = name => ["TVar", name ? name : "T" + (++tVarId)]
 
-// tfunc : List (String|Type) -> Type
-const tfunc = (...types) => {
+// tMaybe : Type
+const tMaybe = (...types) => ["TNamed", "Maybe", types.map(x => typeof x === "string" ? tVar(x) : x)]
+
+const tArrow = ["TNamed", "(->)", [tVar("a"), tVar("b")]]
+
+// tFunc : List (String|Type) -> Type
+const tFunc = (...types) => {
   return types
     .reduceRight((to, from) => ([
       "TFunc",
-      typeof from === "string" ? tvar(from) : from,
-      typeof to === "string" ? tvar(to) : to,
+      typeof from === "string" ? tVar(from) : from,
+      typeof to === "string" ? tVar(to) : to,
     ]))
 }
 
-// tforall : List String -> Type -> Forall
-const tforall = (quantifiers, type) => ["Forall", quantifiers, type]
+// tForall : List String -> Type -> Forall
+const tForall = (quantifiers, type) => ["Forall", quantifiers, type]
 
 // n : Num -> Expr
 const n = x => ["Num", x]
@@ -122,7 +130,7 @@ const c = (f, ...rest) => {
 // | Call Expr Expr
 
 // Type
-// : TNamed String Int
+// : TNamed String [Type]
 // | TFunc Type Type
 // | TVar String
 
@@ -138,7 +146,7 @@ function infer (env, expr, level = 0) {
   console.group(id, exprToString(expr))
   switch (id) {
     case "Num": {
-      const res = [tnum, {}]
+      const res = [tNum, {}]
       log(typeToString(res[0]), res[1].map(typeToString).toString())
       console.groupEnd()
       return res
@@ -165,11 +173,11 @@ function infer (env, expr, level = 0) {
     }
     case "Func" : {
       const [param, body] = rest
-      const paramType = tvar()
+      const paramType = tVar()
       // check if in env already
       const funcEnv = { ...env, [param]: paramType }
       const [bodyType, bodySubst] = infer(funcEnv, body, level + 1)
-      const inferedType = tfunc(
+      const inferedType = tFunc(
         applySubstToType(bodySubst, paramType),
         bodyType
       )
@@ -185,8 +193,8 @@ function infer (env, expr, level = 0) {
       const argEnv = applySubstToEnv(funcSubst, env)
       const [argType, argSubst] = infer(argEnv, arg, level + 1)
 
-      const toTypeVar = tvar()
-      const tmpFunc = tfunc(argType, toTypeVar)
+      const toTypeVar = tVar()
+      const tmpFunc = tFunc(argType, toTypeVar)
       const s3 = unify(
         tmpFunc,
         funcType
@@ -215,7 +223,7 @@ function infer (env, expr, level = 0) {
 // instantiate : Forall -> Type
 function instantiate([id, quantifiers, type]) {
   const subst = quantifiers.reduce(
-    (acc, name) => ({ ...acc, [name]: tvar() }),
+    (acc, name) => ({ ...acc, [name]: tVar() }),
     {}
   )
   return applySubstToType(subst, type);
@@ -309,7 +317,12 @@ function applySubstToType(subst, type) {
   const [id, ...rest] = type
   switch (id) {
     case "TNamed": {
-      return type
+      const [name, kinds] = rest
+      if (kinds.length > 0) {
+        return [id, name, kinds.map(t => applySubstToType(subst, t))]
+      } else {
+        return type
+      }
     }
     case "TVar": {
       const [name] = rest
@@ -323,7 +336,7 @@ function applySubstToType(subst, type) {
     case "TFunc": {
       const [from, to] = rest
       // should this call substitute recursive
-      return tfunc(
+      return tFunc(
         applySubstToType(subst, from),
         applySubstToType(subst, to),
       )
@@ -342,7 +355,7 @@ function typeToString(type, r = false) {
   const [id, ...rest] = type
   switch (id) {
     case "TNamed":
-      return [rest[0], ...[...Array(rest[1]).keys()].map(x => String.fromCharCode(97 + x))].join(" ")
+      return [rest[0], ...(rest[1].map(typeToString))].join(" ")
     case "TVar":
       return rest[0]
     case "TFunc":
@@ -389,11 +402,14 @@ function evaluateExpr(expr, env) {
 }
 
 const env = {
-  add: tfunc(tnum, tnum, tnum),
-  pipe: tforall(["FA", "FB", "GA", "GB"], tfunc(tfunc("FA", "FB"), tfunc("GA", "GB"), tfunc("FA", "GB"))),
-  id: tforall(["A"], tfunc("A", "A")),
-  // eq: tforall(["B"], tfunc("B", "B", tbool)),
-  // random: tnum,
+  add: tFunc(tNum, tNum, tNum),
+  pipe: tForall(["FA", "FB", "GA", "GB"], tFunc(tFunc("FA", "FB"), tFunc("GA", "GB"), tFunc("FA", "GB"))),
+  id: tForall(["A"], tFunc("A", "A")),
+  // eq: tForall(["B"], tFunc("B", "B", tBool)),
+  // random: tNum,
+  Just: tForall(["A"], tFunc("A", tMaybe("A"))),
+  Nothing: tForall(["A"], tMaybe("A")),
+  "Maybe.map": tForall(["A", "B"], tFunc(tFunc("A", "B"), tMaybe("A"), tMaybe("B")))
 }
 
 const add2 = fn("x", "y", c("add", "y", "x"))
@@ -403,7 +419,9 @@ const pipe = fn("f", "g", "x", c("g", c("f", "x")))
 
 // const expr = c("eq", 2, c("id", c("add", "random", "random")))
 // const expr = c("pipe", c("add", 1), c("add", 1), c("id", 1))
-const expr = c(pipe, "add", c("add", 1), 1)
+// const expr = c(pipe, c("add", 1), c("add", 1), 1)
+// const expr = c("Maybe.map", fn("x", c("add", "x", 1)), c("Just", 1))
+const expr = c("Maybe.map")
 
 console.group("Infer")
 
@@ -424,4 +442,6 @@ log("result", evaluateExpr(expr, {
   add: x => y => x + y,
   random: 1,
   pipe: f => g => x => g(f(x)),
+  Just: x => ["Just", x],
+  "Maybe.map": f => ([t,v]) => t === "Just" ? [t,f(v)] : [t,v],
 }))
