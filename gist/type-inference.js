@@ -2,10 +2,6 @@ const log = (...rest) => {
   console.log(rest)
 }
 
-const logLevel = (level, ...rest) => {
-  console.log(String(level).padStart(level * 2), ...rest)
-}
-
 // toKeyedList : Dict k a -> List ( k, a )
 const toKeyedList = x => Object.keys(x).map(k => [k, x[k]])
 
@@ -35,37 +31,40 @@ Object.prototype.toString = function(sep = ", ", ksep = ": ") {
   const tBool = TCon("Bool", 0)
   const tArrow = TCon("(->)", 2)
   const tList = TCon("List", 1)
+  const tMaybe = TCon("Maybe", 1)
 
-  const makeFunc = (...types) => {
+  const fn = (...types) => {
     return types.reduceRight((to, from) => TAp(TAp(tArrow, from), to))
   }
 
-  const tAdd = makeFunc(tInt, tInt, tInt)
+  const tAdd = fn(tInt, tInt, tInt)
+  const tMaybeMaybeInt = TAp(tMaybe, TAp(tMaybe, tInt))
+  const tMaybeMaybeMaybeInt = TAp(tMaybe, tMaybeMaybeInt)
 
-  function typeToString([type, ...rest]) {
+  function typeToString([type, ...rest], level = 0) {
     if (type === "TCon") {
       const [id, kind] = rest
-      if (kind === 1) {
-        return x => `${id} ${x}`
-      } else if (kind === 2) {
-        const match = id.match(/\((.+)\)$/)
-        if (match) {
-          return x => y => `${x} ${match[1]} ${y}`
-        } else {
-          return x => y => `${id} ${x} ${y}`
-        }
+      const match = id.match(/\((.+)\)$/)
+      if (match) {
+        return x => y => `${x} ${match[1]} ${y}`
       } else {
-        return id
+        if (kind > 0) {
+          return x => level > 0 ? `(${[id, x].join(" ")})` : [id, x].join(" ")
+        } else {
+          return id
+        }
       }
     } else if (type === "TAp") {
       const [t1, t2] = rest
-      return typeToString(t1)(typeToString(t2))
+      return typeToString(t1, level)(typeToString(t2, level + 1))
     } else {
-      throw "unknown type"
+      throw "Unknown Type " + id
     }
   }
 
   console.log(typeToString(tAdd))
+  console.log(typeToString(tMaybeMaybeInt))
+  console.log(typeToString(tMaybeMaybeMaybeInt))
 })();
 
 // tNum : Type
@@ -81,16 +80,12 @@ const tVar = name => ["TVar", name ? name : "T" + (++tVarId)]
 // tMaybe : Type
 const tMaybe = (...types) => ["TNamed", "Maybe", types.map(x => typeof x === "string" ? tVar(x) : x)]
 
-const tArrow = ["TNamed", "(->)", [tVar("a"), tVar("b")]]
+// tArrow : Type
+const tArrow = (t1, t2) => ["TNamed", "(->)", [t1, t2].map(x => typeof x === "string" ? tVar(x) : x)]
 
 // tFunc : List (String|Type) -> Type
 const tFunc = (...types) => {
-  return types
-    .reduceRight((to, from) => ([
-      "TFunc",
-      typeof from === "string" ? tVar(from) : from,
-      typeof to === "string" ? tVar(to) : to,
-    ]))
+  return types.reduceRight((to, from) => tArrow(from, to))
 }
 
 // tForall : List String -> Type -> Forall
@@ -110,7 +105,7 @@ const fn = (...args) => {
 
 // f : String -> String|Number|Expr -> Expr
 const f = (param, body) => {
-  return ["Func", param, typeof body === "string" ? v(body) : typeof body === "number" ? n(body) : body ]
+  return ["Lamda", param, typeof body === "string" ? v(body) : typeof body === "number" ? n(body) : body ]
 }
 
 // c : List (String|Number|Expr) -> Expr
@@ -125,7 +120,7 @@ const c = (f, ...rest) => {
 
 // Expr
 // : Num Number
-// | Func Expr Expr
+// | Lamda Expr Expr
 // | Var String
 // | Call Expr Expr
 
@@ -168,54 +163,30 @@ function infer (env, expr, level = 0) {
           return res
         }
       } else {
+        console.groupEnd()
         throw `Unbound var ${name}`
       }
     }
-    case "Func" : {
-      const [param, body] = rest
-      const paramType = tVar()
-      // check if in env already
-      const funcEnv = { ...env, [param]: paramType }
-      const [bodyType, bodySubst] = infer(funcEnv, body, level + 1)
-      const inferedType = tFunc(
-        applySubstToType(bodySubst, paramType),
-        bodyType
-      )
-      const res = [inferedType, bodySubst]
-      log(typeToString(res[0]), res[1].map(typeToString).toString())
-      console.groupEnd()
-      return res
-    }
-    case "Call": {
+    case "Ap": {
       const [func, arg] = rest
-      const [funcType, funcSubst] = infer(env, func, level + 1)
+      const [funcType, funcSubst] = infer(env, func)
+      const [argType, argSubst] = infer(env, arg)
+      const tmpFunc = tArrow(argType, tVar())
+      const s3 = unify(tmpFunc, funcType)
 
-      const argEnv = applySubstToEnv(funcSubst, env)
-      const [argType, argSubst] = infer(argEnv, arg, level + 1)
-
-      const toTypeVar = tVar()
-      const tmpFunc = tFunc(argType, toTypeVar)
-      const s3 = unify(
-        tmpFunc,
-        funcType
-      )
-      const [_, from, to] = funcType1 = applySubstToType(s3, funcType)
-      // const res = [to, s3 ]
-
-      // TODO: Understand this part
-      // pipe(add, (add 1), 1) breaks with this correctly
+      const funcType1 = applySubstToType(s3, funcType)
       const s4 = composeSubst(funcSubst, argSubst)
       const s5 = composeSubst(s4, s3)
-      const s6 = unify(applySubstToType(s5, from), argType)
+      const s6 = unify(applySubstToType(s5, funcType1[2][0]), argType)
       const s7 = composeSubst(s5, s6)
-      const res = [applySubstToType(s7, to), s7]
+      const res = [applySubstToType(s7, funcType1[2][1]), s7]
 
       log(typeToString(res[0]), res[1].map(typeToString).toString(), { before: typeToString(funcType), _after: typeToString(funcType1) })
       console.groupEnd()
       return res
     }
     default: {
-      throw "Unknown expression " + id
+      throw "Unknown expression " + exprToString(expr)
     }
   }
 }
@@ -229,16 +200,22 @@ function instantiate([id, quantifiers, type]) {
   return applySubstToType(subst, type);
 }
 
+const zip = (as, bs) => as.map((a, i) => [a, bs[i]])
+
 // unify : Type -> Type -> Subst
 function unify(t1, t2) {
   const [id1, ...rest1] = t1
   const [id2, ...rest2] = t2
 
   if (id1 === "TNamed" && id2 === "TNamed") {
-    const [name1] = rest1
-    const [name2] = rest2
+    const [name1, types1] = rest1
+    const [name2, types2] = rest2
     if (name1 === name2) {
-      return {}
+      return zip(types1, types2)
+        .reduce((subst, [t1, t2]) =>
+          composeSubst(subst, unify(applySubstToType(subst, t1), applySubstToType(subst, t2))),
+          {}
+        )
     } else {
       throw `Type mismatch:\n    Expected ${typeToString(t1)}\n    Found ${typeToString(t2)}`
     }
@@ -248,15 +225,6 @@ function unify(t1, t2) {
   } else if (id2 === "TVar") {
     const [name] = rest2
     return varBind(name, t1)
-  } else if (id1 === "TFunc" && id2 === "TFunc") {
-    const [from1, to1] = rest1
-    const [from2, to2] = rest2
-      const s1 = unify(from1, from2)
-      const s2 = unify(
-        applySubstToType(s1, to1),
-        applySubstToType(s1, to2)
-      )
-      return composeSubst(s1, s2)
   } else {
     throw `Type mismatch:\n    Expected ${typeToString(t1)}\n    Found ${typeToString(t2)}`
   }
@@ -317,9 +285,9 @@ function applySubstToType(subst, type) {
   const [id, ...rest] = type
   switch (id) {
     case "TNamed": {
-      const [name, kinds] = rest
-      if (kinds.length > 0) {
-        return [id, name, kinds.map(t => applySubstToType(subst, t))]
+      const [name, types] = rest
+      if (types.length > 0) {
+        return [id, name, types.map(t => applySubstToType(subst, t))]
       } else {
         return type
       }
@@ -333,19 +301,11 @@ function applySubstToType(subst, type) {
         return type
       }
     }
-    case "TFunc": {
-      const [from, to] = rest
-      // should this call substitute recursive
-      return tFunc(
-        applySubstToType(subst, from),
-        applySubstToType(subst, to),
-      )
-    }
     case "Forall": {
       return applySubstToForall(subst, type)
     }
     default: {
-      throw "Unknown type " + id
+      throw "Unknown type " + type
     }
   }
 }
@@ -379,10 +339,11 @@ function exprToString(expr) {
     case "Num":
     case "Var":
       return rest[0]
-    case "Func":
-      return "(" + rest[0] + " -> " + exprToString(rest[1]) + ")"
-    case "Call":
+    case "Ap": {
       return exprToString(rest[0]) + "(" + exprToString(rest[1]) + ")"
+    }
+    default:
+      throw "Unsupported expr " + expr
   }
 }
 
@@ -394,22 +355,29 @@ function evaluateExpr(expr, env) {
       return rest[0]
     case "Var":
       return env[rest[0]]
-    case "Func":
+    case "Lamda":
       return x => evaluateExpr(rest[1], { ...env, [rest[0]]: x })
     case "Call":
       return evaluateExpr(rest[0], env)(evaluateExpr(rest[1], env))
   }
 }
 
+const maybe = {
+  "Maybe.Just": tForall(["a"], tarrow("a", tMaybe("a"))),
+  "Maybe.Just.fold": tForall(["a", "b"], tArrow(tArrow("a", "b"), tArrow(tMaybe("a"), "b"))),
+  "Maybe.Nothing": tForall(["a"], tMaybe("a")),
+  "Maybe.Nothing.fold": tForall(["a", "b"], tArrow("b", tArrow(tMaybe("a"), "b"))),
+  "case": tForall(["a", "b"], tArrow(tList(tArrow("a", "b")), tArrow(tMaybe("a"), "b"))),
+}
+
+// const maybeMap = fn("f", "m", c("case", [ ???
+
+// Represent type constuctors as a map instead of a list, this makes for param functions
+
 const env = {
-  add: tFunc(tNum, tNum, tNum),
-  pipe: tForall(["FA", "FB", "GA", "GB"], tFunc(tFunc("FA", "FB"), tFunc("GA", "GB"), tFunc("FA", "GB"))),
-  id: tForall(["A"], tFunc("A", "A")),
-  // eq: tForall(["B"], tFunc("B", "B", tBool)),
-  // random: tNum,
-  Just: tForall(["A"], tFunc("A", tMaybe("A"))),
-  Nothing: tForall(["A"], tMaybe("A")),
-  "Maybe.map": tForall(["A", "B"], tFunc(tFunc("A", "B"), tMaybe("A"), tMaybe("B")))
+  fix: tForall(["a"], tArrow(tArrow("a", "a"), "a")),
+  id: tForall(["A"], tArrow("A", "A")),
+  add: tArrow(tNum, tArrow(tNum, tNum)),
 }
 
 const add2 = fn("x", "y", c("add", "y", "x"))
@@ -421,7 +389,11 @@ const pipe = fn("f", "g", "x", c("g", c("f", "x")))
 // const expr = c("pipe", c("add", 1), c("add", 1), c("id", 1))
 // const expr = c(pipe, c("add", 1), c("add", 1), 1)
 // const expr = c("Maybe.map", fn("x", c("add", "x", 1)), c("Just", 1))
-const expr = c("Maybe.map")
+// const expr = c("Maybe.map")
+const ap = (fn, arg) => ["Ap", fn, arg]
+// const expr = ap(v("id"), ap(ap(v("add"), n(1)), n(1)))
+const expr = ap(v("fn"), ap(ap(v("add"), n(1)), v("A")))
+console.log(expr)
 
 console.group("Infer")
 
