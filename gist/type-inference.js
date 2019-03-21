@@ -372,6 +372,9 @@ const maybe = {
 
 // const maybeMap = fn("f", "m", c("case", [ ???
 
+// When generating documentation you add examples in real code type
+// check them and then generate them as gists in doc
+
 // Represent type constuctors as a map instead of a list, this makes for param functions
 
 const env = {
