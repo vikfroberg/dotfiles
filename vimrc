@@ -4,7 +4,6 @@ scriptencoding utf-8
 set encoding=utf-8
 filetype plugin indent on
 syntax enable
-set background=dark
 
 noremap <Space> <NOP>
 let mapleader = "\<Space>"
@@ -16,37 +15,31 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'mbbill/undotree'
-Plug 'junegunn/vim-slash'
-Plug 'junegunn/vim-after-object'
-Plug 'itchyny/lightline.vim'
-Plug 'hdima/python-syntax'
-Plug 'tpope/vim-commentary'
-Plug 'pangloss/vim-javascript'
-Plug 'elzr/vim-json'
-Plug 'mxw/vim-jsx'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'ervandew/supertab'
-Plug 'vim-scripts/SyntaxAttr.vim'
-Plug 'tpope/vim-eunuch'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
+Plug 'elzr/vim-json'
+Plug 'ervandew/supertab'
+Plug 'guns/xterm-color-table.vim'
+Plug 'hdima/python-syntax'
+Plug 'itchyny/lightline.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-slash'
 Plug 'leafgarland/typescript-vim'
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
+Plug 'mbbill/undotree'
+Plug 'mxw/vim-jsx'
 Plug 'neovimhaskell/haskell-vim'
-" Plug 'tpope/vim-fugitive'
-" Plug 'w0rp/ale'
-" Plug 'kana/vim-textobj-user'
-" Plug 'beloglazov/vim-textobj-quotes'
-" Plug 'michaeljsmith/vim-indent-object'
+Plug 'pangloss/vim-javascript'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
+Plug 'purescript-contrib/purescript-vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-vinegar'
+Plug 'vim-scripts/SyntaxAttr.vim'
 call plug#end()
 
 
@@ -93,6 +86,8 @@ set noswapfile
 set nowrap
 set clipboard+=unnamed
 set iskeyword+=-
+set guifont=Monaco:h14
+
 let g:html_indent_tags = 'li\|p'
 let g:loaded_matchparen = 1
 let g:ackprg = 'ag --vimgrep --smart-case'
@@ -135,10 +130,7 @@ function! s:mru_files(...)
   let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# filename')
   let files_without_mru = filter(copy(files), 'index(relative_mru, v:val) == -1')
   let source = extend(relative_mru_without_current, files_without_mru)
-  return fzf#run({
-        \'source': source,
-        \'sink': 'e',
-        \'options': '--color 16 --no-sort --exact'})
+  return fzf#run({ 'source': source, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
 endfunction
 
 command! GitMRUFiles :call s:mru_files()
@@ -156,11 +148,10 @@ let g:lightline = {
       \ 'colorscheme': 'custom',
       \ 'active': {
       \   'left': [ [ 'filename' ] ],
-      \   'right': [ [ 'branch' ] ]
+      \   'right': [ ],
       \ },
       \ 'component_function': {
       \   'filename': 'LightlineFilename',
-      \   'branch': 'FugitiveStatusline',
       \ }
       \ }
 
@@ -195,27 +186,12 @@ let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
 let g:elm_format_autosave = 0
 
 " Pretttier
-
-" single quotes over double quotes
 let g:prettier#config#single_quote = 'false'
-
-" print spaces between brackets
 let g:prettier#config#bracket_spacing = 'true'
-
-" put > on the last line instead of new line
 let g:prettier#config#jsx_bracket_same_line = 'false'
-
-" none|es5|all
 let g:prettier#config#trailing_comma = 'all'
-
-" autoformat
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx Prettier
-
-
-" After Object
-autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
-
 
 function! Preserve(command)
   let _s=@/
@@ -260,81 +236,86 @@ augroup vimrc
   " Strip whitespace
   autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
 
+  " Unset paste on InsertLeave
+  autocmd InsertLeave * silent! set nopaste
+
+  " Source vimrc on save
   autocmd BufWritePost .vimrc source %
   autocmd BufWritePost vimrc source %
 
+  " Set indention for langs
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType purescript setlocal ts=4 sts=4 sw=4 expandtab
 
+  " Set lang for file types
   autocmd BufRead,BufNewFile *.nunjs setfiletype html
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
-
-  " Unset paste on InsertLeave
-  autocmd InsertLeave * silent! set nopaste
 augroup END
 
-" Use colorbox for colorscheme
-" https://www.colorbox.io/
+hi clear
+if exists("syntax_on")
+  syntax reset
+endif
 
-highlight CursorLine cterm=NONE ctermbg=0 ctermfg=NONE
-highlight Visual ctermfg=NONE ctermbg=8
-highlight Type ctermfg=2
-highlight Comment ctermfg=7 ctermbg=NONE
-highlight PreProc ctermfg=2
-highlight Special ctermfg=11
-highlight Todo ctermfg=7 ctermbg=NONE
+set background=dark
+set linespace=3
 
-" highlight Statement ctermfg=1
-" highlight Noise ctermfg=NONE ctermbg=NONE
-" highlight Normal ctermfg=white ctermbg=NONE
+hi Normal               cterm=none ctermbg=none     ctermfg=15      gui=none        guibg=#282828   guifg=#F7F7F7
+hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#282828   guifg=#8F8F8F
+hi StatusLine           cterm=none ctermbg=8        ctermfg=15      gui=none        guibg=#5D5D5D   guifg=#FBFBFB
+hi StatusLineNC         cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#5D5D5D   guifg=#FBFBFB
+hi Search               cterm=none ctermbg=6        ctermfg=15      gui=none        guibg=#2EB5C1   guifg=#F7F7F7
+hi IncSearch            cterm=none ctermbg=3        ctermfg=8       gui=none        guibg=#F6DC69   guifg=#8F8F8F
+hi ColumnMargin         cterm=none ctermbg=0                        gui=none        guibg=#000000
+hi Error                cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
+hi ErrorMsg             cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
+hi Folded               cterm=none ctermbg=8        ctermfg=2       gui=none        guibg=#3B3B3B   guifg=#90AB41
+hi FoldColumn           cterm=none ctermbg=8        ctermfg=2       gui=none        guibg=#3B3B3B   guifg=#90AB41
+hi NonText              cterm=bold ctermbg=none     ctermfg=8       gui=bold                        guifg=#8F8F8F
+hi ModeMsg              cterm=bold ctermbg=none     ctermfg=10      gui=none
+hi Pmenu                cterm=none ctermbg=8        ctermfg=15      gui=none        guibg=#8F8F8F   guifg=#F7F7F7
+hi PmenuSel             cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#F7F7F7   guifg=#8F8F8F
+hi PmenuSbar            cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#F7F7F7   guifg=#8F8F8F
+hi SpellBad             cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
+hi SpellCap             cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
+hi SpellRare            cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
+hi SpellLocal           cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
+hi Visual               cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#F7F7F7   guifg=#8F8F8F
+hi Directory            cterm=none ctermbg=none     ctermfg=4       gui=none        guibg=#242424   guifg=#88CCE7
+hi SpecialKey           cterm=none ctermbg=none     ctermfg=8       gui=none                        guifg=#8F8F8F
+hi DiffAdd              cterm=bold ctermbg=2        ctermfg=15
+hi DiffChange           cterm=bold ctermbg=4        ctermfg=15
+hi DiffDelete           cterm=bold ctermbg=1        ctermfg=15
+hi DiffText             cterm=bold ctermbg=3        ctermfg=8
+hi MatchParen           cterm=none ctermbg=6        ctermfg=15      gui=none        guibg=#2EB5C1   guifg=#F7F7F7
+hi CursorLine           cterm=none ctermbg=238      ctermfg=none    gui=none        guibg=#424242
+hi CursorColumn         cterm=none ctermbg=238      ctermfg=none    gui=none        guibg=#424242
+hi Title                cterm=none ctermbg=none     ctermfg=4       gui=none                        guifg=#88CCE7
+hi VertSplit            cterm=bold ctermbg=none     ctermfg=8       gui=bold        guibg=#282828   guifg=#8F8F8F
+hi SignColumn           cterm=bold ctermbg=none     ctermfg=8       gui=bold        guibg=#282828   guifg=#8F8F8F
 
-" highlight Number ctermfg=white
-" highlight Identifier ctermfg=white
-
-" highlight jsStorageClass ctermfg=8
-" highlight jsVariableDef ctermfg=6
-" highlight jsOperator ctermfg=2
-" highlight jsObjectBraces ctermfg=8
-" highlight jsImport ctermfg=8
-" highlight jsModuleBraces ctermfg=8
-" highlight jsModuleKeyword ctermfg=white
-" highlight jsModuleComma ctermfg=8
-" highlight jsFrom ctermfg=8
-" highlight jsString ctermfg=3
-" highlight jsFuncParens ctermfg=8
-" highlight jsFuncArgCommas ctermfg=8
-" highlight jsArrowFunction ctermfg=2
-" highlight jsBrackets ctermfg=8
-" highlight jsBracket ctermfg=NONE
-" highlight jsNoise ctermfg=8
-" highlight jsParens ctermfg=8
-" highlight jsExport ctermfg=8
-" highlight jsDestructuringBraces ctermfg=8
-" highlight jsObjectProp ctermfg=NONE
-" highlight jsFuncArgs ctermfg=NONE
-" highlight jsReturn ctermfg=2
-" highlight jsConditional ctermfg=2
-" highlight jsException ctermfg=2
-" highlight jsIfElseBraces ctermfg=8
-" highlight jsSpreadOperator ctermfg=3
-" highlight jsFuncBraces ctermfg=8
-" highlight jsBooleanTrue ctermfg=3
-" highlight jsBooleanFalse ctermfg=3
-" highlight jsRestOperator ctermfg=3
-" highlight jsExportDefault ctermfg=8
-" highlight jsObjectSeparator ctermfg=8
-" highlight jsFunction ctermfg=8
-" highlight jsFuncName ctermfg=4
-" highlight jsRegexpCharClass ctermfg=3
-" highlight jsRegexpString ctermfg=2
-" highlight jsNumber ctermfg=3
-
-" highlight pythonStatement ctermfg=8
-" highlight pythonDot ctermfg=8
-" highlight pythonImport ctermfg=8
-" highlight pythonInclude ctermfg=8
-" highlight pythonFunction ctermfg=4
+" ----------------------------------------------------------------------------
+" Syntax Highlighting
+" ----------------------------------------------------------------------------
+hi Keyword              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
+hi Comment              cterm=none ctermbg=none ctermfg=8           gui=none        guifg=#8F8F8F
+hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
+hi Identifier           cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+hi Structure            cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#9DEEF2
+hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
+hi Constant             cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+hi PreProc              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
+hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+hi Statement            cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
+hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
+hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
+hi Number               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
+hi Underlined           cterm=none ctermbg=none ctermfg=magenta     gui=underline   guibg=#272727
+hi Symbol               cterm=none ctermbg=none ctermfg=9           gui=none        guifg=#FAB1AB
+hi Method               cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
+hi Interpolation        cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#2EB5C1
 
 command! Dotfiles :FZF! ~/dotfiles
 command! SyntaxAttr :call SyntaxAttr()

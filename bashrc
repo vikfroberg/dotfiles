@@ -52,8 +52,6 @@ alias vbox="ssh -XY $USER@192.168.56.101"
 
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
-
-# Magento
 alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/bin/magento"
 
 
@@ -92,10 +90,8 @@ vimmer() {
 }
 
 
-# FZF
-# -------------
-
 # Grep
+# -------------
 
 gg() {
   if [ -z "$1" ]
@@ -113,6 +109,7 @@ gg() {
 }
 
 # Git
+# -------------
 
 is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
@@ -135,13 +132,6 @@ gb() {
   sed 's/.*\///'
 }
 
-# gt() {
-#   is_in_git_repo || return
-#   git tag --sort -version:refname |
-#   fzf --multi --preview-window right:70% \
-#     --preview 'git show --color=always {} | head -200'
-# }
-
 gh() {
   is_in_git_repo || return
   git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
@@ -149,14 +139,6 @@ gh() {
     --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
   grep -o "[a-f0-9]\{7,\}"
 }
-
-# gr() {
-#   is_in_git_repo || return
-#   git remote -v | awk '{print $1 "\t" $2}' | uniq |
-#   fzf --tac \
-#     --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
-#   cut -d$'\t' -f1
-# }
 
 gsl() {
   is_in_git_repo || return
@@ -188,7 +170,6 @@ log_bash_persistent_history()
     fi
 }
 
-# Stuff to do on PROMPT_COMMAND
 run_on_prompt_command()
 {
   log_bash_persistent_history
@@ -218,12 +199,7 @@ git_branch() {
 }
 
 get_pwd() {
-    if [[ $PWD = $HOME ]]
-    then
-        echo "~"
-    else
-        echo $PWD
-    fi
+  echo $(dirs -c; dirs)
 }
 
 if [[ $- == *i* ]]; then
@@ -241,7 +217,7 @@ if [[ $- == *i* ]]; then
   INVERT="$(tput sgr 1 0)"
   NOCOLOR="$(tput sgr0)"
 
-  export PS1="\[${MAGENTA}\]\h\[${NOCOLOR}\]:\[${CYAN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
+  export PS1="\[${BLUE}\]\h\[${NOCOLOR}\]:\[${GREEN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
