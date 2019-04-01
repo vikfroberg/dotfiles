@@ -1,5 +1,25 @@
 # Ivar
 
+## Routing with Albert
+- Routing on matching first path?
+- Should every page be runnable by itself (how to approach graph and routing)
+- Animation between routes is the hard part
+- Move Main to root
+
+- Actor model
+
+## ...
+- Skriva test case innan impl så man kan testa olika lösningar, framförallt när man
+skapar arkitetur.
+
+
+
+
+
+
+
+
+
 ## Ux improv
 * When clicking on a circle (alpha) in the kernel, expand that alpha in area of concern view
 * Let the card view cover header

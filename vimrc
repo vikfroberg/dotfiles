@@ -95,6 +95,9 @@ let g:multi_cursor_exit_from_insert_mode = 0
 let g:vim_json_syntax_conceal = 0
 let g:jsx_ext_required = 0
 
+if !exists("g:netrw_banner")
+  let g:netrw_banner = 0
+endif
 
 " FZF
 
@@ -203,19 +206,47 @@ function! Preserve(command)
 endfunction
 
 function! NetrwMapping()
-    noremap <buffer> S <NOP>
-    noremap <buffer> s <NOP>
-    noremap <buffer> q :bd<CR>
-    noremap <buffer> Q :q<CR>
+  noremap <buffer> S <NOP>
+  noremap <buffer> s <NOP>
+  noremap <buffer> q :CloseNetrw<CR>
+  noremap <buffer> Q :q<CR>
 endfunction
 
 function! MkNonExDir(file, buf)
-    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-        let dir=fnamemodify(a:file, ':h')
-        if !isdirectory(dir)
-            call mkdir(dir, 'p')
-        endif
+  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+    let dir=fnamemodify(a:file, ':h')
+    if !isdirectory(dir)
+      call mkdir(dir, 'p')
     endif
+  endif
+endfunction
+
+function! OpenFolder()
+  execute "e " . expand('%:p:h')
+endfunction
+
+function! OpenRoot()
+  execute "e ."
+endfunction
+
+function! CloseNetrw()
+  execute "bd"
+  " let buflen = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+  " if buflen > 0
+  "   execute "bd"
+  " endif
+endfunction
+
+function! Close()
+  execute "bd"
+  " let bufnr = bufnr('$')
+  " let prevbufnr = bufnr('#')
+  " if prevbufnr > 0
+  "   execute "e#"
+  " else
+  "   execute "e ."
+  " endif
+  " execute bufnr . "bw"
 endfunction
 
 augroup vimrc
@@ -317,34 +348,24 @@ hi Symbol               cterm=none ctermbg=none ctermfg=9           gui=none    
 hi Method               cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
 hi Interpolation        cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#2EB5C1
 
-command! Dotfiles :FZF! ~/dotfiles
-command! SyntaxAttr :call SyntaxAttr()
-command! Diff :w !diff % -
-command! Gist :e ~/dotfiles/gist
-command! W write|bdelete
-
 function! GitConflicts()
   :cexpr system('ag "<<<<" --vimgrep') | copen
 endfunction
-
-command! Gconflicts :call GitConflicts()
 
 function! Todos()
   :cexpr system('ag "todo" --vimgrep') | copen
 endfunction
 
+command! Gconflicts :call GitConflicts()
 command! Todos :call Todos()
-
-augroup netrw_mapping
-    autocmd!
-    autocmd filetype netrw call NetrwMapping()
-augroup END
-
-function! NetrwMapping()
-    noremap <buffer> q :bd<CR>
-    nnoremap <buffer> Q :q<CR>
-    nnoremap <buffer> . :e .<CR>
-endfunction
+command! Close :call Close()
+command! OpenFolder :call OpenFolder()
+command! OpenRoot :call OpenRoot()
+command! CloseNetrw :call CloseNetrw()
+command! Dotfiles :e ~/dotfiles
+command! SyntaxAttr :call SyntaxAttr()
+command! Diff :w !diff % -
+command! W write|bdelete
 
 nnoremap B ^
 onoremap B ^
@@ -364,9 +385,7 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap s :w<CR>
 nnoremap S :wq<CR>
 
-nnoremap g@ q
-
-nnoremap q :bd<CR>
+nnoremap q :Close<CR>
 nnoremap Q :q<CR>
 
 onoremap iq i"
@@ -403,7 +422,8 @@ nnoremap gq :cclose<CR>
 map <C-j> :cn<CR>
 map <C-k> :cp<CR>
 
-nnoremap _ :e .<CR>
+nnoremap - :OpenFolder<CR>
+nnoremap _ :OpenRoot<CR>
 
 noremap J 5j
 noremap K 5k
