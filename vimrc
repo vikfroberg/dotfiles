@@ -38,7 +38,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
+" Plug 'tpope/vim-vinegar'
 Plug 'vim-scripts/SyntaxAttr.vim'
 call plug#end()
 
@@ -208,7 +208,7 @@ endfunction
 function! NetrwMapping()
   noremap <buffer> S <NOP>
   noremap <buffer> s <NOP>
-  noremap <buffer> q :CloseNetrw<CR>
+  noremap <buffer> q :bd<CR>
   noremap <buffer> Q :q<CR>
 endfunction
 
@@ -377,15 +377,16 @@ vnoremap E $
 nnoremap V v$h
 vnoremap v V
 
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" Navigate vim panes
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
 
 nnoremap s :w<CR>
 nnoremap S :wq<CR>
 
-nnoremap q :Close<CR>
+nnoremap q :bd<CR>
 nnoremap Q :q<CR>
 
 onoremap iq i"
@@ -393,11 +394,12 @@ vnoremap iq i"
 onoremap q i"
 vnoremap q i"
 
-nnoremap gp :set paste<CR>o
-nnoremap gP :set paste<CR>O
+nnoremap gp :set paste<CR>
 
 nmap \ gcc
 vmap \ gc
+
+nnoremap <C-l> <Tab>
 
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
@@ -415,10 +417,9 @@ nnoremap k gk
 nnoremap gj J
 nnoremap gk kJ
 
-nnoremap gn :cnext<CR>
-nnoremap gN :cprevious<CR>
-nnoremap gq :cclose<CR>
+nnoremap g. :Dotfiles<CR>
 
+nnoremap gq :cclose<CR>
 map <C-j> :cn<CR>
 map <C-k> :cp<CR>
 
