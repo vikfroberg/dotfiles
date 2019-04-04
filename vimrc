@@ -164,24 +164,24 @@ endfunction
 
 let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
 
-let s:p.normal.left = [ [8, 0] ]
+let s:p.normal.left = [ [15, 0] ]
 let s:p.normal.middle = s:p.normal.left
 let s:p.normal.right = s:p.normal.left
 
-let s:p.insert.left = [ [0, 2] ]
+let s:p.insert.left = [ [8, 2] ]
 let s:p.insert.middle = s:p.insert.left
 let s:p.insert.right = s:p.insert.left
 
-let s:p.visual.left = [ [0, 7] ]
+let s:p.visual.left = [ [8, 15] ]
 let s:p.visual.middle = s:p.visual.left
 let s:p.visual.right = s:p.visual.left
 
-let s:p.replace.left = [ [0, 1] ]
+let s:p.replace.left = [ [8, 1] ]
 let s:p.replace.middle = s:p.replace.left
 let s:p.replace.right = s:p.replace.left
 
-let s:p.normal.error = [ [0, 1] ]
-let s:p.normal.warning = [ [0, 3] ]
+let s:p.normal.error = [ [8, 1] ]
+let s:p.normal.warning = [ [8, 3] ]
 
 let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
 
