@@ -217,7 +217,7 @@ if [[ $- == *i* ]]; then
   INVERT="$(tput sgr 1 0)"
   NOCOLOR="$(tput sgr0)"
 
-  export PS1="\[${BLUE}\]\h\[${NOCOLOR}\]:\[${GREEN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
+  export PS1="\[${RED}\]\h\[${NOCOLOR}\]:\[${CYAN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
