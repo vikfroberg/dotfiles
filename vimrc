@@ -291,16 +291,17 @@ if exists("syntax_on")
   syntax reset
 endif
 
-set background=light
+set background=dark
 set linespace=3
 
-hi Normal               cterm=none ctermbg=none     ctermfg=0      gui=none        guibg=#282828   guifg=#F7F7F7
-hi CursorLine           cterm=none ctermbg=none      ctermfg=none
+hi Normal               cterm=none ctermbg=none     ctermfg=15
+hi CursorLine           cterm=none ctermbg=none     ctermfg=none
+hi Visual               cterm=none ctermbg=7        ctermfg=0
+hi Search               cterm=none ctermbg=7        ctermfg=0
+hi IncSearch            cterm=none ctermbg=7        ctermfg=0
 " hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#282828   guifg=#8F8F8F
 " hi StatusLine           cterm=none ctermbg=8        ctermfg=15      gui=none        guibg=#5D5D5D   guifg=#FBFBFB
 " hi StatusLineNC         cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#5D5D5D   guifg=#FBFBFB
-hi Search               cterm=none ctermbg=7        ctermfg=0
-" hi IncSearch            cterm=none ctermbg=8        ctermfg=15
 " hi ColumnMargin         cterm=none ctermbg=0                        gui=none        guibg=#000000
 " hi Error                cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
 " hi ErrorMsg             cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
@@ -315,7 +316,6 @@ hi Search               cterm=none ctermbg=7        ctermfg=0
 " hi SpellCap             cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
 " hi SpellRare            cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
 " hi SpellLocal           cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi Directory            cterm=none ctermbg=none     ctermfg=4       gui=none        guibg=#242424   guifg=#88CCE7
 " hi SpecialKey           cterm=none ctermbg=none     ctermfg=8       gui=none                        guifg=#8F8F8F
 " hi DiffAdd              cterm=bold ctermbg=2        ctermfg=15
 " hi DiffChange           cterm=bold ctermbg=4        ctermfg=15
@@ -330,7 +330,7 @@ hi Search               cterm=none ctermbg=7        ctermfg=0
 " ----------------------------------------------------------------------------
 " Syntax Highlighting
 " ----------------------------------------------------------------------------
-hi Comment              cterm=none ctermbg=none ctermfg=8
+hi Comment              cterm=none ctermbg=none ctermfg=7
 hi Identifier           cterm=none ctermbg=none ctermfg=5
 hi Constant             cterm=none ctermbg=none ctermfg=6
 hi Type                 cterm=none ctermbg=none ctermfg=1
@@ -349,6 +349,8 @@ hi String               cterm=none ctermbg=none ctermfg=4
 
 hi! link PreProc Type
 hi! link Todo Comment
+hi! link Directory Constant
+hi! link netrwClassify Directory
 
 hi! link elmType Constant
 hi! link elmBraces Statement
