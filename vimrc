@@ -94,7 +94,7 @@ let g:html_indent_tags = 'li\|p'
 let g:loaded_matchparen = 1
 if executable('ag')
 " let g:ackprg = 'ag --vimgrep --smart-case'
-  let g:ackprg = 'ag --vimgrep'
+  let g:ackprg = 'ag --vimgrep -s'
 endif
 let g:multi_cursor_exit_from_insert_mode = 0
 let g:vim_json_syntax_conceal = 0
