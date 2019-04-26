@@ -40,6 +40,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-vinegar'
 Plug 'vim-scripts/SyntaxAttr.vim'
+Plug 'mileszs/ack.vim'
 call plug#end()
 
 
@@ -91,7 +92,10 @@ set guifont=Monaco:h14
 
 let g:html_indent_tags = 'li\|p'
 let g:loaded_matchparen = 1
-let g:ackprg = 'ag --vimgrep --smart-case'
+if executable('ag')
+" let g:ackprg = 'ag --vimgrep --smart-case'
+  let g:ackprg = 'ag --vimgrep'
+endif
 let g:multi_cursor_exit_from_insert_mode = 0
 let g:vim_json_syntax_conceal = 0
 let g:jsx_ext_required = 0
