@@ -8,7 +8,7 @@ export EDITOR=vim
 export CLICOLOR=1
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 export NODE_ENV="development"
-
+export NVM_DIR="$HOME/.nvm"
 export LANGUAGE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -221,3 +221,5 @@ if [[ $- == *i* ]]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion

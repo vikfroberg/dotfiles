@@ -1,4 +1,4 @@
-module BrowserElement exposing (..)
+module Main exposing (..)
 
 import Html
 import Browser
