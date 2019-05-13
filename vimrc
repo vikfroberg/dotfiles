@@ -15,32 +15,29 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
-Plug 'elzr/vim-json'
 Plug 'ervandew/supertab'
-Plug 'guns/xterm-color-table.vim'
-Plug 'hdima/python-syntax'
-Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
-Plug 'leafgarland/typescript-vim'
-Plug 'mbbill/undotree'
-Plug 'mxw/vim-jsx'
-Plug 'neovimhaskell/haskell-vim'
-Plug 'pangloss/vim-javascript'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
-Plug 'purescript-contrib/purescript-vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-vinegar'
-Plug 'vim-scripts/SyntaxAttr.vim'
 Plug 'mileszs/ack.vim'
+" Plug 'vim-scripts/SyntaxAttr.vim'
+" Plug 'itchyny/lightline.vim'
+
+" Syntax
+Plug 'pangloss/vim-javascript'
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
+Plug 'elzr/vim-json'
+Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
+" Plug 'mxw/vim-jsx'
+" Plug 'neovimhaskell/haskell-vim'
+" Plug 'hdima/python-syntax'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'purescript-contrib/purescript-vim'
 call plug#end()
 
 
@@ -152,43 +149,43 @@ command! -bang -nargs=* Ag
 
 " Lightline
 
-let g:lightline = {
-      \ 'colorscheme': 'custom',
-      \ 'active': {
-      \   'left': [ [ 'filename' ] ],
-      \   'right': [ ],
-      \ },
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename',
-      \ }
-      \ }
+" let g:lightline = {
+"       \ 'colorscheme': 'custom',
+"       \ 'active': {
+"       \   'left': [ [ 'filename' ] ],
+"       \   'right': [ ],
+"       \ },
+"       \ 'component_function': {
+"       \   'filename': 'LightlineFilename',
+"       \ }
+"       \ }
 
-function! LightlineFilename()
-  return expand('%')
-endfunction
+" function! LightlineFilename()
+"   return expand('%')
+" endfunction
 
-let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
+" let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
 
-let s:p.normal.left = [ [15, 0] ]
-let s:p.normal.middle = s:p.normal.left
-let s:p.normal.right = s:p.normal.left
+" let s:p.normal.left = [ [15, 0] ]
+" let s:p.normal.middle = s:p.normal.left
+" let s:p.normal.right = s:p.normal.left
 
-let s:p.insert.left = [ [8, 2] ]
-let s:p.insert.middle = s:p.insert.left
-let s:p.insert.right = s:p.insert.left
+" let s:p.insert.left = [ [8, 2] ]
+" let s:p.insert.middle = s:p.insert.left
+" let s:p.insert.right = s:p.insert.left
 
-let s:p.visual.left = [ [8, 15] ]
-let s:p.visual.middle = s:p.visual.left
-let s:p.visual.right = s:p.visual.left
+" let s:p.visual.left = [ [8, 15] ]
+" let s:p.visual.middle = s:p.visual.left
+" let s:p.visual.right = s:p.visual.left
 
-let s:p.replace.left = [ [8, 1] ]
-let s:p.replace.middle = s:p.replace.left
-let s:p.replace.right = s:p.replace.left
+" let s:p.replace.left = [ [8, 1] ]
+" let s:p.replace.middle = s:p.replace.left
+" let s:p.replace.right = s:p.replace.left
 
-let s:p.normal.error = [ [8, 1] ]
-let s:p.normal.warning = [ [8, 3] ]
+" let s:p.normal.error = [ [8, 1] ]
+" let s:p.normal.warning = [ [8, 3] ]
 
-let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
+" let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
 
 " Elm
 let g:elm_format_autosave = 0
