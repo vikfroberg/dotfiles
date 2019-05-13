@@ -1,8 +1,8 @@
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"
-export PATH=":~/dotfiles/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
-export PATH="/Users/vikfroberg/.local/bin:$PATH"
+# export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+# export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"
+# export PATH=":~/dotfiles/bin:$PATH"
+# export PATH="/usr/local/sbin:$PATH"
+# export PATH="/Users/vikfroberg/.local/bin:$PATH"
 export GIT_MERGE_AUTOEDIT=no
 export EDITOR=vim
 export CLICOLOR=1
@@ -90,24 +90,6 @@ vimmer() {
 }
 
 
-# Grep
-# -------------
-
-gg() {
-  if [ -z "$1" ]
-    then
-      echo "usage: gg QUERY"
-      return
-  fi
-  is_in_git_repo || return
-  ag "$1" --vimgrep |
-  sed -E "s/([^\:]+:[^\:]+:)[^\:]+:[[:space:]]*(.+$)/\1\2/" |
-  sort |
-  uniq |
-  fzf -d: --preview="preview {1}:{2}" |
-  awk -F: '{print $1, $2}'
-}
-
 # Git
 # -------------
 
@@ -175,7 +157,7 @@ run_on_prompt_command()
   log_bash_persistent_history
 }
 
-PROMPT_COMMAND="run_on_prompt_command"
+# PROMPT_COMMAND="run_on_prompt_command"
 
 
 # Prompt
@@ -220,6 +202,6 @@ if [[ $- == *i* ]]; then
   export PS1="\[${RED}\]\h\[${NOCOLOR}\]:\[${CYAN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
 fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+# [ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
