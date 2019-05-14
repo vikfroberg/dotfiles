@@ -25,8 +25,8 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'mileszs/ack.vim'
+Plug 'matze/vim-move'
 " Plug 'vim-scripts/SyntaxAttr.vim'
-" Plug 'itchyny/lightline.vim'
 
 " Syntax
 Plug 'pangloss/vim-javascript'
@@ -90,7 +90,6 @@ set guifont=Monaco:h14
 let g:html_indent_tags = 'li\|p'
 let g:loaded_matchparen = 1
 if executable('ag')
-" let g:ackprg = 'ag --vimgrep --smart-case'
   let g:ackprg = 'ag --vimgrep -s'
 endif
 let g:multi_cursor_exit_from_insert_mode = 0
@@ -147,48 +146,9 @@ command! -bang -nargs=* Ag
   \                 <bang>0)
 
 
-" Lightline
-
-" let g:lightline = {
-"       \ 'colorscheme': 'custom',
-"       \ 'active': {
-"       \   'left': [ [ 'filename' ] ],
-"       \   'right': [ ],
-"       \ },
-"       \ 'component_function': {
-"       \   'filename': 'LightlineFilename',
-"       \ }
-"       \ }
-
-" function! LightlineFilename()
-"   return expand('%')
-" endfunction
-
-" let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
-
-" let s:p.normal.left = [ [15, 0] ]
-" let s:p.normal.middle = s:p.normal.left
-" let s:p.normal.right = s:p.normal.left
-
-" let s:p.insert.left = [ [8, 2] ]
-" let s:p.insert.middle = s:p.insert.left
-" let s:p.insert.right = s:p.insert.left
-
-" let s:p.visual.left = [ [8, 15] ]
-" let s:p.visual.middle = s:p.visual.left
-" let s:p.visual.right = s:p.visual.left
-
-" let s:p.replace.left = [ [8, 1] ]
-" let s:p.replace.middle = s:p.replace.left
-" let s:p.replace.right = s:p.replace.left
-
-" let s:p.normal.error = [ [8, 1] ]
-" let s:p.normal.warning = [ [8, 3] ]
-
-" let g:lightline#colorscheme#custom#palette = lightline#colorscheme#fill(s:p)
-
 " Elm
 let g:elm_format_autosave = 0
+
 
 " Pretttier
 let g:prettier#config#single_quote = 'false'
@@ -229,26 +189,6 @@ endfunction
 
 function! OpenRoot()
   execute "e ."
-endfunction
-
-function! CloseNetrw()
-  execute "bd"
-  " let buflen = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
-  " if buflen > 0
-  "   execute "bd"
-  " endif
-endfunction
-
-function! Close()
-  execute "bd"
-  " let bufnr = bufnr('$')
-  " let prevbufnr = bufnr('#')
-  " if prevbufnr > 0
-  "   execute "e#"
-  " else
-  "   execute "e ."
-  " endif
-  " execute bufnr . "bw"
 endfunction
 
 augroup vimrc
@@ -300,9 +240,9 @@ hi CursorLine           cterm=none ctermbg=none     ctermfg=none
 hi Visual               cterm=none ctermbg=7        ctermfg=0
 hi Search               cterm=none ctermbg=7        ctermfg=0
 hi IncSearch            cterm=none ctermbg=7        ctermfg=0
+hi StatusLine           cterm=none ctermbg=8        ctermfg=15
+hi StatusLineNC         cterm=none ctermbg=8       ctermfg=15
 " hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#282828   guifg=#8F8F8F
-" hi StatusLine           cterm=none ctermbg=8        ctermfg=15      gui=none        guibg=#5D5D5D   guifg=#FBFBFB
-" hi StatusLineNC         cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#5D5D5D   guifg=#FBFBFB
 " hi ColumnMargin         cterm=none ctermbg=0                        gui=none        guibg=#000000
 " hi Error                cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
 " hi ErrorMsg             cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
@@ -369,10 +309,8 @@ endfunction
 
 command! Gconflicts :call GitConflicts()
 command! Todos :call Todos()
-command! Close :call Close()
 command! OpenFolder :call OpenFolder()
 command! OpenRoot :call OpenRoot()
-command! CloseNetrw :call CloseNetrw()
 command! Dotfiles :e ~/dotfiles
 command! SyntaxAttr :call SyntaxAttr()
 command! Diff :w !diff % -
@@ -443,5 +381,56 @@ noremap K 5k
 nnoremap U <C-R>
 
 nnoremap <leader>p :GitMRUFiles<CR>
-nnoremap <leader>F :Ag!
-nnoremap <leader>f :BLines!<CR>
+
+" Statusline
+" :h mode() to see all modes
+let g:currentmode={
+    \ 'n'      : 'Normal ',
+    \ 'no'     : 'N·Operator Pending ',
+    \ 'v'      : 'Visual ',
+    \ 'V'      : 'Visual ',
+    \ '\<C-V>' : 'V·Block ',
+    \ 's'      : 'Select ',
+    \ 'S'      : 'S·Line ',
+    \ '\<C-S>' : 'S·Block ',
+    \ 'i'      : 'Insert ',
+    \ 'R'      : 'Replace ',
+    \ 'Rv'     : 'V·Replace ',
+    \ 'c'      : 'Command ',
+    \ 'cv'     : 'Vim Ex ',
+    \ 'ce'     : 'Ex ',
+    \ 'r'      : 'Prompt ',
+    \ 'rm'     : 'More ',
+    \ 'r?'     : 'Confirm ',
+    \ '!'      : 'Shell ',
+    \ 't'      : 'Terminal '
+    \}
+
+" Automatically change the statusline color depending on mode
+function! ChangeStatuslineColor()
+  if (mode() =~# '\v(n|no)')
+    exe 'hi! StatusLine ctermbg=8 ctermfg=0'
+  elseif (mode() =~# '\v(v|V)')
+    exe 'hi! StatusLine ctermbg=2 ctermfg=0'
+  elseif (mode() ==# 'i')
+    exe 'hi! StatusLine ctermbg=4 ctermfg=0'
+  else
+    exe 'hi! StatusLine ctermbg=3 ctermfg=0'
+  endif
+  return ''
+endfunction
+
+function! ReadOnly()
+  if &readonly || !&modifiable
+    return '[ReadOnly]'
+  else
+    return ''
+endfunction
+
+set laststatus=2
+set statusline=
+set statusline+=%{ChangeStatuslineColor()} " Changing the statusline color
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])} " Current mode
+set statusline+=%8*\ %<%F\ %{ReadOnly()}\ %m\ %w\ " File+path
+set statusline+=%9*\ %= " Space
+set statusline+=%0*\ %3p%%\ %l#\ " Rownumber/total (%)
