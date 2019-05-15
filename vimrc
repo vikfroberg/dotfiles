@@ -240,8 +240,8 @@ hi CursorLine           cterm=none ctermbg=none     ctermfg=none
 hi Visual               cterm=none ctermbg=7        ctermfg=0
 hi Search               cterm=none ctermbg=7        ctermfg=0
 hi IncSearch            cterm=none ctermbg=7        ctermfg=0
-hi StatusLine           cterm=none ctermbg=8        ctermfg=15
-hi StatusLineNC         cterm=none ctermbg=8       ctermfg=15
+hi StatusLine           cterm=none ctermbg=8        ctermfg=0
+hi StatusLineNC         cterm=none ctermbg=8       ctermfg=0
 " hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#282828   guifg=#8F8F8F
 " hi ColumnMargin         cterm=none ctermbg=0                        gui=none        guibg=#000000
 " hi Error                cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
@@ -431,6 +431,6 @@ set laststatus=2
 set statusline=
 set statusline+=%{ChangeStatuslineColor()} " Changing the statusline color
 set statusline+=%0*\ %{toupper(g:currentmode[mode()])} " Current mode
-set statusline+=%8*\ %<%F\ %{ReadOnly()}\ %m\ %w\ " File+path
+set statusline+=%8*\ %<%f\ " File+path
 set statusline+=%9*\ %= " Space
 set statusline+=%0*\ %3p%%\ %l#\ " Rownumber/total (%)
