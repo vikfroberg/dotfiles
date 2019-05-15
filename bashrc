@@ -1,8 +1,8 @@
-# export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-# export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"
-# export PATH=":~/dotfiles/bin:$PATH"
-# export PATH="/usr/local/sbin:$PATH"
-# export PATH="/Users/vikfroberg/.local/bin:$PATH"
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"
+export PATH=":~/dotfiles/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
+export PATH="~/.local/bin:$PATH"
 export GIT_MERGE_AUTOEDIT=no
 export EDITOR=vim
 export CLICOLOR=1
