@@ -156,7 +156,7 @@ let g:prettier#config#bracket_spacing = 'true'
 let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#trailing_comma = 'all'
 let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx Prettier
+" autocmd BufWritePre *.js,*.jsx Prettier
 
 function! Preserve(command)
   let _s=@/
