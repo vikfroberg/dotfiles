@@ -49,7 +49,7 @@ alias gsp="git stash pop"
 alias gsu="git stash --include-untracked"
 
 # Virtual box
-alias vbox="ssh -XY $USER@192.168.56.101"
+alias vbox="ssh -XY $USER@virtual-box"
 
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
