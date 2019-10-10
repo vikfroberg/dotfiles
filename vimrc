@@ -207,7 +207,8 @@ augroup vimrc
   autocmd FileType * setlocal formatoptions-=o
 
   " Strip whitespace
-  autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
+  " Disabled because it makes bad diffs when used at WH
+  " autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
 
   " Unset paste on InsertLeave
   autocmd InsertLeave * silent! set nopaste
@@ -355,6 +356,11 @@ nnoremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
+nnoremap m *n
+nnoremap M *N
+
+" vnoremap n y/<C-R>"<CR>
+
 nnoremap , ;
 nnoremap ; ,
 
@@ -418,13 +424,6 @@ function! ChangeStatuslineColor()
     exe 'hi! StatusLine ctermbg=3 ctermfg=0'
   endif
   return ''
-endfunction
-
-function! ReadOnly()
-  if &readonly || !&modifiable
-    return '[ReadOnly]'
-  else
-    return ''
 endfunction
 
 set laststatus=2

@@ -26,9 +26,9 @@ alias -- -='cd -'
 alias ..="cd .."
 alias ...="..;.."
 alias ....="..;..;.."
-alias l="ls -l"
-alias ll="ls -l"
-alias la="ls -la"
+alias l="ls -l --colors"
+alias ll="ls -l --colors"
+alias la="ls -la --colors"
 alias c="clear"
 alias v="vimmer"
 alias r="source ~/.bash_profile"
@@ -177,7 +177,7 @@ git_branch() {
     if [[ "$branch" == "HEAD" ]]; then
       branch='detached*'
     fi
-    echo "$branch"
+    echo "$branch" | awk 'length > 30{$0=substr($0,0,31)"..."}1'
   fi
 }
 
@@ -200,7 +200,7 @@ if [[ $- == *i* ]]; then
   INVERT="$(tput sgr 1 0)"
   NOCOLOR="$(tput sgr0)"
 
-  export PS1="\[${RED}\]\h\[${NOCOLOR}\]:\[${CYAN}\]\$(get_pwd) \[${GRAY}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
+  export PS1="\[${RED}\]\h\[${NOCOLOR}\]:\[${BLUE}\]\$(get_pwd) \[${YELLOW}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
 fi
 
 # [ -f ~/.fzf.bash ] && source ~/.fzf.bash
