@@ -45,7 +45,6 @@ alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gcb="git checkout \$(gb)"
 alias gcf="git checkout \$(gf)"
-alias gsp="git stash pop"
 alias gsu="git stash --include-untracked"
 
 # Virtual box

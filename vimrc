@@ -30,9 +30,9 @@ Plug 'matze/vim-move'
 
 " Syntax
 Plug 'pangloss/vim-javascript'
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 Plug 'elzr/vim-json'
 Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'mxw/vim-jsx'
 " Plug 'neovimhaskell/haskell-vim'
 " Plug 'hdima/python-syntax'
@@ -95,6 +95,7 @@ endif
 let g:multi_cursor_exit_from_insert_mode = 0
 let g:vim_json_syntax_conceal = 0
 let g:jsx_ext_required = 0
+" let g:move_key_modifier = 'C'
 
 if !exists("g:netrw_banner")
   let g:netrw_banner = 0
@@ -130,8 +131,8 @@ function! s:mru_files(...)
   let mru = reverse(copy(g:fzf_mru_files))
   let files = sort(split(system('ag -l')))
   let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
-  let filename = fnamemodify(expand('%'), ":~:.")
-  let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# filename')
+  let current_filename = fnamemodify(expand('%'), ":~:.")
+  let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# current_filename')
   let files_without_mru = filter(copy(files), 'index(relative_mru, v:val) == -1')
   let source = extend(relative_mru_without_current, files_without_mru)
   return fzf#run({ 'source': source, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
@@ -305,7 +306,7 @@ function! GitConflicts()
 endfunction
 
 function! Todos()
-  :cexpr system('ag "todo" --vimgrep') | copen
+  :cexpr system('ag "TODO:" --vimgrep') | copen
 endfunction
 
 command! Gconflicts :call GitConflicts()
@@ -326,12 +327,6 @@ vnoremap E $
 
 nnoremap V v$h
 vnoremap v V
-
-" Navigate vim panes
-" nnoremap <C-J> <C-W><C-J>
-" nnoremap <C-K> <C-W><C-K>
-" nnoremap <C-L> <C-W><C-L>
-" nnoremap <C-H> <C-W><C-H>
 
 nnoremap s :w<CR>
 nnoremap S :wq<CR>
@@ -359,8 +354,6 @@ vnoremap <S-Tab> <gv
 nnoremap m *n
 nnoremap M *N
 
-" vnoremap n y/<C-R>"<CR>
-
 nnoremap , ;
 nnoremap ; ,
 
@@ -371,8 +364,6 @@ nnoremap k gk
 
 nnoremap gj J
 nnoremap gk kJ
-
-nnoremap g. :Dotfiles<CR>
 
 nnoremap gq :cclose<CR>
 map <C-j> :cn<CR>
@@ -389,6 +380,7 @@ nnoremap U <C-R>
 nnoremap <leader>p :GitMRUFiles<CR>
 
 " Statusline
+
 " :h mode() to see all modes
 let g:currentmode={
     \ 'n'      : 'Normal ',
