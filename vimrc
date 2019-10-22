@@ -8,6 +8,10 @@ syntax enable
 noremap <Space> <NOP>
 let mapleader = "\<Space>"
 
+
+" Plugins
+" -----------------------------
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -15,23 +19,27 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+
+" Features
 Plug 'ervandew/supertab'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'mileszs/ack.vim'
 Plug 'matze/vim-move'
-" Plug 'vim-scripts/SyntaxAttr.vim'
+Plug 'godlygeek/tabular'
 
 " Syntax
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
 Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
+" Plug 'vim-scripts/SyntaxAttr.vim'
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'mxw/vim-jsx'
 " Plug 'neovimhaskell/haskell-vim'
@@ -40,6 +48,9 @@ Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
 " Plug 'purescript-contrib/purescript-vim'
 call plug#end()
 
+
+" Settings
+" -------------------------------------
 
 set incsearch
 set hlsearch
@@ -87,110 +98,51 @@ set clipboard+=unnamed
 set iskeyword+=-
 set guifont=Monaco:h14
 
+" More sane html idention
 let g:html_indent_tags = 'li\|p'
+
+" Show matching paren
 let g:loaded_matchparen = 1
+
+" Remove netrw banner
+" if !exists("g:netrw_banner")
+"   let g:netrw_banner = 0
+" endif
+
+" ack.vim
 if executable('ag')
   let g:ackprg = 'ag --vimgrep -s'
 endif
+
+" vim-multiple-cursors
 let g:multi_cursor_exit_from_insert_mode = 0
+
+" vim-json
 let g:vim_json_syntax_conceal = 0
+
+" vim-jsx
 let g:jsx_ext_required = 0
+
+" vim-move
 " let g:move_key_modifier = 'C'
 
-if !exists("g:netrw_banner")
-  let g:netrw_banner = 0
-endif
-
-" FZF
-
-let $FZF_DEFAULT_OPTS = '--reverse --color 16'
-let g:fzf_mru_files = get(g:, 'fzf_mru_files', [])
-
-function! s:update_mru_files(filename)
-  if filereadable(a:filename)
-    let filename = fnamemodify(a:filename, ":~:.")
-    call filter(g:fzf_mru_files, 'v:val !=# filename')
-    call add(g:fzf_mru_files, filename)
-  endif
-endfunction
-
-function! s:delete_mru_files(filename)
-  let filename = fnamemodify(a:filename, ":~:.")
-  call filter(g:fzf_mru_files, 'v:val !=# filename')
-endfunction
-
-augroup fzf_mru_files
-  autocmd!
-  autocmd BufWritePost * call s:update_mru_files(expand('%'))
-  autocmd BufEnter * call s:update_mru_files(expand('%'))
-  autocmd BufReadPost * call s:update_mru_files(expand('%'))
-  autocmd BufDelete * call s:delete_mru_files(expand('%'))
-augroup END
-
-function! s:mru_files(...)
-  let mru = reverse(copy(g:fzf_mru_files))
-  let files = sort(split(system('ag -l')))
-  let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
-  let current_filename = fnamemodify(expand('%'), ":~:.")
-  let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# current_filename')
-  let files_without_mru = filter(copy(files), 'index(relative_mru, v:val) == -1')
-  let source = extend(relative_mru_without_current, files_without_mru)
-  return fzf#run({ 'source': source, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
-endfunction
-
-command! GitMRUFiles :call s:mru_files()
-
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter :'}, 'right:50%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \                 <bang>0)
-
-
-" Elm
+" elm-vim
 let g:elm_format_autosave = 0
 
-
-" Pretttier
+" vim-prettier
 let g:prettier#config#single_quote = 'false'
 let g:prettier#config#bracket_spacing = 'true'
 let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#trailing_comma = 'all'
 let g:prettier#autoformat = 0
-" autocmd BufWritePre *.js,*.jsx Prettier
 
-function! Preserve(command)
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
-  execute a:command
-  let @/=_s
-  call cursor(l, c)
-endfunction
 
-function! NetrwMapping()
-  noremap <buffer> S <NOP>
-  noremap <buffer> s <NOP>
-  noremap <buffer> q :bd<CR>
-  noremap <buffer> Q :q<CR>
-endfunction
+" vim-fzf
+let $FZF_DEFAULT_OPTS = '--reverse --color 16'
 
-function! MkNonExDir(file, buf)
-  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-    let dir=fnamemodify(a:file, ':h')
-    if !isdirectory(dir)
-      call mkdir(dir, 'p')
-    endif
-  endif
-endfunction
 
-function! OpenFolder()
-  execute "e " . expand('%:p:h')
-endfunction
-
-function! OpenRoot()
-  execute "e ."
-endfunction
+" Auto commands
+" ----------------------------------
 
 augroup vimrc
   autocmd!
@@ -206,6 +158,9 @@ augroup vimrc
 
   " Don't add comment when using o/O
   autocmd FileType * setlocal formatoptions-=o
+
+  " Run prettier on save
+  " autocmd BufWritePre *.js,*.jsx Prettier
 
   " Strip whitespace
   " Disabled because it makes bad diffs when used at WH
@@ -229,50 +184,30 @@ augroup vimrc
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
 augroup END
 
+
+" Appearance
+" ---------------------------------
+
+" Clear existing color scheme
 hi clear
 if exists("syntax_on")
   syntax reset
 endif
 
+" Set background style
 set background=dark
+
+" Set spacing between lines
 set linespace=3
 
-hi Normal               cterm=none ctermbg=none     ctermfg=15
-hi CursorLine           cterm=none ctermbg=none     ctermfg=none
-hi Visual               cterm=none ctermbg=7        ctermfg=0
-hi Search               cterm=none ctermbg=7        ctermfg=0
-hi IncSearch            cterm=none ctermbg=7        ctermfg=0
-hi StatusLine           cterm=none ctermbg=8        ctermfg=0
-hi StatusLineNC         cterm=none ctermbg=8       ctermfg=0
-" hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#282828   guifg=#8F8F8F
-" hi ColumnMargin         cterm=none ctermbg=0                        gui=none        guibg=#000000
-" hi Error                cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi ErrorMsg             cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi Folded               cterm=none ctermbg=8        ctermfg=2       gui=none        guibg=#3B3B3B   guifg=#90AB41
-" hi FoldColumn           cterm=none ctermbg=8        ctermfg=2       gui=none        guibg=#3B3B3B   guifg=#90AB41
-" hi NonText              cterm=bold ctermbg=none     ctermfg=8       gui=bold                        guifg=#8F8F8F
-" hi ModeMsg              cterm=bold ctermbg=none     ctermfg=10      gui=none
-" hi Pmenu                cterm=none ctermbg=8        ctermfg=15      gui=none        guibg=#8F8F8F   guifg=#F7F7F7
-" hi PmenuSel             cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#F7F7F7   guifg=#8F8F8F
-" hi PmenuSbar            cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#F7F7F7   guifg=#8F8F8F
-" hi SpellBad             cterm=none ctermbg=1        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi SpellCap             cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi SpellRare            cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi SpellLocal           cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
-" hi SpecialKey           cterm=none ctermbg=none     ctermfg=8       gui=none                        guifg=#8F8F8F
-" hi DiffAdd              cterm=bold ctermbg=2        ctermfg=15
-" hi DiffChange           cterm=bold ctermbg=4        ctermfg=15
-" hi DiffDelete           cterm=bold ctermbg=1        ctermfg=15
-" hi DiffText             cterm=bold ctermbg=3        ctermfg=8
-" hi MatchParen           cterm=none ctermbg=6        ctermfg=15      gui=none        guibg=#2EB5C1   guifg=#F7F7F7
-" hi CursorColumn         cterm=none ctermbg=238      ctermfg=none    gui=none        guibg=#424242
-" hi Title                cterm=none ctermbg=none     ctermfg=4       gui=none                        guifg=#88CCE7
-" hi VertSplit            cterm=bold ctermbg=none     ctermfg=8       gui=bold        guibg=#282828   guifg=#8F8F8F
-" hi SignColumn           cterm=bold ctermbg=none     ctermfg=8       gui=bold        guibg=#282828   guifg=#8F8F8F
-
-" ----------------------------------------------------------------------------
-" Syntax Highlighting
-" ----------------------------------------------------------------------------
+" Set colorscheme
+hi Normal               cterm=none ctermbg=none ctermfg=15
+hi CursorLine           cterm=none ctermbg=none ctermfg=none
+hi Visual               cterm=none ctermbg=7    ctermfg=0
+hi Search               cterm=none ctermbg=7    ctermfg=0
+hi IncSearch            cterm=none ctermbg=7    ctermfg=0
+hi StatusLine           cterm=none ctermbg=8    ctermfg=0
+hi StatusLineNC         cterm=none ctermbg=8    ctermfg=0
 hi Comment              cterm=none ctermbg=none ctermfg=7
 hi Identifier           cterm=none ctermbg=none ctermfg=5
 hi Constant             cterm=none ctermbg=none ctermfg=6
@@ -280,44 +215,76 @@ hi Type                 cterm=none ctermbg=none ctermfg=1
 hi Statement            cterm=none ctermbg=none ctermfg=1
 hi Special              cterm=none ctermbg=none ctermfg=6
 hi String               cterm=none ctermbg=none ctermfg=4
-" hi Keyword              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
-" hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
-" hi Structure            cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#9DEEF2
-" hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
-" hi Number               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
-" hi Underlined           cterm=none ctermbg=none ctermfg=magenta     gui=underline   guibg=#272727
-" hi Symbol               cterm=none ctermbg=none ctermfg=9           gui=none        guifg=#FAB1AB
-" hi Method               cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
-" hi Interpolation        cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#2EB5C1
-
 hi! link PreProc Type
 hi! link Todo Comment
 hi! link Directory Constant
+
+" Netrw
 hi! link netrwClassify Directory
 
+" Elm
 hi! link elmType Constant
 hi! link elmBraces Statement
 
+" Javascript
 hi! link jsVariableDef     Constant
 hi! link jsArrowFunction Normal
 
-function! GitConflicts()
-  :cexpr system('ag "<<<<" --vimgrep') | copen
-endfunction
 
-function! Todos()
-  :cexpr system('ag "TODO:" --vimgrep') | copen
-endfunction
+" Commands
+" ------------------------------
 
-command! Gconflicts :call GitConflicts()
-command! Todos :call Todos()
-command! OpenFolder :call OpenFolder()
-command! OpenRoot :call OpenRoot()
-command! Dotfiles :e ~/dotfiles
+command! Dotfiles :FZF! ~/dotfiles
 command! SyntaxAttr :call SyntaxAttr()
 command! Diff :w !diff % -
 command! W write|bdelete
 
+command! Gconflicts :call GitConflicts()
+command! GConflicts :call GitConflicts()
+function! GitConflicts()
+  :cexpr system('ag "<<<<" --vimgrep') | copen
+endfunction
+
+command! Todos :call Todos()
+function! Todos()
+  :cexpr system('ag "TODO:" --vimgrep') | copen
+endfunction
+
+command! GitMRUFiles :call s:mru_files()
+
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
+  \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \                 <bang>0)
+
+command! -bang -nargs=* ElmAgFunctions
+  \ call fzf#vim#ag('^[a-z][a-zA-Z_0-9]*\s:',
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
+  \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \                 <bang>0)
+
+command! -bang -nargs=* ElmAgTypes
+  \ call fzf#vim#ag('^type',
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
+  \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \                 <bang>0)
+
+command! -bang -nargs=* ElmBufferFunctions
+  \ call fzf#vim#buffer_lines('^[a-z][a-zA-Z_0-9]*\s:', <bang>0)
+
+command! -bang -nargs=* ElmBufferTypes
+  \ call fzf#vim#buffer_lines('^type', <bang>0)
+
+command! -bang -nargs=* ElmBufferOverview
+  \ call fzf#vim#buffer_lines('^\s*[{,]\s[a-z][a-zA-Z0-9_]*\s:\|^type\|^\s*[=|]\s[A-Z]\|^[a-z][a-zA-Z0-9_]*\s:', <bang>0)
+
+
+
+" Key mapping
+" -------------------------------
+
+" Sane ^/$ for swedish keyboard
 nnoremap B ^
 onoremap B ^
 vnoremap B ^
@@ -325,61 +292,89 @@ nnoremap E $
 onoremap E $
 vnoremap E $
 
+" More sane redo
+nnoremap U <C-R>
+
+" Make c/d/v/y more consistent
 nnoremap V v$h
 vnoremap v V
+nnoremap Y y$
 
+" Reverse repeat action 
+" Makes more sense on a swedish keyboard
+nnoremap , ;
+nnoremap ; ,
+
+" Save and quit hotkeys
 nnoremap s :w<CR>
 nnoremap S :wq<CR>
-
 nnoremap q :bd<CR>
 nnoremap Q :q<CR>
 
+" Hotkeys for quotes
 onoremap iq i"
 vnoremap iq i"
 onoremap q i"
 vnoremap q i"
 
+" Set paste mode for when copying
 nnoremap gp :set paste<CR>
 
+" Vim commentary
 nmap \ gcc
 vmap \ gc
 
-nnoremap <C-l> <Tab>
+" Move display lines instead of physical line
+nnoremap j gj
+nnoremap k gk
 
+" Join hotkeys
+nnoremap gj J
+
+" Quick navigation 
+noremap J 5j
+noremap K 5k
+
+" Go forward in nav history
+nnoremap <C-l> <Tab> 
+
+" Navigate quickfix
+nnoremap gq :cclose<CR>
+map <C-j> :cn<CR> 
+map <C-k> :cp<CR>
+
+" Tabs
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-nnoremap m *n
-nnoremap M *N
 
-nnoremap , ;
-nnoremap ; ,
+" Netrw mappings
+" --------------------------------
 
-nnoremap Y y$
+function! NetrwMapping()
+  noremap <buffer> S <NOP>
+  noremap <buffer> s <NOP>
+  noremap <buffer> q :bd<CR>
+  noremap <buffer> Q :q<CR>
+endfunction
 
-nnoremap j gj
-nnoremap k gk
 
-nnoremap gj J
-nnoremap gk kJ
-
-nnoremap gq :cclose<CR>
-map <C-j> :cn<CR>
-map <C-k> :cp<CR>
-
-nnoremap - :OpenFolder<CR>
-nnoremap _ :OpenRoot<CR>
-
-noremap J 5j
-noremap K 5k
-
-nnoremap U <C-R>
+" Leader mappings
+" ----------------------------------
 
 nnoremap <leader>p :GitMRUFiles<CR>
+nnoremap <leader>f :BLines!<CR>
+nnoremap <leader>F :Ag!<CR>
+nnoremap <leader>o :ElmBufferOverview!<CR>
+nnoremap <leader>T :ElmAgTypes!<CR>
+nnoremap <leader>t :ElmAgFunctions!<CR>
+nnoremap <leader>n :BLines! <C-R><C-W><CR>
+
 
 " Statusline
+" --------------------------------------------
 
 " :h mode() to see all modes
 let g:currentmode={
@@ -418,6 +413,7 @@ function! ChangeStatuslineColor()
   return ''
 endfunction
 
+" Set the statusline
 set laststatus=2
 set statusline=
 set statusline+=%{ChangeStatuslineColor()} " Changing the statusline color
@@ -425,3 +421,63 @@ set statusline+=%0*\ %{toupper(g:currentmode[mode()])} " Current mode
 set statusline+=%8*\ %<%f\ " File+path
 set statusline+=%9*\ %= " Space
 set statusline+=%0*\ %3p%%\ %l#\ " Rownumber/total (%)
+
+
+" Custom FZF Git MRU 
+" ------------------------------
+
+let g:fzf_mru_files = get(g:, 'fzf_mru_files', [])
+
+function! s:update_mru_files(filename)
+  if filereadable(a:filename)
+    let filename = fnamemodify(a:filename, ":~:.")
+    call filter(g:fzf_mru_files, 'v:val !=# filename')
+    call add(g:fzf_mru_files, filename)
+  endif
+endfunction
+
+function! s:delete_mru_files(filename)
+  let filename = fnamemodify(a:filename, ":~:.")
+  call filter(g:fzf_mru_files, 'v:val !=# filename')
+endfunction
+
+augroup fzf_mru_files
+  autocmd!
+  autocmd BufWritePost * call s:update_mru_files(expand('%'))
+  autocmd BufEnter * call s:update_mru_files(expand('%'))
+  autocmd BufReadPost * call s:update_mru_files(expand('%'))
+  autocmd BufDelete * call s:delete_mru_files(expand('%'))
+augroup END
+
+function! s:mru_files(...)
+  let mru = reverse(copy(g:fzf_mru_files))
+  let files = sort(split(system('ag -l')))
+  let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
+  let current_filename = fnamemodify(expand('%'), ":~:.")
+  let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# current_filename')
+  let files_without_mru = filter(copy(files), 'index(relative_mru, v:val) == -1')
+  let source = extend(relative_mru_without_current, files_without_mru)
+  return fzf#run({ 'source': source, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
+endfunction
+
+
+" Helpers
+" ---------------------------
+
+function! Preserve(command)
+  let _s=@/
+  let l = line(".")
+  let c = col(".")
+  execute a:command
+  let @/=_s
+  call cursor(l, c)
+endfunction
+
+function! MkNonExDir(file, buf)
+  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+    let dir=fnamemodify(a:file, ':h')
+    if !isdirectory(dir)
+      call mkdir(dir, 'p')
+    endif
+  endif
+endfunction
