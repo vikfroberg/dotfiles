@@ -5,6 +5,8 @@ set encoding=utf-8
 filetype plugin indent on
 syntax enable
 
+" Leader
+" ----------------------------
 noremap <Space> <NOP>
 let mapleader = "\<Space>"
 
@@ -95,7 +97,7 @@ set nowb
 set noswapfile
 set nowrap
 set clipboard+=unnamed
-set iskeyword+=-
+set iskeyword+=
 set guifont=Monaco:h14
 
 " More sane html idention
@@ -252,6 +254,9 @@ endfunction
 
 command! GitMRUFiles :call s:mru_files()
 
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>,
   \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
@@ -368,9 +373,8 @@ nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>f :BLines!<CR>
 nnoremap <leader>F :Ag!<CR>
 nnoremap <leader>o :ElmBufferOverview!<CR>
-nnoremap <leader>T :ElmAgTypes!<CR>
-nnoremap <leader>t :ElmAgFunctions!<CR>
 nnoremap <leader>n :BLines! <C-R><C-W><CR>
+nnoremap <leader>N :Ag! <C-R><C-W><CR>
 
 
 " Statusline
