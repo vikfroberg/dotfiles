@@ -185,6 +185,8 @@ augroup vimrc
   autocmd BufRead,BufNewFile *.nunjs setfiletype html
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
+  autocmd BufRead,BufNewFile bashrc setfiletype sh
+  autocmd BufRead,BufNewFile bash_profile setfiletype sh
 augroup END
 
 

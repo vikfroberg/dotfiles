@@ -3,19 +3,20 @@ export PATH="/usr/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH=":$HOME/dotfiles/bin:$PATH"
 
-export GIT_MERGE_AUTOEDIT=no
-export EDITOR=vim
 export CLICOLOR=1
 
-export FZF_DEFAULT_OPTS="--color 16 --reverse"
-
-export NVM_DIR="$HOME/.nvm"
-export NODE_ENV="development"
+export EDITOR=vim
 
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_TYPE=en_US.UTF-8
+
+export FZF_DEFAULT_OPTS="--color 16 --reverse"
+
+export NODE_ENV="development"
+
+export GIT_MERGE_AUTOEDIT=no
 
 # Base16 Shell
 BASE16_SHELL="$HOME/.config/base16-shell/"
@@ -144,37 +145,6 @@ gsl() {
   git stash list | fzf --reverse -d: --preview 'git show --color=always {1}' |
   cut -d: -f1
 }
-
-
-# History
-# https://davidebove.com/blog/2016/04/29/persistent-bash-history-an-experiment/
-# -------------
-
-alias h="tail -200 ~/.persistent_history"
-alias hf="tac ~/.persistent_history | fzf"
-
-HISTTIMEFORMAT="%d/%m/%y %T "
-
-log_bash_persistent_history()
-{
-    [[
-    $(history 1) =~ ^\ *[0-9]+\ +([^\ ]+\ [^\ ]+)\ +(.*)$
-    ]]
-    local date_part="${BASH_REMATCH[1]}"
-    local command_part="${BASH_REMATCH[2]}"
-    if [ "$command_part" != "$PERSISTENT_HISTORY_LAST" ]
-    then
-        echo "$command_part" >> ~/.persistent_history
-        export PERSISTENT_HISTORY_LAST="$command_part"
-    fi
-}
-
-run_on_prompt_command()
-{
-  log_bash_persistent_history
-}
-
-# PROMPT_COMMAND="run_on_prompt_command"
 
 
 # Prompt
