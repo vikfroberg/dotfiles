@@ -36,6 +36,7 @@ Plug 'tpope/vim-surround'
 Plug 'mileszs/ack.vim'
 Plug 'matze/vim-move'
 Plug 'godlygeek/tabular'
+Plug 'chriskempson/base16-vim'
 
 " Syntax
 Plug 'pangloss/vim-javascript'
@@ -190,36 +191,13 @@ augroup END
 " Appearance
 " ---------------------------------
 
-" Clear existing color scheme
-hi clear
-if exists("syntax_on")
-  syntax reset
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
 endif
-
-" Set background style
-set background=dark
 
 " Set spacing between lines
 set linespace=3
-
-" Set colorscheme
-hi Normal               cterm=none ctermbg=none ctermfg=15
-hi CursorLine           cterm=none ctermbg=none ctermfg=none
-hi Visual               cterm=none ctermbg=7    ctermfg=0
-hi Search               cterm=none ctermbg=7    ctermfg=0
-hi IncSearch            cterm=none ctermbg=7    ctermfg=0
-hi StatusLine           cterm=none ctermbg=8    ctermfg=0
-hi StatusLineNC         cterm=none ctermbg=8    ctermfg=0
-hi Comment              cterm=none ctermbg=none ctermfg=7
-hi Identifier           cterm=none ctermbg=none ctermfg=5
-hi Constant             cterm=none ctermbg=none ctermfg=6
-hi Type                 cterm=none ctermbg=none ctermfg=1
-hi Statement            cterm=none ctermbg=none ctermfg=1
-hi Special              cterm=none ctermbg=none ctermfg=6
-hi String               cterm=none ctermbg=none ctermfg=4
-hi! link PreProc Type
-hi! link Todo Comment
-hi! link Directory Constant
 
 " Netrw
 hi! link netrwClassify Directory
