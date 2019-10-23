@@ -1,6 +1,3 @@
-export PATH="/bin:$PATH"
-export PATH="/usr/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
 export PATH=":$HOME/dotfiles/bin:$PATH"
 
 export CLICOLOR=1
