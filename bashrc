@@ -1,5 +1,7 @@
-export PATH=":$HOME/dotfiles/bin:$PATH"
+export PATH="/bin:$PATH"
+export PATH="/usr/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
+export PATH=":$HOME/dotfiles/bin:$PATH"
 
 export GIT_MERGE_AUTOEDIT=no
 export EDITOR=vim
