@@ -59,6 +59,7 @@ alias vbox="ssh -XY $USER@virtual-box"
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"
 alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/bin/magento"
+alias ivar="cd /var/www/elm/ivar/app"
 
 
 # Cd
