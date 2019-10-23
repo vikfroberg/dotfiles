@@ -37,12 +37,12 @@ Plug 'mileszs/ack.vim'
 Plug 'matze/vim-move'
 Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Syntax
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
-Plug 'ElmCast/elm-vim', { 'do': 'npm i -g elm elm-test elm-format elm-oracle' }
-" Plug 'vim-scripts/SyntaxAttr.vim'
+Plug 'andys8/vim-elm-syntax'
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'mxw/vim-jsx'
 " Plug 'neovimhaskell/haskell-vim'
@@ -169,6 +169,10 @@ augroup vimrc
   " Disabled because it makes bad diffs when used at WH
   " autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
 
+  " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
+  au BufNewFile,BufRead,InsertLeave * silent! match ExtraWhitespace /\s\+$/
+  au InsertEnter * silent! match ExtraWhitespace /\s\+\%#\@<!$/
+
   " Unset paste on InsertLeave
   autocmd InsertLeave * silent! set nopaste
 
@@ -205,8 +209,34 @@ set linespace=3
 hi! link netrwClassify Directory
 
 " Elm
-hi! link elmType Constant
-hi! link elmBraces Statement
+hi! link elmAlias Statement
+hi! link elmBraces Normal
+hi! link elmCaseBlockDefinition Statement
+hi! link elmCaseBlockItemDefinition Statement
+hi! link elmChar String
+hi! link elmComment Comment
+hi! link elmConditional Statement
+hi! link elmDebug Debug
+hi! link elmDelimiter Delimiter
+hi! link elmFloat Float
+hi! link elmFuncName Function
+hi! link elmImport Include
+hi! link elmInt Number
+hi! link elmLambdaFunc Normal
+hi! link elmLetBlockDefinition Statement
+hi! link elmLineComment Comment
+hi! link elmModule Type
+hi! link elmNumberType Identifier
+hi! link elmOperator Operator
+hi! link elmString String
+hi! link elmStringEscape Special
+hi! link elmTodo Todo
+hi! link elmTopLevelDecl Function
+hi! link elmTripleString String
+hi! link elmTupleFunction Normal
+hi! link elmType Identifier
+hi! link elmType Type
+hi! link elmTypedef Statement
 
 " Javascript
 hi! link jsVariableDef     Constant
@@ -217,7 +247,6 @@ hi! link jsArrowFunction Normal
 " ------------------------------
 
 command! Dotfiles :FZF! ~/dotfiles
-command! SyntaxAttr :call SyntaxAttr()
 command! Diff :w !diff % -
 command! W write|bdelete
 
@@ -356,6 +385,18 @@ nnoremap <leader>o :ElmBufferOverview!<CR>
 nnoremap <leader>n :BLines! <C-R><C-W><CR>
 nnoremap <leader>N :Ag! <C-R><C-W><CR>
 
+" Coc bindings
+" --------------------------------
+" nmap <leader>r <Plug>(coc-rename)
+" nmap <silent> <leader>s <Plug>(coc-fix-current)
+" nmap <silent> <leader>S <Plug>(coc-codeaction)
+" nmap <silent> <leader>a <Plug>(coc-diagnostic-next)
+" nmap <silent> <leader>A <Plug>(coc-diagnostic-next-error)
+nmap <silent> <leader>d <Plug>(coc-definition)
+nmap <silent> <leader>g :call CocAction('doHover')<CR>
+nmap <silent> <leader>u <Plug>(coc-references)
+" nmap <silent> <leader>p :call CocActionAsync('format')<CR>
+
 
 " Statusline
 " --------------------------------------------
@@ -445,8 +486,18 @@ function! s:mru_files(...)
 endfunction
 
 
+" HL | Find out syntax group
+" -------------------------------------
+
+function! s:hl()
+  " echo synIDattr(synID(line('.'), col('.'), 0), 'name')
+  echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), '/')
+endfunction
+command! HL call <SID>hl()
+
+
 " Helpers
-" ---------------------------
+" -------------------------------------
 
 function! Preserve(command)
   let _s=@/
