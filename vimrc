@@ -27,17 +27,20 @@ Plug 'ervandew/supertab'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
+Plug 'junegunn/vim-after-object'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
 Plug 'mileszs/ack.vim'
 Plug 'matze/vim-move'
 Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'} -- BUGGY
+" Plug 'wincent/loupe'
 
 " Syntax
 Plug 'pangloss/vim-javascript'
@@ -107,6 +110,9 @@ let g:html_indent_tags = 'li\|p'
 " Show matching paren
 let g:loaded_matchparen = 1
 
+" supertab.vim
+let g:SuperTabDefaultCompletionType = "<C-n>"
+
 " Remove netrw banner
 " if !exists("g:netrw_banner")
 "   let g:netrw_banner = 0
@@ -146,6 +152,8 @@ let $FZF_DEFAULT_OPTS = '--reverse --color 16'
 
 " Auto commands
 " ----------------------------------
+
+autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',')
 
 augroup vimrc
   autocmd!
@@ -291,11 +299,12 @@ command! -bang -nargs=* ElmBufferTypes
   \ call fzf#vim#buffer_lines('^type', <bang>0)
 
 command! -bang -nargs=* ElmBufferOverview
-  \ call fzf#vim#buffer_lines('^\s*[{,]\s[a-z][a-zA-Z0-9_]*\s:\|^type\|^\s*[=|]\s[A-Z]\|^[a-z][a-zA-Z0-9_]*\s:', <bang>0)
+  \ call fzf#vim#buffer_lines('^type\|^[a-z][a-zA-Z0-9_]*\s:', <bang>0)
+  " \ call fzf#vim#buffer_lines('^\s*[{,]\s[a-z][a-zA-Z0-9_]*\s:\|^type\|^\s*[=|]\s[A-Z]\|^[a-z][a-zA-Z0-9_]*\s:', <bang>0)
 
 
 
-" Key mapping
+" Key bindings
 " -------------------------------
 
 " Sane ^/$ for swedish keyboard
@@ -313,6 +322,7 @@ nnoremap U <C-R>
 nnoremap V v$h
 vnoremap v V
 nnoremap Y y$
+vnoremap y ygv<Esc>
 
 " Reverse repeat action 
 " Makes more sense on a swedish keyboard
@@ -381,21 +391,23 @@ endfunction
 nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>f :BLines!<CR>
 nnoremap <leader>F :Ag!<CR>
-nnoremap <leader>o :ElmBufferOverview!<CR>
-nnoremap <leader>n :BLines! <C-R><C-W><CR>
+nnoremap <leader>o :BTags!<CR>
+nnoremap <leader>O :Tags!<CR>
+nnoremap <leader>n *
 nnoremap <leader>N :Ag! <C-R><C-W><CR>
+nnoremap <leader>d :tag <C-R><C-W><CR>
 
 " Coc bindings
 " --------------------------------
-" nmap <leader>r <Plug>(coc-rename)
 " nmap <silent> <leader>s <Plug>(coc-fix-current)
 " nmap <silent> <leader>S <Plug>(coc-codeaction)
 " nmap <silent> <leader>a <Plug>(coc-diagnostic-next)
 " nmap <silent> <leader>A <Plug>(coc-diagnostic-next-error)
-nmap <silent> <leader>d <Plug>(coc-definition)
-nmap <silent> <leader>g :call CocAction('doHover')<CR>
-nmap <silent> <leader>u <Plug>(coc-references)
 " nmap <silent> <leader>p :call CocActionAsync('format')<CR>
+" nmap <leader>r e<Plug>(coc-rename)
+" nmap <silent> <leader>d e<Plug>(coc-definition)
+nmap <silent> <leader>g e:call CocAction('doHover')<CR>
+" nmap <silent> <leader>u e<Plug>(coc-references)
 
 
 " Statusline
