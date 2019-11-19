@@ -102,7 +102,9 @@ set noswapfile
 set nowrap
 set clipboard+=unnamed
 set iskeyword+=
+set iskeyword+=-
 set guifont=Monaco:h14
+
 
 " More sane html idention
 let g:html_indent_tags = 'li\|p'
