@@ -10,7 +10,6 @@ syntax enable
 noremap <Space> <NOP>
 let mapleader = "\<Space>"
 
-
 " Plugins
 " -----------------------------
 
@@ -39,6 +38,7 @@ Plug 'mileszs/ack.vim'
 Plug 'matze/vim-move'
 Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
+Plug 'tpope/vim-fugitive'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'} -- BUGGY
 " Plug 'wincent/loupe'
 
@@ -104,6 +104,8 @@ set clipboard+=unnamed
 set iskeyword+=
 set iskeyword+=-
 set guifont=Monaco:h14
+set undodir=~/.vim/undodir
+set undofile 
 
 
 " More sane html idention
@@ -334,7 +336,7 @@ nnoremap ; ,
 " Save and quit hotkeys
 nnoremap s :w<CR>
 nnoremap S :wq<CR>
-nnoremap q :bd<CR>
+nnoremap q :bw<CR>
 nnoremap Q :q<CR>
 
 " Hotkeys for quotes
@@ -365,7 +367,7 @@ noremap K 5k
 nnoremap <C-l> <Tab> 
 
 " Navigate quickfix
-nnoremap gq :cclose<CR>
+nnoremap <C-h> :cclose<CR>
 map <C-j> :cn<CR> 
 map <C-k> :cp<CR>
 
