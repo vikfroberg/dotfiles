@@ -29,7 +29,6 @@ Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-after-object'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
-" Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
@@ -42,8 +41,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'cocopon/vaffle.vim'
 Plug 'mattn/webapi-vim'
 Plug 'mattn/vim-gist'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'} -- BUGGY
-" Plug 'wincent/loupe'
 
 " Syntax
 Plug 'pangloss/vim-javascript'

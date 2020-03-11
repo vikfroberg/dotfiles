@@ -21,7 +21,7 @@
   default = simple
 [core]
   excludesfile = ~/.gitignore
-  fileMode = false
+	fileMode = false
   editor = /usr/bin/vim
 [github]
 	user = vikfroberg
