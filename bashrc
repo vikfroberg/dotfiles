@@ -1,4 +1,5 @@
 export PATH=":$HOME/dotfiles/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
 
 export CLICOLOR=1
 
@@ -55,7 +56,7 @@ alias gcf="git checkout \$(gf)"
 alias gsu="git stash --include-untracked"
 
 # Virtual box
-alias vbox="ssh -XY $USER@virtual-box"
+alias vbox="ssh $USER@virtual-box"
 
 # Webbhuset
 alias whd="/var/www/tools/dev-docker/start"

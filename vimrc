@@ -29,7 +29,7 @@ Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-after-object'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-vinegar'
+" Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
@@ -39,6 +39,7 @@ Plug 'matze/vim-move'
 Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-fugitive'
+Plug 'cocopon/vaffle.vim'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'} -- BUGGY
 " Plug 'wincent/loupe'
 
@@ -46,8 +47,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
 Plug 'andys8/vim-elm-syntax'
+Plug 'mxw/vim-jsx'
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
-" Plug 'mxw/vim-jsx'
 " Plug 'neovimhaskell/haskell-vim'
 " Plug 'hdima/python-syntax'
 " Plug 'leafgarland/typescript-vim'
@@ -377,6 +378,19 @@ nnoremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
+
+nnoremap - :Vaffle<CR>
+
+function! s:customize_vaffle_mappings() abort
+  nmap <buffer> <Tab> <Space>k
+  vmap <buffer> <Tab> <Space>
+  nmap <buffer> - <Plug>(vaffle-open-parent)
+endfunction
+
+augroup vimrc_vaffle
+  autocmd!
+  autocmd FileType vaffle call s:customize_vaffle_mappings()
+augroup END
 
 " Netrw mappings
 " --------------------------------
