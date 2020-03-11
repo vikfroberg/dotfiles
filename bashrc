@@ -38,6 +38,7 @@ alias la="ls -la"
 alias c="clear"
 alias v="vimmer"
 alias r="source ~/.bash_profile"
+alias ducks="du -cks * | sort -rn | head"
 
 # Git
 alias gs="git status"

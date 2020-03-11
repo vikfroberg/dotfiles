@@ -410,7 +410,7 @@ nnoremap <leader>d :tag <C-R><C-W><CR>
 " nmap <silent> <leader>p :call CocActionAsync('format')<CR>
 " nmap <leader>r e<Plug>(coc-rename)
 " nmap <silent> <leader>d e<Plug>(coc-definition)
-nmap <silent> <leader>g e:call CocAction('doHover')<CR>
+" nmap <silent> <leader>g e:call CocAction('doHover')<CR>
 " nmap <silent> <leader>u e<Plug>(coc-references)
 
 
