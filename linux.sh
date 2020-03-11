@@ -4,10 +4,10 @@ echo "Bootstrapping..."
 if test ! $(which brew); then
     echo "Installing Linuxbrew..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+    sudo apt-get install build-essential curl file git
 fi
 
 ~/dotfiles/install/brew.sh
-sudo apt install silversearcher-ag
 ~/dotfiles/install/symlink.sh
 
 cat ~/dotfiles/install/enjoy.txt
