@@ -15,7 +15,4 @@ for file in $files; do
     ln -s ~/dotfiles/$file ~/.$file
 done
 
-echo "Creating symlink for coc-settings.json"
-ln -s ~/dotfiles/coc-settings.json ~/.vim/coc-settings.json
-
 source ~/.bash_profile
