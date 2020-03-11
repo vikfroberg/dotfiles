@@ -9,5 +9,6 @@ fi
 
 ~/dotfiles/install/brew.sh
 ~/dotfiles/install/symlink.sh
+~/dotfiles/install/base16.sh
 
 cat ~/dotfiles/install/enjoy.txt
