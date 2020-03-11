@@ -150,6 +150,10 @@ let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#trailing_comma = 'all'
 let g:prettier#autoformat = 0
 
+" vim-vaffle
+let g:vaffle_force_delete = 1
+let g:vaffle_use_default_mappings = 0
+
 
 " vim-fzf
 let $FZF_DEFAULT_OPTS = '--reverse --color 16'
@@ -382,9 +386,18 @@ vnoremap <S-Tab> <gv
 nnoremap - :Vaffle<CR>
 
 function! s:customize_vaffle_mappings() abort
-  nmap <buffer> <Tab> <Space>k
-  vmap <buffer> <Tab> <Space>
+  nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
+  vmap <buffer> <Tab> <Plug>(vaffle-toggle-current)
   nmap <buffer> - <Plug>(vaffle-open-parent)
+  nmap <buffer> <CR> <Plug>(vaffle-open-current)
+  nmap <buffer> m <Plug>(vaffle-move-selected)
+  nmap <buffer> d <Plug>(vaffle-delete-selected)
+  nmap <buffer> r <Plug>(vaffle-rename-selected)
+  nmap <buffer> q <Plug>(vaffle-quit)
+  nmap <buffer> o <Plug>(vaffle-mkdir)
+  nmap <buffer> i <Plug>(vaffle-new-file)
+  nmap <buffer> x <Plug>(vaffle-fill-cmdline)
+  nmap <buffer> . <Plug>(vaffle-toggle-hidden)
 endfunction
 
 augroup vimrc_vaffle
