@@ -428,18 +428,6 @@ nnoremap <leader>n *
 nnoremap <leader>N :Ag! <C-R><C-W><CR>
 nnoremap <leader>d :tag <C-R><C-W><CR>
 
-" Coc bindings
-" --------------------------------
-" nmap <silent> <leader>s <Plug>(coc-fix-current)
-" nmap <silent> <leader>S <Plug>(coc-codeaction)
-" nmap <silent> <leader>a <Plug>(coc-diagnostic-next)
-" nmap <silent> <leader>A <Plug>(coc-diagnostic-next-error)
-" nmap <silent> <leader>p :call CocActionAsync('format')<CR>
-" nmap <leader>r e<Plug>(coc-rename)
-" nmap <silent> <leader>d e<Plug>(coc-definition)
-" nmap <silent> <leader>g e:call CocAction('doHover')<CR>
-" nmap <silent> <leader>u e<Plug>(coc-references)
-
 
 " Statusline
 " --------------------------------------------
