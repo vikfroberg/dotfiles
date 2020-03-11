@@ -9,6 +9,7 @@ if test ! $(which brew); then
 fi
 
 ~/dotfiles/install/brew.sh
+brew install ag
 ~/dotfiles/install/symlink.sh
 
 cat ~/dotfiles/install/enjoy.txt

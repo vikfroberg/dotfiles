@@ -8,4 +8,3 @@ echo "Installing brew packages..."
 # brew install node
 brew install fzf
 brew install git
-brew install ag
