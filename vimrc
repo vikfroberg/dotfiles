@@ -40,6 +40,8 @@ Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'cocopon/vaffle.vim'
+Plug 'mattn/webapi-vim'
+Plug 'mattn/vim-gist'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'} -- BUGGY
 " Plug 'wincent/loupe'
 
