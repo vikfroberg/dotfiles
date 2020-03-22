@@ -2,21 +2,23 @@ export PATH=":$HOME/dotfiles/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
 export CLICOLOR=1
-
 export EDITOR=vim
-
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export LC_TYPE=en_US.UTF-8
-
+export NODE_ENV="development"
+export GIT_MERGE_AUTOEDIT=no
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 
-export NODE_ENV="development"
 
-export GIT_MERGE_AUTOEDIT=no
+# I think these are for linux?
+# ----------------------------
+# export LANGUAGE=en_US.UTF-8
+# export LANG=en_US.UTF-8
+# export LC_ALL=en_US.UTF-8
+# export LC_TYPE=en_US.UTF-8
+
 
 # Base16 Shell
+# --------------
+
 BASE16_SHELL="$HOME/.config/base16-shell/"
 [ -n "$PS1" ] && \
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
@@ -58,11 +60,6 @@ alias gsu="git stash --include-untracked"
 # Virtual box
 alias vbox="ssh $USER@virtual-box"
 
-# Webbhuset
-alias whd="/var/www/tools/dev-docker/start"
-alias magento="sudo -uwww-data php7.0 \$(git rev-parse --show-toplevel)/magento/bin/magento"
-alias ivar="cd /var/www/elm/ivar/app"
-
 
 # Cd
 # -------------
@@ -98,13 +95,9 @@ vimmer() {
   return
 }
 
-# fd - cd to selected directory
 
-fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  echo $dir
+temp() {
+  vim +"set filetype=$1" /tmp/temp-$(date +'%Y%m%d-%H%M%S')
 }
 
 
@@ -188,5 +181,3 @@ if [[ $- == *i* ]]; then
 
   export PS1="\[${RED}\]\h\[${NOCOLOR}\]:\[${BLUE}\]\$(get_pwd) \[${YELLOW}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
 fi
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
