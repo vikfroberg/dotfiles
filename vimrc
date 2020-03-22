@@ -1,15 +1,3 @@
-set nocompatible
-
-scriptencoding utf-8
-set encoding=utf-8
-filetype plugin indent on
-syntax enable
-
-" Leader
-" ----------------------------
-noremap <Space> <NOP>
-let mapleader = "\<Space>"
-
 " Plugins
 " -----------------------------
 
@@ -33,7 +21,6 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
-Plug 'mileszs/ack.vim'
 Plug 'matze/vim-move'
 Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
@@ -55,57 +42,63 @@ Plug 'mxw/vim-jsx'
 call plug#end()
 
 
+" Leader
+" ----------------------------
+noremap <Space> <NOP>
+let mapleader = "\<Space>"
+
+
 " Settings
 " -------------------------------------
 
-set incsearch
-set hlsearch
-set ignorecase
-set smartindent
-set smartcase
-set cursorline
-set nocursorcolumn
-set shiftwidth=2
-set nonumber
-set norelativenumber
-set numberwidth=8
-set tabstop=2
-set softtabstop=2
-set expandtab
-set laststatus=2
-set conceallevel=0
-set ttyfast
-set lazyredraw
-set list
-set listchars=nbsp:¬
 set autoindent
-set backspace=indent,eol,start
-set scrolloff=7
-set showmatch
-set splitbelow
-set nosplitright
-set ttimeout
-set ttimeoutlen=20
-set notimeout
-set history=500
-set noshowmode
-set noshowcmd
-set mouse=i
-set visualbell
-set t_vb=
 set autoread
+set backspace=indent,eol,start
+set clipboard=unnamed
+set cursorline
+set encoding=utf-8
 set hidden
-set encoding=utf8
-set nobackup
-set nowb
-set noswapfile
+set lazyredraw
+set visualbell
+set directory^=$HOME/.vim/tmp//
 set nowrap
-set clipboard+=unnamed
-set iskeyword+=
+set scrolloff=7
+set nonumber
+set showcmd
+set noshowmode
+set linespace=3
+
+" Gui
+set guifont=Menlo:h16
+
+" Tabs
+set tabstop=2 shiftwidth=2 expandtab
+set softtabstop=2
+set smartindent
+set smarttab
+
+" Search
+set hlsearch
+set incsearch
+set ignorecase smartcase
+
+" include - as a word
 set iskeyword+=-
-set guifont=Monaco:h14
-set undodir=~/.vim/undodir
-set undofile 
+
+" hightlight trailing and nbsb
+set list
+set listchars=nbsp:¬,trail:␣
+
+" fix timeout for esc
+set ttimeout
+set ttimeoutlen=0
+set notimeout
+
+" semi-persistent undo
+if has('persistent_undo')
+  set undodir=/tmp,.
+  set undofile
+endif
 
 
 " More sane html idention
@@ -116,11 +109,6 @@ let g:loaded_matchparen = 1
 
 " supertab.vim
 let g:SuperTabDefaultCompletionType = "<C-n>"
-
-" ack.vim
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep -s'
-endif
 
 " vim-multiple-cursors
 let g:multi_cursor_exit_from_insert_mode = 0
@@ -149,17 +137,15 @@ let g:vaffle_force_delete = 1
 let g:vaffle_use_default_mappings = 0
 
 
-" vim-fzf
-let $FZF_DEFAULT_OPTS = '--reverse --color 16'
-
-
 " Auto commands
 " ----------------------------------
 
-autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',')
-
 augroup vimrc
   autocmd!
+
+  " Enable after object keys
+  autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',')
+
   " Create directories on write
   autocmd BufWritePre * :call MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 
@@ -172,10 +158,6 @@ augroup vimrc
   " Strip whitespace
   " Disabled because it makes bad diffs when used at WH
   " autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
-
-  " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
-  au BufNewFile,BufRead,InsertLeave * silent! match ExtraWhitespace /\s\+$/
-  au InsertEnter * silent! match ExtraWhitespace /\s\+\%#\@<!$/
 
   " Unset paste on InsertLeave
   autocmd InsertLeave * silent! set nopaste
@@ -205,12 +187,6 @@ if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
-
-" Set spacing between lines
-set linespace=3
-
-" Netrw
-hi! link netrwClassify Directory
 
 " Elm
 hi! link elmAlias Statement
@@ -243,7 +219,7 @@ hi! link elmType Type
 hi! link elmTypedef Statement
 
 " Javascript
-hi! link jsVariableDef     Constant
+hi! link jsVariableDef Constant
 hi! link jsArrowFunction Normal
 
 
@@ -256,13 +232,9 @@ command! W write|bdelete
 
 command! Gconflicts :call GitConflicts()
 command! GConflicts :call GitConflicts()
+
 function! GitConflicts()
   :cexpr system('ag "<<<<" --vimgrep') | copen
-endfunction
-
-command! Todos :call Todos()
-function! Todos()
-  :cexpr system('ag "TODO:" --vimgrep') | copen
 endfunction
 
 command! GitMRUFiles :call s:mru_files()
@@ -272,19 +244,19 @@ command! -bang -nargs=? -complete=dir Files
 
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
   \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
   \                 <bang>0)
 
 command! -bang -nargs=* ElmAgFunctions
   \ call fzf#vim#ag('^[a-z][a-zA-Z_0-9]*\s:',
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
   \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
   \                 <bang>0)
 
 command! -bang -nargs=* ElmAgTypes
   \ call fzf#vim#ag('^type',
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%')
+  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
   \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
   \                 <bang>0)
 
