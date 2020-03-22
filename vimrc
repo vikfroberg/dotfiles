@@ -117,11 +117,6 @@ let g:loaded_matchparen = 1
 " supertab.vim
 let g:SuperTabDefaultCompletionType = "<C-n>"
 
-" Remove netrw banner
-" if !exists("g:netrw_banner")
-"   let g:netrw_banner = 0
-" endif
-
 " ack.vim
 if executable('ag')
   let g:ackprg = 'ag --vimgrep -s'
@@ -165,13 +160,6 @@ autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',')
 
 augroup vimrc
   autocmd!
-  " Netrw mappings
-  autocmd filetype netrw call NetrwMapping()
-
-  " Netrw hack
-  " https://github.com/tpope/vim-vinegar/issues/13#issuecomment-47133890
-  autocmd FileType netrw setl bufhidden=delete
-
   " Create directories on write
   autocmd BufWritePre * :call MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 
@@ -403,16 +391,6 @@ augroup vimrc_vaffle
   autocmd!
   autocmd FileType vaffle call s:customize_vaffle_mappings()
 augroup END
-
-" Netrw mappings
-" --------------------------------
-
-function! NetrwMapping()
-  noremap <buffer> S <NOP>
-  noremap <buffer> s <NOP>
-  noremap <buffer> q :bd<CR>
-  noremap <buffer> Q :q<CR>
-endfunction
 
 
 " Leader mappings
