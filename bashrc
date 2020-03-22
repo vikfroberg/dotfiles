@@ -28,6 +28,15 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 # Alias
 # -------------
 
+# Colored ls
+if [ -x /usr/bin/dircolors ]; then
+  eval "`dircolors -b`"
+  alias ls='ls --color=auto'
+  alias grep='grep --color=auto'
+elif [ "$PLATFORM" = Darwin ]; then
+  alias ls='ls -G'
+fi
+
 # Bash
 alias cd="push_cd"
 alias dc="pop_cd"
@@ -163,6 +172,21 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$NVM_DIR/versions/node/v$(<$NVM_DIR/alias/default)/bin:$PATH"
 # alias `nvm` to this one liner lazy load of the normal nvm script
 alias nvm="unalias nvm; [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"; nvm $@"
+
+
+# Auto complete parent dir
+# --------------
+
+..cd() {
+  cd ..
+  cd "$@"
+}
+
+_parent_dirs() {
+  COMPREPLY=( $(cd ..; find . -mindepth 1 -maxdepth 1 -type d -print | cut -c3- | grep "^${COMP_WORDS[COMP_CWORD]}") )
+}
+
+complete -F _parent_dirs -o default -o bashdefault ..cd
 
 
 # Prompt
