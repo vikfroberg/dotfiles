@@ -230,6 +230,9 @@ hi! link jsArrowFunction Normal
 " Commands
 " ------------------------------
 
+command! TrimWhitespace :call Preserve("%s/\\s\\+$//e")
+
+
 command! Dotfiles :FZF! ~/dotfiles
 command! Diff :w !diff % -
 command! W write|bdelete
