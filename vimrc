@@ -67,6 +67,7 @@ set nonumber
 set showcmd
 set noshowmode
 set linespace=3
+set listchars=nbsp:¬
 
 " Gui
 set guifont=Menlo:h16
@@ -87,7 +88,6 @@ set iskeyword+=-
 
 " hightlight trailing and nbsb
 set list
-set listchars=nbsp:¬,trail:␣
 
 " fix timeout for esc
 set ttimeout
@@ -161,6 +161,10 @@ augroup vimrc
 
   " Unset paste on InsertLeave
   autocmd InsertLeave * silent! set nopaste
+
+  " Show trailing when out of insert mode
+  autocmd InsertEnter * set listchars=nbsp:¬
+  autocmd InsertLeave * set listchars=nbsp:¬,trail:␣
 
   " Source vimrc on save
   autocmd BufWritePost .vimrc source %
