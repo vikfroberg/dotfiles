@@ -33,12 +33,12 @@ Plug 'mattn/vim-gist'
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
 Plug 'andys8/vim-elm-syntax'
-Plug 'mxw/vim-jsx'
+" Plug 'mxw/vim-jsx'
+Plug 'purescript-contrib/purescript-vim'
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'neovimhaskell/haskell-vim'
 " Plug 'hdima/python-syntax'
 " Plug 'leafgarland/typescript-vim'
-" Plug 'purescript-contrib/purescript-vim'
 call plug#end()
 
 
@@ -60,7 +60,7 @@ set encoding=utf-8
 set hidden
 set lazyredraw
 set visualbell
-set directory^=$HOME/.vim/tmp//
+set noswapfile
 set nowrap
 set scrolloff=7
 set nonumber
@@ -135,7 +135,6 @@ let g:prettier#autoformat = 0
 " vim-vaffle
 let g:vaffle_force_delete = 1
 let g:vaffle_use_default_mappings = 0
-
 
 " Auto commands
 " ----------------------------------

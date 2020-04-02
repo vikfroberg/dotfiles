@@ -7,6 +7,7 @@ export NODE_ENV="development"
 export GIT_MERGE_AUTOEDIT=no
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 export BAT_THEME="base16"
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
 
 # I think these are for linux?
@@ -107,7 +108,7 @@ vimmer() {
 
 
 temp() {
-  vim +"set filetype=$1" /tmp/temp-$(date +'%Y%m%d-%H%M%S')
+  vim +"set filetype=$1" /tmp/$1/temp-$(date +'%Y%m%d-%H%M%S').$1
 }
 
 
