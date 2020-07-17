@@ -232,3 +232,5 @@ if [[ $- == *i* ]]; then
 
   export PS1="\[${RED}\]\h\[${NOCOLOR}\]:\[${BLUE}\]\$(get_pwd) \[${YELLOW}\]\$(git_branch)\$(git_dirty)\[${NOCOLOR}\] \n$ "
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
