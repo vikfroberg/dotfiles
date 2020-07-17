@@ -10,12 +10,14 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " Features
+Plug 'mattn/emmet-vim'
 Plug 'ervandew/supertab'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-after-object'
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
@@ -28,12 +30,17 @@ Plug 'tpope/vim-fugitive'
 Plug 'cocopon/vaffle.vim'
 Plug 'mattn/webapi-vim'
 Plug 'mattn/vim-gist'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
+Plug 'brooth/far.vim'
+Plug 'dkprice/vim-easygrep'
 
 " Syntax
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
 Plug 'andys8/vim-elm-syntax'
-" Plug 'mxw/vim-jsx'
+" Plug 'vikfroberg/vim-elm-syntax'
+Plug 'mxw/vim-jsx'
 Plug 'purescript-contrib/purescript-vim'
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'neovimhaskell/haskell-vim'
@@ -168,6 +175,7 @@ augroup vimrc
   " Source vimrc on save
   autocmd BufWritePost .vimrc source %
   autocmd BufWritePost vimrc source %
+  autocmd BufWritePost .vim source %
 
   " Set indention for langs
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
@@ -329,16 +337,16 @@ nnoremap k gk
 " Join hotkeys
 nnoremap gj J
 
-" Quick navigation 
+" Quick navigation
 noremap J 5j
 noremap K 5k
 
 " Go forward in nav history
-nnoremap <C-l> <Tab> 
+nnoremap <C-l> <Tab>
 
 " Navigate quickfix
 nnoremap <C-h> :cclose<CR>
-map <C-j> :cn<CR> 
+map <C-j> :cn<CR>
 map <C-k> :cp<CR>
 
 " Tabs
@@ -347,6 +355,9 @@ nnoremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
+" Vim splits
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 nnoremap - :Vaffle<CR>
 
@@ -375,6 +386,7 @@ augroup END
 " ----------------------------------
 
 nnoremap <leader>p :GitMRUFiles<CR>
+nnoremap <leader>b :Buffers!<CR>
 nnoremap <leader>f :BLines!<CR>
 nnoremap <leader>F :Ag!<CR>
 nnoremap <leader>o :BTags!<CR>
