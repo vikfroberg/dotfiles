@@ -133,7 +133,7 @@ gb() {
   fzf --ansi --multi --preview-window right:60% \
     --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -200' |
   sed 's/^..//' | cut -d' ' -f1 |
-  sed 's/.*\///'
+  sed 's/^remotes\/[^\/]*\///'
 }
 
 gh() {
