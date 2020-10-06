@@ -163,7 +163,7 @@ augroup vimrc
 
   " Strip whitespace
   " Disabled because it makes bad diffs when used at WH
-  " autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
+  autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
 
   " Unset paste on InsertLeave
   autocmd InsertLeave * silent! set nopaste
@@ -275,7 +275,7 @@ command! -bang -nargs=* ElmAgTypes
   \                 <bang>0)
 
 command! -bang -nargs=* ElmBufferFunctions
-  \ call fzf#vim#buffer_lines('^[a-z][a-zA-Z_0-9]*\s:', <bang>0)
+  \ call fzf#vim#buffer_lines('^[a-z][a-zA-Z_0-9]*\s:', <bang>1)
 
 command! -bang -nargs=* ElmBufferTypes
   \ call fzf#vim#buffer_lines('^type', <bang>0)
@@ -306,7 +306,7 @@ vnoremap v V
 nnoremap Y y$
 vnoremap y ygv<Esc>
 
-" Reverse repeat action 
+" Reverse repeat action
 " Makes more sense on a swedish keyboard
 nnoremap , ;
 nnoremap ; ,
@@ -359,7 +359,7 @@ vnoremap <S-Tab> <gv
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-nnoremap - :Vaffle<CR>
+nnoremap - :Vaffle %<CR>
 
 function! s:customize_vaffle_mappings() abort
   nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
@@ -446,7 +446,7 @@ set statusline+=%9*\ %= " Space
 set statusline+=%0*\ %3p%%\ %l#\ " Rownumber/total (%)
 
 
-" Custom FZF Git MRU 
+" Custom FZF Git MRU
 " ------------------------------
 
 let g:fzf_mru_files = get(g:, 'fzf_mru_files', [])

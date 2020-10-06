@@ -1,0 +1,178 @@
+#/bin/bash
+
+root_path=$(git rev-parse --show-toplevel)
+current_path=$(git rev-parse --show-prefix)
+absolute_module_path=$root_path/$current_path$1
+relive_module_path=$current_path$1
+current_dir=`dirname $absolute_module_path`
+
+if [ ! -d $current_dir ]; then
+    echo "Directory '$current_dir' does not exist."
+    exit
+fi
+
+module_file=$absolute_module_path.elm
+sandbox_file=$absolute_module_path\_Sandbox.elm
+module_name=`echo ${relive_module_path#*/} | sed 's/\//./g'`
+module_alias=`basename $1`
+sandbox_name=$module_name\_Sandbox
+
+(
+cat <<ELM
+module $module_name exposing
+    ( Args
+    , Model
+    , Msg
+    , OutMsg(..)
+    , actor
+    )
+
+{-|
+
+# $module_alias Actor
+
+## Init Arguments
+
+@docs Args
+
+## Input
+
+@docs Msg
+
+## Output
+
+@docs OutMsg
+
+@docs Model, actor
+-}
+import Element exposing (Element)
+import Element.Background as Bg
+import Element.Font as Font
+import Element.Border as Border
+import Element.Actor exposing (Actor, PID)
+import Vendor.StoreFront.Design.Default as Default
+import Vendor.StoreFront.View.Helper as Helper
+
+{-| Init Arguments
+-}
+type alias Args =
+    {}
+
+
+{-| Actor Msg
+-}
+type Msg
+    = NoMsg
+
+
+{-| Actor out messages
+-}
+type OutMsg
+    = NoOut
+
+
+{-| Actor model
+-}
+type alias Model =
+    { self : PID
+    }
+
+
+{-| Actor
+-}
+actor : Actor Args Model Msg OutMsg msg
+actor =
+    { init = init
+    , update = update
+    , view = view
+    , subscriptions = subscriptions
+    }
+
+
+init : Args -> PID -> ( Model, List OutMsg, Cmd Msg )
+init args pid =
+    ( { self = pid
+      }
+    , []
+    , Cmd.none
+    )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
+
+update : Msg -> Model -> ( Model, List OutMsg, Cmd Msg )
+update msgIn model =
+    case msgIn of
+        NoMsg ->
+            ( model
+            , []
+            , Cmd.none
+            )
+
+
+view : (Msg -> msg) -> (PID -> Element msg) -> Model -> Element msg
+view toSelf renderPid model =
+    Element.column
+        [ Helper.htmlId (Helper.id model.self)
+        ]
+        [ Element.paragraph [] [ Element.text "I am $module_alias, please implement me?" ]
+        ]
+
+ELM
+) > $module_file
+
+(
+cat <<SANDBOX
+module $sandbox_name exposing (main)
+
+import $module_name as $module_alias
+import Element exposing (Element)
+import Element.Sandbox as Sandbox exposing (SandboxProgram)
+import System
+
+
+type alias TestCase =
+    Sandbox.TestCase $module_alias.Args $module_alias.Model $module_alias.Msg $module_alias.OutMsg
+
+
+main : SandboxProgram $module_alias.Model $module_alias.Msg
+main =
+    Sandbox.sandbox
+        { title = "Sandbox for $module_alias"
+        , actor = $module_alias.actor
+        , cases =
+            [ test_1
+            ]
+        , stringifyMsgIn = Debug.toString
+        , stringifyMsgOut = Debug.toString
+        }
+
+
+
+test_1 : TestCase
+test_1 =
+    { title = "Test case for $module_alias"
+    , desc =
+        """
+- Describe the test case here.
+- You can use markdown.
+- $module_name
+    """
+    , createArgs =
+        System.return {}
+    , init =
+        System.return []
+    , onOutMsg =
+        \\outMsg ->
+            case outMsg of
+                _ ->
+                    System.return []
+    }
+
+
+SANDBOX
+) > $sandbox_file
+

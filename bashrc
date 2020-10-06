@@ -67,10 +67,10 @@ alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gcb="git checkout \$(gb)"
 alias gcf="git checkout \$(gf)"
 alias gsu="git stash --include-untracked"
+alias gsb="git switch -"
 
 # Virtual box
 alias vbox="ssh $USER@virtual-box"
-
 
 # Cd
 # -------------
