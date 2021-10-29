@@ -16,7 +16,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-after-object'
-" Plug 'terryma/vim-multiple-cursors'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
@@ -35,14 +34,17 @@ Plug 'junegunn/gv.vim'
 Plug 'brooth/far.vim'
 Plug 'dkprice/vim-easygrep'
 
+Plug 'unisonweb/unison', { 'branch': 'trunk', 'rtp': 'editor-support/vim' }
+
 " Syntax
+Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
-Plug 'elzr/vim-json'
-Plug 'andys8/vim-elm-syntax'
-" Plug 'vikfroberg/vim-elm-syntax'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 Plug 'mxw/vim-jsx'
-Plug 'purescript-contrib/purescript-vim'
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
+" Plug 'elzr/vim-json'
+" Plug 'andys8/vim-elm-syntax'
+" Plug 'purescript-contrib/purescript-vim'
+" Plug 'vikfroberg/vim-elm-syntax'
 " Plug 'neovimhaskell/haskell-vim'
 " Plug 'hdima/python-syntax'
 " Plug 'leafgarland/typescript-vim'
@@ -142,6 +144,9 @@ let g:prettier#autoformat = 0
 " vim-vaffle
 let g:vaffle_force_delete = 1
 let g:vaffle_use_default_mappings = 0
+
+" fzf-vim
+let g:fzf_layout = { 'down': '40%' }
 
 " Auto commands
 " ----------------------------------
@@ -261,28 +266,6 @@ command! -bang -nargs=* Ag
   \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
   \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
   \                 <bang>0)
-
-command! -bang -nargs=* ElmAgFunctions
-  \ call fzf#vim#ag('^[a-z][a-zA-Z_0-9]*\s:',
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
-  \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
-  \                 <bang>0)
-
-command! -bang -nargs=* ElmAgTypes
-  \ call fzf#vim#ag('^type',
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
-  \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
-  \                 <bang>0)
-
-command! -bang -nargs=* ElmBufferFunctions
-  \ call fzf#vim#buffer_lines('^[a-z][a-zA-Z_0-9]*\s:', <bang>1)
-
-command! -bang -nargs=* ElmBufferTypes
-  \ call fzf#vim#buffer_lines('^type', <bang>0)
-
-command! -bang -nargs=* ElmBufferOverview
-  \ call fzf#vim#buffer_lines('^type\|^[a-z][a-zA-Z0-9_]*\s:', <bang>0)
-  " \ call fzf#vim#buffer_lines('^\s*[{,]\s[a-z][a-zA-Z0-9_]*\s:\|^type\|^\s*[=|]\s[A-Z]\|^[a-z][a-zA-Z0-9_]*\s:', <bang>0)
 
 
 

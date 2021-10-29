@@ -57,6 +57,7 @@ alias ducks="du -cks * | sort -rn | head"
 # Git
 alias gs="git status"
 alias ga="git add"
+alias gaf="git add \$(gf)"
 alias gap="git add --all --intent-to-add && git add --patch"
 alias gd="git diff"
 alias gc="git commit -v"
@@ -67,7 +68,6 @@ alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gcb="git checkout \$(gb)"
 alias gcf="git checkout \$(gf)"
 alias gsu="git stash --include-untracked"
-alias gsb="git switch -"
 
 # Virtual box
 alias vbox="ssh $USER@virtual-box"
@@ -121,7 +121,7 @@ is_in_git_repo() {
 
 gf() {
   is_in_git_repo || return
-  git -c color.status=always status --short |
+  git -c color.status=always status . --short |
   fzf -m --ansi --nth 2..,.. \
     --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
   cut -c4- | sed 's/.* -> //'
