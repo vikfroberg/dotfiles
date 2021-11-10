@@ -39,8 +39,8 @@ Plug 'unisonweb/unison', { 'branch': 'trunk', 'rtp': 'editor-support/vim' }
 " Syntax
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 Plug 'mxw/vim-jsx'
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'elzr/vim-json'
 " Plug 'andys8/vim-elm-syntax'
 " Plug 'purescript-contrib/purescript-vim'
