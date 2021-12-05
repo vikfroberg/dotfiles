@@ -54,6 +54,9 @@ alias v="vimmer"
 alias r="source ~/.bash_profile"
 alias ducks="du -cks * | sort -rn | head"
 
+# Ctags
+alias ptags="ag -l | ctags --links=no -L-"
+
 # Git
 alias gs="git status"
 alias ga="git add"

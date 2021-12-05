@@ -11,6 +11,7 @@
   pop = !git stash pop
   amend = !git add . && git add -u . && git commit --amend
   squash = !git rebase -i master
+  amend = !git commit --amend --no-edit
   conflicts = !git diff --name-only --diff-filter=U | uniq
 [user]
   email = vikfroberg@gmail.com

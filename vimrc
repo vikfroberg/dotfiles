@@ -23,23 +23,19 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
 Plug 'matze/vim-move'
-Plug 'godlygeek/tabular'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'cocopon/vaffle.vim'
-Plug 'mattn/webapi-vim'
-Plug 'mattn/vim-gist'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
-Plug 'brooth/far.vim'
-Plug 'dkprice/vim-easygrep'
+Plug 'vikfroberg/repl-visual-no-reg-overwrite'
 
-Plug 'unisonweb/unison', { 'branch': 'trunk', 'rtp': 'editor-support/vim' }
+" Ctags
+Plug 'xolox/vim-easytags'
+Plug 'xolox/vim-misc'
 
 " Syntax
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
+" Plug 'mxw/vim-jsx'
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
 " Plug 'elzr/vim-json'
 " Plug 'andys8/vim-elm-syntax'
@@ -63,12 +59,12 @@ let mapleader = "\<Space>"
 set autoindent
 set autoread
 set backspace=indent,eol,start
-set clipboard=unnamed
 set cursorline
 set encoding=utf-8
 set hidden
 set lazyredraw
 set visualbell
+set clipboard=unnamed
 set noswapfile
 set nowrap
 set scrolloff=7
@@ -275,19 +271,31 @@ command! -bang -nargs=* Ag
 " Sane ^/$ for swedish keyboard
 nnoremap B ^
 onoremap B ^
-vnoremap B ^
+xnoremap B ^
 nnoremap E $
 onoremap E $
-vnoremap E $
+xnoremap E $
 
 " More sane redo
 nnoremap U <C-R>
 
 " Make c/d/v/y more consistent
 nnoremap V v$h
-vnoremap v V
+xnoremap v V
+xnoremap y ygv<Esc>
 nnoremap Y y$
-vnoremap y ygv<Esc>
+" xnoremap p "_dp
+
+" Do not yank when c:hanging and x:ing
+nnoremap c "_c
+xnoremap c "_c
+nnoremap cc "_S
+nnoremap C "_C
+xnoremap C "_C
+nnoremap x "_x
+xnoremap x "_x
+nnoremap X "_X
+xnoremap X "_X
 
 " Reverse repeat action
 " Makes more sense on a swedish keyboard
@@ -302,16 +310,16 @@ nnoremap Q :q<CR>
 
 " Hotkeys for quotes
 onoremap iq i"
-vnoremap iq i"
+xnoremap iq i"
 onoremap q i"
-vnoremap q i"
+xnoremap q i"
 
 " Set paste mode for when copying
 nnoremap gp :set paste<CR>
 
 " Vim commentary
 nmap \ gcc
-vmap \ gc
+xmap \ gc
 
 " Move display lines instead of physical line
 nnoremap j gj
@@ -335,8 +343,8 @@ map <C-k> :cp<CR>
 " Tabs
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
-vnoremap <Tab> >gv
-vnoremap <S-Tab> <gv
+xnoremap <Tab> >gv
+xnoremap <S-Tab> <gv
 
 " Vim splits
 map <C-h> <C-W>h
