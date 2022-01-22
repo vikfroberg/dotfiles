@@ -40,8 +40,6 @@ elif [ "$PLATFORM" = Darwin ]; then
 fi
 
 # Bash
-alias cd="push_cd"
-alias dc="pop_cd"
 alias -- -='cd -'
 alias ..="cd .."
 alias ...="..;.."
@@ -53,6 +51,7 @@ alias c="clear"
 alias v="vimmer"
 alias r="source ~/.bash_profile"
 alias ducks="du -cks * | sort -rn | head"
+alias zk="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Zettlekasten; v"
 
 # Ctags
 alias ptags="ag -l | ctags --links=no -L-"
@@ -74,21 +73,6 @@ alias gsu="git stash --include-untracked"
 
 # Virtual box
 alias vbox="ssh $USER@virtual-box"
-
-# Cd
-# -------------
-
-push_cd() {
-  if [ $1 = "." ]; then
-    pushd ~/dotfiles > /dev/null
-  else
-    pushd "$1" > /dev/null
-  fi
-}
-
-pop_cd() {
-  popd > /dev/null
-}
 
 
 # Vim

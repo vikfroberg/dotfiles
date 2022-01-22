@@ -1,6 +1,5 @@
 " Plugins
 " -----------------------------
-
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -12,10 +11,21 @@ call plug#begin('~/.vim/plugged')
 " Features
 Plug 'mattn/emmet-vim'
 Plug 'ervandew/supertab'
+  let g:SuperTabDefaultCompletionType = "<C-n>"
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+  let g:fzf_layout = { 'down': '40%' }
+  let g:fzf_tags_command = 'ctags -R'
+  command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+  command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>,
+    \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
+    \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+    \                 <bang>0)
 Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-after-object'
+  autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',', '|')
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
@@ -25,18 +35,45 @@ Plug 'tpope/vim-surround'
 Plug 'matze/vim-move'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-fugitive'
-Plug 'cocopon/vaffle.vim'
+Plug 'vikfroberg/vaffle.vim'
+  let g:vaffle_force_delete = 1
+  let g:vaffle_use_default_mappings = 0
+  function! s:customize_vaffle_mappings() abort
+    nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
+    vmap <buffer> <Tab> <Plug>(vaffle-toggle-current)
+    nmap <buffer> - <Plug>(vaffle-open-parent)
+    nmap <buffer> <CR> <Plug>(vaffle-open-current)
+    nmap <buffer> m <Plug>(vaffle-move-selected)
+    nmap <buffer> d <Plug>(vaffle-delete-selected)
+    nmap <buffer> r <Plug>(vaffle-rename-selected)
+    nmap <buffer> q <Plug>(vaffle-quit)
+    nmap <buffer> o <Plug>(vaffle-mkdir)
+    nmap <buffer> i <Plug>(vaffle-new-file)
+    nmap <buffer> x <Plug>(vaffle-fill-cmdline)
+    nmap <buffer> . <Plug>(vaffle-toggle-hidden)
+  endfunction
+  autocmd FileType vaffle call s:customize_vaffle_mappings()
 Plug 'vikfroberg/repl-visual-no-reg-overwrite'
-
-" Ctags
-Plug 'xolox/vim-easytags'
-Plug 'xolox/vim-misc'
+Plug 'dkarter/bullets.vim'
+Plug 'vikfroberg/vim-gfm-syntax'
+" Plug 'vikfroberg/vim-checkbox'
+Plug 'ton/vim-bufsurf'
 
 " Syntax
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
+
 " Plug 'mxw/vim-jsx'
+"   let g:jsx_ext_required = 0
+
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
+"   let g:prettier#config#single_quote = 'false'
+"   let g:prettier#config#bracket_spacing = 'true'
+"   let g:prettier#config#jsx_bracket_same_line = 'false'
+"   let g:prettier#config#trailing_comma = 'all'
+"   let g:prettier#autoformat = 0
+"   autocmd BufWritePre *.js,*.jsx Prettier
+
 " Plug 'elzr/vim-json'
 " Plug 'andys8/vim-elm-syntax'
 " Plug 'purescript-contrib/purescript-vim'
@@ -73,76 +110,33 @@ set showcmd
 set noshowmode
 set linespace=3
 set listchars=nbsp:¬
-
-" Gui
 set guifont=Menlo:h16
-
-" Tabs
 set tabstop=2 shiftwidth=2 expandtab
 set softtabstop=2
 set smartindent
 set smarttab
-
-" Search
 set hlsearch
 set incsearch
 set ignorecase smartcase
-
-" include - as a word
 set iskeyword+=-
+set list " hightlight trailing and nbsb
 
-" hightlight trailing and nbsb
-set list
-
-" fix timeout for esc
+" Fix timeout for esc
 set ttimeout
 set ttimeoutlen=0
 set notimeout
 
-" semi-persistent undo
+" Semi persistent undo
 if has('persistent_undo')
   set undodir=/tmp,.
   set undofile
 endif
 
+let g:loaded_matchparen = 1 " Show matching paren
+let g:markdown_fenced_languages = ['elm', 'javascript', 'js=javascript']
+let g:html_indent_tags = 'li\|p' " More sane html idention
+let g:vim_json_syntax_conceal = 1
 
-" More sane html idention
-let g:html_indent_tags = 'li\|p'
-
-" Show matching paren
-let g:loaded_matchparen = 1
-
-" supertab.vim
-let g:SuperTabDefaultCompletionType = "<C-n>"
-
-" vim-multiple-cursors
-let g:multi_cursor_exit_from_insert_mode = 0
-
-" vim-json
-let g:vim_json_syntax_conceal = 0
-
-" vim-jsx
-let g:jsx_ext_required = 0
-
-" vim-move
-" let g:move_key_modifier = 'C'
-
-" elm-vim
-let g:elm_format_autosave = 0
-
-" vim-prettier
-let g:prettier#config#single_quote = 'false'
-let g:prettier#config#bracket_spacing = 'true'
-let g:prettier#config#jsx_bracket_same_line = 'false'
-let g:prettier#config#trailing_comma = 'all'
-let g:prettier#autoformat = 0
-
-" vim-vaffle
-let g:vaffle_force_delete = 1
-let g:vaffle_use_default_mappings = 0
-
-" fzf-vim
-let g:fzf_layout = { 'down': '40%' }
 
 " Auto commands
 " ----------------------------------
@@ -150,24 +144,34 @@ let g:fzf_layout = { 'down': '40%' }
 augroup vimrc
   autocmd!
 
-  " Enable after object keys
-  autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',')
-
-  " Create directories on write
-  autocmd BufWritePre * :call MkNonExDir(expand('<afile>'), +expand('<abuf>'))
-
   " Don't add comment when using o/O
   autocmd FileType * setlocal formatoptions-=o
 
-  " Run prettier on save
-  " autocmd BufWritePre *.js,*.jsx Prettier
-
-  " Strip whitespace
-  " Disabled because it makes bad diffs when used at WH
-  autocmd BufWritePre * :call Preserve("%s/\\s\\+$//e")
-
   " Unset paste on InsertLeave
   autocmd InsertLeave * silent! set nopaste
+
+  " Create directories on write
+  function! s:mkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+      let dir=fnamemodify(a:file, ':h')
+      if !isdirectory(dir)
+        call mkdir(dir, 'p')
+      endif
+    endif
+  endfunction
+  autocmd BufWritePre * :call s:mkNonExDir(expand('<afile>'), +expand('<abuf>'))
+
+  " Strip whitespace
+  " function! s:preserve(command)
+  "   let _s=@/
+  "   let l = line(".")
+  "   let c = col(".")
+  "   execute a:command
+  "   let @/=_s
+  "   call cursor(l, c)
+  " endfunction
+  " command! TrimWhitespace :call s:preserve("%s/\\s\\+$//e")
+  " autocmd BufWritePre * :TrimWhitespace
 
   " Show trailing when out of insert mode
   autocmd InsertEnter * set listchars=nbsp:¬
@@ -182,6 +186,14 @@ augroup vimrc
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType purescript setlocal ts=4 sts=4 sw=4 expandtab
+
+  " Markdown settings
+  function! s:markdown_settings()
+    set wrap linebreak nolist
+    inoremap <Tab> <C-t>
+    inoremap <S-Tab> <C-d>
+  endfunction
+  autocmd FileType markdown call s:markdown_settings()
 
   " Set lang for file types
   autocmd BufRead,BufNewFile *.nunjs setfiletype html
@@ -230,39 +242,14 @@ hi! link elmType Identifier
 hi! link elmType Type
 hi! link elmTypedef Statement
 
+" Markdown
+hi! link markdownUrl Special
+hi! link markdownUrlTitle Special
+hi! link markdownLinkText Special
+
 " Javascript
 hi! link jsVariableDef Constant
 hi! link jsArrowFunction Normal
-
-
-" Commands
-" ------------------------------
-
-command! TrimWhitespace :call Preserve("%s/\\s\\+$//e")
-
-
-command! Dotfiles :FZF! ~/dotfiles
-command! Diff :w !diff % -
-command! W write|bdelete
-
-command! Gconflicts :call GitConflicts()
-command! GConflicts :call GitConflicts()
-
-function! GitConflicts()
-  :cexpr system('ag "<<<<" --vimgrep') | copen
-endfunction
-
-command! GitMRUFiles :call s:mru_files()
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
-  \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
-  \                 <bang>0)
-
 
 
 " Key bindings
@@ -305,8 +292,10 @@ nnoremap ; ,
 " Save and quit hotkeys
 nnoremap s :w<CR>
 nnoremap S :wq<CR>
-nnoremap q :bw<CR>
+nnoremap q :BW<CR>
 nnoremap Q :q<CR>
+nnoremap gq :bw!<CR>
+nnoremap gQ :q!<CR>
 
 " Hotkeys for quotes
 onoremap iq i"
@@ -349,32 +338,6 @@ xnoremap <S-Tab> <gv
 " Vim splits
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
-nnoremap - :Vaffle %<CR>
-
-function! s:customize_vaffle_mappings() abort
-  nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
-  vmap <buffer> <Tab> <Plug>(vaffle-toggle-current)
-  nmap <buffer> - <Plug>(vaffle-open-parent)
-  nmap <buffer> <CR> <Plug>(vaffle-open-current)
-  nmap <buffer> m <Plug>(vaffle-move-selected)
-  nmap <buffer> d <Plug>(vaffle-delete-selected)
-  nmap <buffer> r <Plug>(vaffle-rename-selected)
-  nmap <buffer> q <Plug>(vaffle-quit)
-  nmap <buffer> o <Plug>(vaffle-mkdir)
-  nmap <buffer> i <Plug>(vaffle-new-file)
-  nmap <buffer> x <Plug>(vaffle-fill-cmdline)
-  nmap <buffer> . <Plug>(vaffle-toggle-hidden)
-endfunction
-
-augroup vimrc_vaffle
-  autocmd!
-  autocmd FileType vaffle call s:customize_vaffle_mappings()
-augroup END
-
-
-" Leader mappings
-" ----------------------------------
 
 nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>b :Buffers!<CR>
@@ -437,8 +400,25 @@ set statusline+=%9*\ %= " Space
 set statusline+=%0*\ %3p%%\ %l#\ " Rownumber/total (%)
 
 
-" Custom FZF Git MRU
+" Dotfiles
 " ------------------------------
+
+command! Dotfiles :FZF! ~/dotfiles
+
+
+" Git conflicts
+" ------------------------------
+
+function! s:gitConflicts()
+  :cexpr system('ag "<<<<" --vimgrep') | copen
+endfunction
+command! Gconflicts :call s:gitConflicts()
+
+
+" FZF <3 MRU
+" ------------------------------
+
+command! GitMRUFiles :call s:mru_files()
 
 let g:fzf_mru_files = get(g:, 'fzf_mru_files', [])
 
@@ -465,7 +445,7 @@ augroup END
 
 function! s:mru_files(...)
   let mru = reverse(copy(g:fzf_mru_files))
-  let files = sort(split(system('ag -l')))
+  let files = sort(split(system('fd -c never -tf'), '\n'))
   let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
   let current_filename = fnamemodify(expand('%'), ":~:.")
   let relative_mru_without_current = filter(copy(relative_mru), 'v:val !=# current_filename')
@@ -475,33 +455,76 @@ function! s:mru_files(...)
 endfunction
 
 
+" Close buffer and go to netrw root
+" -----------------------------------------
+
+function! s:bw_root()
+  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) < 2
+    execute "bw"
+    execute "e ."
+  else
+    execute "bw"
+  endif
+endfunction
+
+command! BW :call s:bw_root()
+
+
 " HL | Find out syntax group
 " -------------------------------------
 
 function! s:hl()
-  " echo synIDattr(synID(line('.'), col('.'), 0), 'name')
   echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), '/')
 endfunction
-command! HL call <SID>hl()
+
+command! HL :call s:hl()
 
 
-" Helpers
-" -------------------------------------
+" Zettlekasten <3 Vim
+" ------------------------------
 
-function! Preserve(command)
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
-  execute a:command
-  let @/=_s
-  call cursor(l, c)
-endfunction
-
-function! MkNonExDir(file, buf)
-  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-    let dir=fnamemodify(a:file, ':h')
-    if !isdirectory(dir)
-      call mkdir(dir, 'p')
-    endif
+function! s:is_zettlekasten()
+  let zettlekasten_dir = "/Users/vikfroberg/Library/Mobile Documents/iCloud~md~obsidian/Documents/Zettlekasten"
+  if getcwd() == zettlekasten_dir
+    nnoremap <buffer> - :BufSurfBack<CR>
+    nnoremap <buffer> _ :BufSurfForward<CR>
+  else
+    nnoremap <buffer> - :Vaffle<CR>
   endif
 endfunction
+autocmd BufRead,BufNewFile * :call s:is_zettlekasten()
+
+function! s:upcoming_dates(...)
+  let c = -1
+  let dates = []
+  while c <= 70
+    call add(dates, strftime("%B %dth, %Y.md", localtime() + c * 24 * 3600))
+    let c += 1
+  endwhile
+  return fzf#run({ 'source': dates, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
+endfunction
+
+command! UpcomingDates :call s:upcoming_dates()
+
+command! Todos :Ag! \[ \]
+
+function! s:note_open(title)
+  let filename = a:title . ".md"
+  if filereadable(filename)
+    execute "e " . filename
+  else
+    execute "e " . filename
+    call setline(1, "# " . a:title)
+    call setline(2, "")
+    call setline(3, "- ")
+    call feedkeys("GA")
+  endif
+endfunction
+command! -nargs=1 NoteOpen :call s:note_open(<q-args>)
+
+nnoremap <CR> vi]<ESC>"zyi]:NoteOpen <C-r>z<CR>
+nnoremap <leader>t :NoteOpen <C-r>=strftime("%B %dth, %Y")<CR><CR>
+nnoremap <leader>T :UpcomingDates<CR>
+nnoremap <leader>l :Ag! \[\[<C-r>=expand('%:t:r')<CR>\]\]<CR>
+nnoremap <leader>L :Ag! <C-r>=expand('%:t:r')<CR><CR>
+inoremap <expr> <c-k> fzf#vim#complete('fd -c never -t f -x echo {/.}')
