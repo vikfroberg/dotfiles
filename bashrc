@@ -1,4 +1,5 @@
 export PATH=":$HOME/dotfiles/bin:$PATH"
+export PATH=":$HOME/Code/Viktor/backlinks/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
 export CLICOLOR=1
@@ -30,6 +31,10 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 # Alias
 # -------------
 
+# Theme
+alias light='base16_github'
+alias dark='base16_irblack'
+
 # Colored ls
 if [ -x /usr/bin/dircolors ]; then
   eval "`dircolors -b`"
@@ -41,9 +46,9 @@ fi
 
 # Bash
 alias -- -='cd -'
-alias ..="cd .."
-alias ...="..;.."
-alias ....="..;..;.."
+alias ..="cd ../"
+alias ...="cd ../../"
+alias ....="cd ../../../"
 alias l="ls -l"
 alias ll="ls -l"
 alias la="ls -la"
@@ -70,6 +75,7 @@ alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gcb="git checkout \$(gb)"
 alias gcf="git checkout \$(gf)"
 alias gsu="git stash --include-untracked"
+alias grm="git checkout master && gpr && git checkout - && git rebase master"
 
 # Virtual box
 alias vbox="ssh $USER@virtual-box"
@@ -81,21 +87,16 @@ alias vbox="ssh $USER@virtual-box"
 vimmer() {
   if [ -z "$1" ]
     then
-      vim .
+      nvim .
       return
   fi
   if [ -z "$2" ]
     then
-      vim $1
+      nvim $1
       return
   fi
-  vim +$2 $1
+  nvim +$2 $1
   return
-}
-
-
-temp() {
-  vim +"set filetype=$1" /tmp/$1/temp-$(date +'%Y%m%d-%H%M%S').$1
 }
 
 
@@ -148,19 +149,6 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 # -------------
 
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-
-# NVM
-# -------------
-
-# normal brew nvm shell config lines minus the 2nd one
-# lazy loading the bash completions does not save us meaningful shell startup time, so we won't do it
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
-
-# add our default nvm node (`nvm alias default 10.16.0`) to path without loading nvm
-# export PATH="$NVM_DIR/versions/node/v$(<$NVM_DIR/alias/default)/bin:$PATH"
-# alias `nvm` to this one liner lazy load of the normal nvm script
-# alias nvm="unalias nvm; [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"; nvm $@"
 
 
 # Auto complete parent dir
@@ -221,3 +209,12 @@ if [[ $- == *i* ]]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
+eval "$(starship init bash)"
+
+# pnpm
+export PNPM_HOME="/Users/vikfroberg/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm end

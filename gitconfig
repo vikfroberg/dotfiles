@@ -26,3 +26,5 @@
   editor = /usr/bin/vim
 [github]
 	user = vikfroberg
+[init]
+	defaultBranch = main

@@ -31,6 +31,16 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
+" - snake_case (crs)
+" - MixedCase (crm)
+" - camelCase (crc)
+" - snake_case (crs)
+" - UPPER_CASE (cru)
+" - dash-case (cr-)
+" - dot.case (cr.)
+" - space case (cr<space>)
+" - Title Case (crt)
+
 Plug 'tpope/vim-surround'
 Plug 'matze/vim-move'
 Plug 'chriskempson/base16-vim'
@@ -53,30 +63,34 @@ Plug 'vikfroberg/vaffle.vim'
     nmap <buffer> . <Plug>(vaffle-toggle-hidden)
   endfunction
   autocmd FileType vaffle call s:customize_vaffle_mappings()
-Plug 'vikfroberg/repl-visual-no-reg-overwrite'
+" Plug 'vikfroberg/repl-visual-no-reg-overwrite'
 Plug 'dkarter/bullets.vim'
 Plug 'vikfroberg/vim-gfm-syntax'
-" Plug 'vikfroberg/vim-checkbox'
 Plug 'ton/vim-bufsurf'
+
+" Tree sitter
+" Plug 'nvim-treesitter/nvim-treesitter'
+" Plug 'nkrkv/nvim-treesitter-rescript', { 'branch': 'main' }
 
 " Syntax
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
+Plug 'rescript-lang/vim-rescript'
+  autocmd BufWritePre *.res RescriptFormat
+  function! s:customize_rescript_mappings() abort
+    nmap <buffer> gd :RescriptJumpToDefinition<cr>
+    nmap <buffer> gh :RescriptTypeHint<cr>
+  endfunction
+  autocmd FileType rescript call s:customize_rescript_mappings()
 
 " Plug 'mxw/vim-jsx'
 "   let g:jsx_ext_required = 0
 
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json', 'graphql'] }
-"   let g:prettier#config#single_quote = 'false'
-"   let g:prettier#config#bracket_spacing = 'true'
-"   let g:prettier#config#jsx_bracket_same_line = 'false'
-"   let g:prettier#config#trailing_comma = 'all'
-"   let g:prettier#autoformat = 0
-"   autocmd BufWritePre *.js,*.jsx Prettier
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json'] }
 
 " Plug 'elzr/vim-json'
 " Plug 'andys8/vim-elm-syntax'
-" Plug 'purescript-contrib/purescript-vim'
+Plug 'purescript-contrib/purescript-vim'
 " Plug 'vikfroberg/vim-elm-syntax'
 " Plug 'neovimhaskell/haskell-vim'
 " Plug 'hdima/python-syntax'
@@ -118,8 +132,8 @@ set smarttab
 set hlsearch
 set incsearch
 set ignorecase smartcase
-set iskeyword+=-
 set list " hightlight trailing and nbsb
+set splitright
 
 " Fix timeout for esc
 set ttimeout
@@ -133,7 +147,7 @@ if has('persistent_undo')
 endif
 
 let g:loaded_matchparen = 1 " Show matching paren
-let g:markdown_fenced_languages = ['elm', 'javascript', 'js=javascript']
+let g:markdown_fenced_languages = ['elm', 'javascript', 'js=javascript', 'rescript', 'res=rescript']
 let g:html_indent_tags = 'li\|p' " More sane html idention
 let g:vim_json_syntax_conceal = 1
 
@@ -162,16 +176,16 @@ augroup vimrc
   autocmd BufWritePre * :call s:mkNonExDir(expand('<afile>'), +expand('<abuf>'))
 
   " Strip whitespace
-  " function! s:preserve(command)
-  "   let _s=@/
-  "   let l = line(".")
-  "   let c = col(".")
-  "   execute a:command
-  "   let @/=_s
-  "   call cursor(l, c)
-  " endfunction
-  " command! TrimWhitespace :call s:preserve("%s/\\s\\+$//e")
-  " autocmd BufWritePre * :TrimWhitespace
+  function! s:preserve(command)
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    execute a:command
+    let @/=_s
+    call cursor(l, c)
+  endfunction
+  command! TrimWhitespace :call s:preserve("%s/\\s\\+$//e")
+  autocmd BufWritePre *.elm :TrimWhitespace
 
   " Show trailing when out of insert mode
   autocmd InsertEnter * set listchars=nbsp:¬
@@ -185,13 +199,13 @@ augroup vimrc
   " Set indention for langs
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
-  autocmd FileType purescript setlocal ts=4 sts=4 sw=4 expandtab
+  autocmd FileType purescript setlocal ts=2 sts=2 sw=2 expandtab
 
   " Markdown settings
   function! s:markdown_settings()
     set wrap linebreak nolist
-    inoremap <Tab> <C-t>
-    inoremap <S-Tab> <C-d>
+    inoremap <buffer> <Tab> <C-t>
+    inoremap <buffer> <S-Tab> <C-d>
   endfunction
   autocmd FileType markdown call s:markdown_settings()
 
@@ -263,6 +277,12 @@ nnoremap E $
 onoremap E $
 xnoremap E $
 
+" Navigate between panes
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
+
 " More sane redo
 nnoremap U <C-R>
 
@@ -283,6 +303,10 @@ nnoremap x "_x
 xnoremap x "_x
 nnoremap X "_X
 xnoremap X "_X
+
+" Do not yank when pasting in visual mode
+xnoremap p P
+xnoremap P p
 
 " Reverse repeat action
 " Makes more sense on a swedish keyboard
@@ -322,10 +346,9 @@ noremap J 5j
 noremap K 5k
 
 " Go forward in nav history
-nnoremap <C-l> <Tab>
+" nnoremap <C-l> <Tab>
 
 " Navigate quickfix
-nnoremap <C-h> :cclose<CR>
 map <C-j> :cn<CR>
 map <C-k> :cp<CR>
 
@@ -334,10 +357,6 @@ nnoremap <Tab> >>
 nnoremap <S-Tab> <<
 xnoremap <Tab> >gv
 xnoremap <S-Tab> <gv
-
-" Vim splits
-map <C-h> <C-W>h
-map <C-l> <C-W>l
 
 nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>b :Buffers!<CR>
@@ -479,52 +498,76 @@ endfunction
 
 command! HL :call s:hl()
 
+" Vaffle
+" --------------------------------------
+nnoremap - :Vaffle %<CR>
 
 " Zettlekasten <3 Vim
 " ------------------------------
 
-function! s:is_zettlekasten()
-  let zettlekasten_dir = "/Users/vikfroberg/Library/Mobile Documents/iCloud~md~obsidian/Documents/Zettlekasten"
-  if getcwd() == zettlekasten_dir
-    nnoremap <buffer> - :BufSurfBack<CR>
-    nnoremap <buffer> _ :BufSurfForward<CR>
-  else
-    nnoremap <buffer> - :Vaffle<CR>
-  endif
-endfunction
-autocmd BufRead,BufNewFile * :call s:is_zettlekasten()
+" function! s:is_zettlekasten()
+"   let zettlekasten_dir = "/Users/vikfroberg/Library/Mobile Documents/iCloud~md~obsidian/Documents/Zettlekasten"
+"   if getcwd() == zettlekasten_dir
+"     nnoremap <buffer> - :BufSurfBack<CR>
+"     nnoremap <buffer> _ :BufSurfForward<CR>
+"   else
+"     nnoremap <buffer> - :Vaffle %<CR>
+"   endif
+" endfunction
+" autocmd BufRead,BufNewFile * :call s:is_zettlekasten()
 
-function! s:upcoming_dates(...)
-  let c = -1
-  let dates = []
-  while c <= 70
-    call add(dates, strftime("%B %dth, %Y.md", localtime() + c * 24 * 3600))
-    let c += 1
-  endwhile
-  return fzf#run({ 'source': dates, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
-endfunction
+" function! s:upcoming_dates(...)
+"   let c = 0
+"   let dates = []
+"   while c <= 70
+"     call add(dates, strftime("%Y-%m-%d.md", localtime() + c * 24 * 3600))
+"     let c += 1
+"   endwhile
+"   return fzf#run({ 'source': dates, 'sink': 'e', 'options': '--color 16 --no-sort --exact'})
+" endfunction
 
-command! UpcomingDates :call s:upcoming_dates()
+" command! UpcomingDates :call s:upcoming_dates()
 
-command! Todos :Ag! \[ \]
+" function! s:rename_note(new_title)
+"   let current_title = expand('%:t:r')
+"   execute "%s/# " . current_title . "/# " . a:new_title . "/g"
+"   execute "Rename troll-" . a:new_title . ".md"
+"   execute "Rename " . a:new_title . ".md"
+"   execute "!fd --type file . --print0 | xargs -0 sd -s '[[" . current_title . "]]' '[[" . a:new_title . "]]'"
+" endfunction
+" command! -nargs=1 RenameNote :call s:rename_note(<q-args>)
 
-function! s:note_open(title)
-  let filename = a:title . ".md"
-  if filereadable(filename)
-    execute "e " . filename
-  else
-    execute "e " . filename
-    call setline(1, "# " . a:title)
-    call setline(2, "")
-    call setline(3, "- ")
-    call feedkeys("GA")
-  endif
-endfunction
-command! -nargs=1 NoteOpen :call s:note_open(<q-args>)
+" command! Todos :Ag! \[ \]
 
-nnoremap <CR> vi]<ESC>"zyi]:NoteOpen <C-r>z<CR>
-nnoremap <leader>t :NoteOpen <C-r>=strftime("%B %dth, %Y")<CR><CR>
-nnoremap <leader>T :UpcomingDates<CR>
-nnoremap <leader>l :Ag! \[\[<C-r>=expand('%:t:r')<CR>\]\]<CR>
-nnoremap <leader>L :Ag! <C-r>=expand('%:t:r')<CR><CR>
-inoremap <expr> <c-k> fzf#vim#complete('fd -c never -t f -x echo {/.}')
+" function! s:note_open(title)
+"   let filename = a:title . ".md"
+"   execute "e " . filename
+"   if !filereadable(filename) && !&mod
+"     call setline(1, "# " . a:title)
+"     call setline(2, "")
+"     call setline(3, "- ")
+"     call feedkeys("GA")
+"   endif
+" endfunction
+
+" function! s:note_split(title)
+"   let filename = a:title . ".md"
+"   execute "vsplit " . filename
+"   if !filereadable(filename) && !&mod
+"     call setline(1, "# " . a:title)
+"     call setline(2, "")
+"     call setline(3, "- ")
+"     call feedkeys("GA")
+"   endif
+" endfunction
+
+" command! -nargs=1 NoteOpen :call s:note_open(<q-args>)
+" command! -nargs=1 NoteSplit :call s:note_split(<q-args>)
+
+" nnoremap <CR> vi]<ESC>"zyi]:NoteOpen <C-r>z<CR>
+" nnoremap <S-CR> vi]<ESC>"zyi]:NoteSplit <C-r>z<CR>
+" nnoremap <leader>t :NoteOpen <C-r>=strftime("%Y-%m-%d")<CR><CR>
+" nnoremap <leader>T :UpcomingDates<CR>
+" nnoremap <leader>l :Ag! \[\[<C-r>=expand('%:t:r')<CR>\]\]<CR>
+" nnoremap <leader>L :Ag! <C-r>=expand('%:t:r')<CR><CR>
+" inoremap <expr> <c-k> fzf#vim#complete('fd -c never -t f -x echo {/.}')
