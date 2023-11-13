@@ -23,7 +23,7 @@
 [core]
   excludesfile = ~/.gitignore
 	fileMode = false
-  editor = /usr/bin/vim
+  editor = nvim
 [github]
 	user = vikfroberg
 [init]
