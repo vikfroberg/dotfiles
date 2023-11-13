@@ -15,4 +15,7 @@ for file in $files; do
     ln -s ~/dotfiles/$file ~/.$file
 done
 
+echo "Creating symlinks for nvim..."
+ln -s ~/dotfiles/nvim ~/.config/nvim
+
 source ~/.bash_profile
