@@ -15,6 +15,8 @@
   conflicts = !git diff --name-only --diff-filter=U | uniq
 [user]
   email = vikfroberg@gmail.com
+  [includeIf "gitdir:~/Code/Carla"]
+    email = viktor.froberg@carla.se
   name = Viktor Froberg
 [commit]
   template = ~/.gitmessage
@@ -22,9 +24,14 @@
   default = simple
 [core]
   excludesfile = ~/.gitignore
-	fileMode = false
+  fileMode = false
   editor = nvim
 [github]
-	user = vikfroberg
+  user = vikfroberg
 [init]
-	defaultBranch = main
+  defaultBranch = main
+[rerere]
+  enabled = true
+  autoUpdate = true
+[branch]
+	sort = -committerdate

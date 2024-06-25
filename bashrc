@@ -1,6 +1,6 @@
 export PATH=":$HOME/dotfiles/bin:$PATH"
-export PATH=":$HOME/Code/Viktor/backlinks/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/:$PATH"
+export PATH="~/Code/Viktor/roc-js/.roc_nightly-macos_x86_64-2024-06-18-41ea2bf/:$PATH"
 
 export CLICOLOR=1
 export EDITOR=vim
@@ -67,15 +67,18 @@ alias ga="git add"
 alias gaf="git add \$(gf)"
 alias gap="git add --all --intent-to-add && git add --patch"
 alias gd="git diff"
-alias gc="git commit -v"
-alias gca="git add --all && git commit -v"
+alias gc="git commit -v --no-verify"
+alias gca="git add --all && git commit -v --no-verify"
 alias gl="gh"
 alias gp="git push origin \$(git rev-parse --abbrev-ref HEAD)"
+alias gpf="git push origin \$(git rev-parse --abbrev-ref HEAD) --force-with-lease"
 alias gpr="git pull --rebase origin \$(git rev-parse --abbrev-ref HEAD)"
 alias gcb="git checkout \$(gb)"
 alias gcf="git checkout \$(gf)"
 alias gsu="git stash --include-untracked"
 alias grm="git checkout master && gpr && git checkout - && git rebase master"
+alias gmm="git checkout master && gpr && git checkout - && git merge master"
+alias grc="git rebase --continue"
 
 # Virtual box
 alias vbox="ssh $USER@virtual-box"
@@ -99,6 +102,21 @@ vimmer() {
   return
 }
 
+# Search backwards in history for the first commit that is in a branch other than $1
+# and output that branch's name.
+parent_branch() {
+    local result rev child_branch=$1
+    rev=$(git rev-parse --revs-only $child_branch)
+    while [[ -n $rev ]]; do
+        result=$(git branch --contains $rev | grep -v " $child_branch$")
+        if [[ -n $result ]]; then
+            echo $result
+            return 0
+        fi
+        rev=$(git rev-parse --revs-only $rev^)
+    done
+    return 1
+}
 
 # Git
 # -------------
@@ -209,8 +227,6 @@ if [[ $- == *i* ]]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
 
 eval "$(starship init bash)"
 
@@ -218,3 +234,7 @@ eval "$(starship init bash)"
 export PNPM_HOME="/Users/vikfroberg/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 # pnpm end
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

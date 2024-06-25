@@ -1,5 +1,6 @@
 .ignore
 .idea
+.dbxignore
 TODO.md
 tags
 .transifexrc

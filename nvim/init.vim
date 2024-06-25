@@ -8,10 +8,11 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-" Features
-" Plug 'mattn/emmet-vim'
-" Plug 'ervandew/supertab'
-  " let g:SuperTabDefaultCompletionType = "<C-n>"
+" Tab completion
+Plug 'ervandew/supertab'
+  let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" FZF
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
   let g:fzf_layout = { 'down': '40%' }
@@ -23,13 +24,31 @@ Plug 'junegunn/fzf.vim'
     \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
     \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
     \                 <bang>0)
+
+" Search
 Plug 'junegunn/vim-slash'
+
+" Multiple cursors
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
+" Comments
+Plug 'tpope/vim-commentary'
+
+" Motions
+Plug 'tpope/vim-repeat' " Repeat last plugin commands
+Plug 'tpope/vim-surround'
 Plug 'junegunn/vim-after-object'
   autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',', '|')
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-repeat'
+
+" Text objects
+Plug 'kana/vim-textobj-user'
+
+Plug 'beloglazov/vim-textobj-quotes'
+" Most of the time, you need to operate on a text inside quotes
+" xmap q iq
+" omap q iq
+
+" Text transform
 Plug 'tpope/vim-abolish'
 " - snake_case (crs)
 " - MixedCase (crm)
@@ -41,86 +60,78 @@ Plug 'tpope/vim-abolish'
 " - space case (cr<space>)
 " - Title Case (crt)
 
-Plug 'tpope/vim-surround'
-" Plug 'matze/vim-move'
+" Appearance
 Plug 'chriskempson/base16-vim'
+
+" Git
 Plug 'tpope/vim-fugitive'
-Plug 'vikfroberg/vaffle.vim'
-  let g:vaffle_force_delete = 1
-  let g:vaffle_use_default_mappings = 0
-  function! s:customize_vaffle_mappings() abort
-    nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
-    vmap <buffer> <Tab> <Plug>(vaffle-toggle-current)
-    nmap <buffer> - <Plug>(vaffle-open-parent)
-    nmap <buffer> <CR> <Plug>(vaffle-open-current)
-    nmap <buffer> m <Plug>(vaffle-move-selected)
-    nmap <buffer> d <Plug>(vaffle-delete-selected)
-    nmap <buffer> r <Plug>(vaffle-rename-selected)
-    nmap <buffer> q <Plug>(vaffle-quit)
-    nmap <buffer> o <Plug>(vaffle-mkdir)
-    nmap <buffer> i <Plug>(vaffle-new-file)
-    nmap <buffer> x <Plug>(vaffle-fill-cmdline)
-    nmap <buffer> . <Plug>(vaffle-toggle-hidden)
-  endfunction
-  autocmd FileType vaffle call s:customize_vaffle_mappings()
-" Plug 'vikfroberg/repl-visual-no-reg-overwrite'
-Plug 'dkarter/bullets.vim'
-Plug 'vikfroberg/vim-gfm-syntax'
-Plug 'ton/vim-bufsurf'
+
+Plug 'APZelos/blamer.nvim'
+let g:blamer_delay = 0
+nnoremap gb :BlamerToggle<CR>
+
+" File management
+Plug 'tpope/vim-eunuch'
+Plug 'stevearc/oil.nvim'
+
+" Plug 'vikfroberg/vaffle.vim'
+" nnoremap - :Vaffle %<CR>
+" let g:vaffle_force_delete = 1
+" let g:vaffle_use_default_mappings = 0
+" function! s:customize_vaffle_mappings() abort
+"   nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
+"   vmap <buffer> <Tab> <Plug>(vaffle-toggle-current)
+"   nmap <buffer> - <Plug>(vaffle-open-parent)
+"   nmap <buffer> <CR> <Plug>(vaffle-open-current)
+"   nmap <buffer> m <Plug>(vaffle-move-selected)
+"   nmap <buffer> d <Plug>(vaffle-delete-selected)
+"   nmap <buffer> r <Plug>(vaffle-rename-selected)
+"   nmap <buffer> q <Plug>(vaffle-quit)
+"   nmap <buffer> o <Plug>(vaffle-mkdir)
+"   nmap <buffer> i <Plug>(vaffle-new-file)
+"   nmap <buffer> x <Plug>(vaffle-fill-cmdline)
+"   nmap <buffer> . <Plug>(vaffle-toggle-hidden)
+" endfunction
+" autocmd FileType vaffle call s:customize_vaffle_mappings()
 
 " Syntax
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
 Plug 'rescript-lang/vim-rescript'
-  " autocmd BufWritePre *.res RescriptFormat
-  " function! s:customize_rescript_mappings() abort
-  "   nmap <buffer> gd :RescriptJumpToDefinition<cr>
-  "   nmap <buffer> gh :RescriptTypeHint<cr>
-  " endfunction
-  " autocmd FileType rescript call s:customize_rescript_mappings()
 
-" Plug 'mxw/vim-jsx'
-"   let g:jsx_ext_required = 0
-
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'json'] }
-
-" Plug 'elzr/vim-json'
-" Plug 'andys8/vim-elm-syntax'
-" Plug 'purescript-contrib/purescript-vim'
-" Plug 'vikfroberg/vim-elm-syntax'
-" Plug 'neovimhaskell/haskell-vim'
-" Plug 'hdima/python-syntax'
-" Plug 'leafgarland/typescript-vim'
-
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-" Plug 'nkrkv/nvim-treesitter-rescript'
+" Treesitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 
 " LSP Support
 Plug 'lukas-reineke/lsp-format.nvim'
 
 " Autocompletion
+Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
 
 " Copilot
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
+" imap <silent><script><expr> <C-l> copilot#Accept('\<CR>')
+" let g:copilot_no_tab_map = v:true
+
+" SuperMaven
+Plug 'supermaven-inc/supermaven-nvim'
+
 call plug#end()
 
-:lua require("vikfroberg.lsp")
-":lua require("vikfroberg.treesitter")
-:lua require("vikfroberg.cmp")
+:lua require('vikfroberg.lsp')
+:lua require('vikfroberg.treesitter')
+:lua require('vikfroberg.cmp')
+:lua require('vikfroberg.supermaven')
+:lua require('vikfroberg.oil')
 
 " Leader
 " ----------------------------
 noremap <Space> <NOP>
 let mapleader = "\<Space>"
-
-imap <silent><script><expr> <C-l> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
-
 
 " Settings
 " -------------------------------------
@@ -158,16 +169,10 @@ set ttimeout
 set ttimeoutlen=0
 set notimeout
 
-" Semi persistent undo
-" if has('persistent_undo')
-"   set undodir=/tmp,.
-"   set undofile
-" endif
-
 let g:loaded_matchparen = 1 " Show matching paren
-let g:markdown_fenced_languages = ['elm', 'javascript', 'js=javascript', 'rescript', 'res=rescript']
+let g:markdown_fenced_languages = ['javascript', 'js=javascript', 'rescript', 'res=rescript']
 let g:html_indent_tags = 'li\|p' " More sane html idention
-let g:vim_json_syntax_conceal = 1
+" let g:vim_json_syntax_conceal = 1
 
 
 " Auto commands
@@ -192,18 +197,6 @@ augroup vimrc
   endfunction
   autocmd BufWritePre * :call s:mkNonExDir(expand('<afile>'), +expand('<abuf>'))
 
-  " Strip whitespace
-  function! s:preserve(command)
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    execute a:command
-    let @/=_s
-    call cursor(l, c)
-  endfunction
-  command! TrimWhitespace :call s:preserve("%s/\\s\\+$//e")
-  autocmd BufWritePre *.elm :TrimWhitespace
-
   " Show trailing when out of insert mode
   autocmd InsertEnter * set listchars=nbsp:¬
   autocmd InsertLeave * set listchars=nbsp:¬,trail:␣
@@ -212,11 +205,16 @@ augroup vimrc
   autocmd BufWritePost .vimrc source %
   autocmd BufWritePost vimrc source %
   autocmd BufWritePost .vim source %
+  autocmd BufWritePost init.vim source %
 
   " Set indention for langs
   autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
   autocmd FileType purescript setlocal ts=2 sts=2 sw=2 expandtab
+
+  " Roc
+  autocmd BufRead,BufNewFile *.roc setfiletype roc
+  autocmd FileType roc setlocal commentstring=#\ %s
 
   " Markdown settings
   function! s:markdown_settings()
@@ -227,9 +225,9 @@ augroup vimrc
   autocmd FileType markdown call s:markdown_settings()
 
   " Set lang for file types
-  autocmd BufRead,BufNewFile *.nunjs setfiletype html
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
+
   autocmd BufRead,BufNewFile bashrc setfiletype sh
   autocmd BufRead,BufNewFile bash_profile setfiletype sh
 augroup END
@@ -238,40 +236,10 @@ augroup END
 " Appearance
 " ---------------------------------
 
-if filereadable(expand("~/.vimrc_background"))
+if filereadable(expand('~/.vimrc_background'))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
-
-" Elm
-hi! link elmAlias Statement
-hi! link elmBraces Normal
-hi! link elmCaseBlockDefinition Statement
-hi! link elmCaseBlockItemDefinition Statement
-hi! link elmChar String
-hi! link elmComment Comment
-hi! link elmConditional Statement
-hi! link elmDebug Debug
-hi! link elmDelimiter Delimiter
-hi! link elmFloat Float
-hi! link elmFuncName Function
-hi! link elmImport Include
-hi! link elmInt Number
-hi! link elmLambdaFunc Normal
-hi! link elmLetBlockDefinition Statement
-hi! link elmLineComment Comment
-hi! link elmModule Type
-hi! link elmNumberType Identifier
-hi! link elmOperator Operator
-hi! link elmString String
-hi! link elmStringEscape Special
-hi! link elmTodo Todo
-hi! link elmTopLevelDecl Function
-hi! link elmTripleString String
-hi! link elmTupleFunction Normal
-hi! link elmType Identifier
-hi! link elmType Type
-hi! link elmTypedef Statement
 
 " Markdown
 hi! link markdownUrl Special
@@ -292,6 +260,9 @@ xnoremap B ^
 nnoremap E $
 onoremap E $
 xnoremap E $
+
+" Folds
+nnoremap <CR> za
 
 " More sane redo
 nnoremap U <C-R>
@@ -327,21 +298,13 @@ nnoremap s :w<CR>
 nnoremap S :wq<CR>
 nnoremap q :BW<CR>
 nnoremap Q :q<CR>
-nnoremap gq :bw!<CR>
-nnoremap gQ :q!<CR>
-
-" Hotkeys for quotes
-onoremap iq i"
-xnoremap iq i"
-onoremap q i"
-xnoremap q i"
 
 " Set paste mode for when copying
 nnoremap gp :set paste<CR>
 
 " Vim commentary
-nmap \ gcc
-xmap \ gc
+nmap # gcc
+xmap # gc
 
 " Move display lines instead of physical line
 nnoremap j gj
@@ -369,11 +332,8 @@ nnoremap <leader>p :GitMRUFiles<CR>
 nnoremap <leader>b :Buffers!<CR>
 nnoremap <leader>f :BLines!<CR>
 nnoremap <leader>F :Ag!<CR>
-nnoremap <leader>o :BTags!<CR>
-nnoremap <leader>O :Tags!<CR>
 nnoremap <leader>n *
 nnoremap <leader>N :Ag! <C-R><C-W><CR>
-nnoremap <leader>d :tag <C-R><C-W><CR>
 
 " Statusline
 " --------------------------------------------
@@ -423,7 +383,6 @@ set statusline+=%8*\ %<%f\ " File+path
 set statusline+=%9*\ %= " Space
 set statusline+=%0*\ %3p%%\ %l#\ " Rownumber/total (%)
 
-
 " FZF <3 MRU
 " ------------------------------
 command! GitMRUFiles :call s:mru_files()
@@ -432,14 +391,14 @@ let g:fzf_mru_files = get(g:, 'fzf_mru_files', [])
 
 function! s:update_mru_files(filename)
   if filereadable(a:filename)
-    let filename = fnamemodify(a:filename, ":~:.")
+    let filename = fnamemodify(a:filename, ':~:.')
     call filter(g:fzf_mru_files, 'v:val !=# filename')
     call add(g:fzf_mru_files, filename)
   endif
 endfunction
 
 function! s:delete_mru_files(filename)
-  let filename = fnamemodify(a:filename, ":~:.")
+  let filename = fnamemodify(a:filename, ':~:.')
   call filter(g:fzf_mru_files, 'v:val !=# filename')
 endfunction
 
@@ -454,8 +413,7 @@ augroup END
 function! s:mru_files(...)
   let mru = reverse(copy(g:fzf_mru_files))
   let files = sort(split(system('fd -c never -tf'), '\n'))
-  " let relative_mru = filter(copy(mru), 'index(files, v:val) != -1')
-  let current_filename = fnamemodify(expand('%'), ":~:.")
+  let current_filename = fnamemodify(expand('%'), ':~:.')
   let relative_mru_without_current = filter(copy(mru), 'v:val !=# current_filename')
   let files_without_mru = filter(copy(files), 'index(mru, v:val) == -1')
   let source = extend(relative_mru_without_current, files_without_mru)
@@ -467,24 +425,15 @@ endfunction
 " -----------------------------------------
 function! s:bw_root()
   if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) < 2
-    execute "bw"
-    execute "e ."
+    execute 'bw'
+    execute 'e .'
   else
-    execute "bw"
+    execute 'bw'
   endif
 endfunction
 
 command! BW :call s:bw_root()
 
-
-" HL | Find out syntax group
-" -------------------------------------
-function! s:hl()
-  echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), '/')
-endfunction
-
-command! HL :call s:hl()
-
-" Vaffle
+" Dotfiles
 " --------------------------------------
-nnoremap - :Vaffle %<CR>
+command! Dotfiles :FZF! ~/dotfiles
