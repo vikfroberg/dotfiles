@@ -128,41 +128,8 @@ call plug#end()
 :lua require('vikfroberg.supermaven')
 :lua require('vikfroberg.oil')
 
-" Leader
-" ----------------------------
-noremap <Space> <NOP>
-let mapleader = "\<Space>"
-
 " Settings
 " -------------------------------------
-
-set autoindent
-set autoread
-set backspace=indent,eol,start
-set cursorline
-set encoding=utf-8
-set hidden
-set lazyredraw
-set visualbell
-set clipboard=unnamed
-set noswapfile
-set nowrap
-set scrolloff=7
-set nonumber
-set showcmd
-set noshowmode
-set linespace=3
-set listchars=nbsp:¬
-set guifont=Menlo:h16
-set tabstop=2 shiftwidth=2 expandtab
-set softtabstop=2
-set smartindent
-set smarttab
-set hlsearch
-set incsearch
-set ignorecase smartcase
-set list " hightlight trailing and nbsb
-set splitright
 
 " Fix timeout for esc
 set ttimeout
@@ -253,26 +220,6 @@ hi! link jsArrowFunction Normal
 
 " Key bindings
 " -------------------------------
-" Sane ^/$ for swedish keyboard
-nnoremap B ^
-onoremap B ^
-xnoremap B ^
-nnoremap E $
-onoremap E $
-xnoremap E $
-
-" Folds
-nnoremap <CR> za
-
-" More sane redo
-nnoremap U <C-R>
-
-" Make c/d/v/y more consistent
-nnoremap V v$h
-xnoremap v V
-xnoremap y ygv<Esc>
-nnoremap Y y$
-
 " Do not yank when c:hanging and x:ing
 nnoremap c "_c
 xnoremap c "_c
@@ -288,44 +235,12 @@ xnoremap X "_X
 xnoremap p P
 xnoremap P p
 
-" Reverse repeat action
-" Makes more sense on a swedish keyboard
-nnoremap , ;
-nnoremap ; ,
-
-" Save and quit hotkeys
-nnoremap s :w<CR>
-nnoremap S :wq<CR>
-nnoremap q :BW<CR>
-nnoremap Q :q<CR>
-
 " Set paste mode for when copying
 nnoremap gp :set paste<CR>
 
 " Vim commentary
 nmap # gcc
 xmap # gc
-
-" Move display lines instead of physical line
-nnoremap j gj
-nnoremap k gk
-
-" Join hotkeys
-nnoremap gj J
-
-" Quick navigation
-noremap J 5j
-noremap K 5k
-
-" Navigate quickfix
-map <C-j> :cn<CR>
-map <C-k> :cp<CR>
-
-" Tabs
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
-xnoremap <Tab> >gv
-xnoremap <S-Tab> <gv
 
 " Leaders
 nnoremap <leader>p :GitMRUFiles<CR>
