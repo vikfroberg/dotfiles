@@ -1,52 +1,11 @@
 " Plugins
 " -----------------------------
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-call plug#begin('~/.vim/plugged')
-
 " Tab completion
 Plug 'ervandew/supertab'
-  let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" FZF
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-  let g:fzf_layout = { 'down': '40%' }
-  let g:fzf_tags_command = 'ctags -R'
-  command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-  command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>,
-    \                 <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?')
-    \                         : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
-    \                 <bang>0)
+let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " Search
 Plug 'junegunn/vim-slash'
-
-" Multiple cursors
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-
-" Comments
-Plug 'tpope/vim-commentary'
-
-" Motions
-Plug 'tpope/vim-repeat' " Repeat last plugin commands
-Plug 'tpope/vim-surround'
-Plug 'junegunn/vim-after-object'
-  autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ', ',', '|')
-
-" Text objects
-Plug 'kana/vim-textobj-user'
-
-Plug 'beloglazov/vim-textobj-quotes'
-" Most of the time, you need to operate on a text inside quotes
-" xmap q iq
-" omap q iq
 
 " Text transform
 Plug 'tpope/vim-abolish'
@@ -60,49 +19,9 @@ Plug 'tpope/vim-abolish'
 " - space case (cr<space>)
 " - Title Case (crt)
 
-" Appearance
-Plug 'chriskempson/base16-vim'
-
-" Git
-Plug 'tpope/vim-fugitive'
-
 Plug 'APZelos/blamer.nvim'
 let g:blamer_delay = 0
 nnoremap gb :BlamerToggle<CR>
-
-" File management
-Plug 'tpope/vim-eunuch'
-Plug 'stevearc/oil.nvim'
-
-" Plug 'vikfroberg/vaffle.vim'
-" nnoremap - :Vaffle %<CR>
-" let g:vaffle_force_delete = 1
-" let g:vaffle_use_default_mappings = 0
-" function! s:customize_vaffle_mappings() abort
-"   nmap <buffer> <Tab> <Plug>(vaffle-toggle-current)k
-"   vmap <buffer> <Tab> <Plug>(vaffle-toggle-current)
-"   nmap <buffer> - <Plug>(vaffle-open-parent)
-"   nmap <buffer> <CR> <Plug>(vaffle-open-current)
-"   nmap <buffer> m <Plug>(vaffle-move-selected)
-"   nmap <buffer> d <Plug>(vaffle-delete-selected)
-"   nmap <buffer> r <Plug>(vaffle-rename-selected)
-"   nmap <buffer> q <Plug>(vaffle-quit)
-"   nmap <buffer> o <Plug>(vaffle-mkdir)
-"   nmap <buffer> i <Plug>(vaffle-new-file)
-"   nmap <buffer> x <Plug>(vaffle-fill-cmdline)
-"   nmap <buffer> . <Plug>(vaffle-toggle-hidden)
-" endfunction
-" autocmd FileType vaffle call s:customize_vaffle_mappings()
-
-" Syntax
-Plug 'jparise/vim-graphql'
-Plug 'pangloss/vim-javascript'
-Plug 'rescript-lang/vim-rescript'
-
-" Treesitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 
 " LSP Support
 Plug 'lukas-reineke/lsp-format.nvim'
@@ -112,41 +31,12 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 
-" Copilot
-" Plug 'github/copilot.vim'
-" imap <silent><script><expr> <C-l> copilot#Accept('\<CR>')
-" let g:copilot_no_tab_map = v:true
-
-" SuperMaven
-Plug 'supermaven-inc/supermaven-nvim'
-
 call plug#end()
-
-:lua require('vikfroberg.lsp')
-:lua require('vikfroberg.treesitter')
-:lua require('vikfroberg.cmp')
-:lua require('vikfroberg.supermaven')
-:lua require('vikfroberg.oil')
-
-" Settings
-" -------------------------------------
-
-" Fix timeout for esc
-set ttimeout
-set ttimeoutlen=0
-set notimeout
-
-let g:loaded_matchparen = 1 " Show matching paren
-let g:markdown_fenced_languages = ['javascript', 'js=javascript', 'rescript', 'res=rescript']
-let g:html_indent_tags = 'li\|p' " More sane html idention
-" let g:vim_json_syntax_conceal = 1
-
 
 " Auto commands
 " ----------------------------------
 augroup vimrc
   autocmd!
-
   " Don't add comment when using o/O
   autocmd FileType * setlocal formatoptions-=o
 
@@ -168,33 +58,9 @@ augroup vimrc
   autocmd InsertEnter * set listchars=nbsp:¬
   autocmd InsertLeave * set listchars=nbsp:¬,trail:␣
 
-  " Source vimrc on save
-  autocmd BufWritePost .vimrc source %
-  autocmd BufWritePost vimrc source %
-  autocmd BufWritePost .vim source %
-  autocmd BufWritePost init.vim source %
-
-  " Set indention for langs
-  autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
-  autocmd FileType elm setlocal ts=4 sts=4 sw=4 expandtab
-  autocmd FileType purescript setlocal ts=2 sts=2 sw=2 expandtab
-
-  " Roc
-  autocmd BufRead,BufNewFile *.roc setfiletype roc
-  autocmd FileType roc setlocal commentstring=#\ %s
-
-  " Markdown settings
-  function! s:markdown_settings()
-    set wrap linebreak nolist
-    inoremap <buffer> <Tab> <C-t>
-    inoremap <buffer> <S-Tab> <C-d>
-  endfunction
-  autocmd FileType markdown call s:markdown_settings()
-
   " Set lang for file types
   autocmd BufRead,BufNewFile *.eslintrc setfiletype json
   autocmd BufRead,BufNewFile *.babelrc setfiletype json
-
   autocmd BufRead,BufNewFile bashrc setfiletype sh
   autocmd BufRead,BufNewFile bash_profile setfiletype sh
 augroup END
@@ -237,10 +103,6 @@ xnoremap P p
 
 " Set paste mode for when copying
 nnoremap gp :set paste<CR>
-
-" Vim commentary
-nmap # gcc
-xmap # gc
 
 " Leaders
 nnoremap <leader>p :GitMRUFiles<CR>

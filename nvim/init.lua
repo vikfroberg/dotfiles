@@ -1,4 +1,4 @@
-require("options")
-require("autocmd")
-require("keymaps")
-require("lazyplug")
+require("custom.options")
+require("custom.autocmd")
+require("custom.keymaps")
+require("custom.lazy")
