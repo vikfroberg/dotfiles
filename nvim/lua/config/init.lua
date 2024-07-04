@@ -31,29 +31,3 @@ function Util.walkmods(root, fn, modname)
     end
   end)
 end
-
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-end
-vim.opt.rtp:prepend(lazypath)
-
-require("config.options")
-require("config.keymaps")
-require("config.yank-highlight")
-
--- Require all modules in the config directory
--- Util.walkmods("config", function(modname)
---  require(modname)
--- end)
-
--- Leader
-vim.keymap.set('n', '<SPACE>', '<Nop>', { remap = false })
-vim.g.mapleader = ' '
-
--- Lazy
-require("lazy").setup("plugins", {
-  checker = { enabled = false },
-  change_detection = { enabled = false },
-})

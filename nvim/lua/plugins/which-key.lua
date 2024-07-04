@@ -3,7 +3,7 @@ return {
   event = "VeryLazy",
   init = function()
     vim.o.timeout = true
-    vim.o.timeoutlen = 300
+    vim.o.timeoutlen = 500
     vim.keymap.set("n", "?", "<cmd>WhichKey <CR>", { desc = "Show key bindings" })
   end,
   opts = {

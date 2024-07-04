@@ -2,7 +2,11 @@ return {
   {
     "stevearc/oil.nvim",
     config = function()
-      require("oil").setup {}
+      require("oil").setup {
+        keymaps = {
+          ["."] = "actions.toggle_hidden",
+        },
+      }
       vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
       vim.api.nvim_create_autocmd("FileType", {
