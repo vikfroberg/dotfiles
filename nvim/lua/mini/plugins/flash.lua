@@ -8,6 +8,6 @@ return {
     },
   },
   config = function()
-    vim.keymap.set("n", " ", "<cmd>lua require('flash').jump()<cr>", { desc = "Flash jump" })
+    vim.keymap.set("n", "<leader>f", "<cmd>lua require('flash').jump()<cr>", { desc = "Flash jump" })
   end
 }

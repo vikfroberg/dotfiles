@@ -4,7 +4,7 @@ local function mru_upsert_file(filename)
   if vim.fn.filereadable(filename) == 1 then
     local modified_filename = vim.fn.fnamemodify(filename, ":~:.")
     mru_buffers = vim.tbl_filter(function(v)
-        return v ~= modified_filename
+      return v ~= modified_filename
     end, mru_buffers)
     table.insert(mru_buffers, 1, modified_filename)
   end
@@ -63,10 +63,18 @@ end
 return {
   "ibhagwan/fzf-lua",
   config = function()
-    vim.keymap.set("n", "<c-P>", function () require'fzf-lua'.fzf_exec(mru_files(), {
-      actions = {
-        ['default'] = require'fzf-lua'.actions.file_edit,
+    require("fzf-lua").setup({
+      blines = {
+        previewer = false,
       },
-    }) end, { desc = "MRU Files" })
+    })
+    vim.keymap.set("n", "<leader>l>", function() require 'fzf-lua'.blines() end, { desc = "Lines" })
+    vim.keymap.set("n", "<leader>p", function()
+      require 'fzf-lua'.fzf_exec(mru_files(), {
+        actions = {
+          ['default'] = require 'fzf-lua'.actions.file_edit,
+        },
+      })
+    end, { desc = "MRU Files" })
   end
 }
