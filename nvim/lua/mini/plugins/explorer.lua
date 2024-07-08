@@ -11,9 +11,10 @@ return {
           ["-"] = "actions.parent",
           ["_"] = "actions.open_cwd",
           ["~"] = { "actions.cd", opts = { scope = "tab" }, desc = ":tcd to the current oil directory" },
+          ["?"] = "actions.preview",
         },
       }
-      vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+      vim.keymap.set("n", "-", "<Cmd>Oil<cr>", { desc = "Open parent directory" })
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "oil_preview",
