@@ -49,9 +49,15 @@ vim.keymap.set("n", "<S-Tab>", "<<", { desc = "Indent left" })
 vim.keymap.set("x", "<Tab>", ">gv", { desc = "Indent right" })
 vim.keymap.set("x", "<S-Tab>", "<gv", { desc = "Indent left" })
 
+-- Search
+vim.keymap.set("n", "<leader>n", "*", { desc = "Search word under cursor forwards" })
+vim.keymap.set("n", "<leader>r", [[:%s/<C-r><C-w>//g<Left><Left>]], { desc = "Replace word under cursor" })
+vim.keymap.set("x", "r", "\"hy:%s/<C-r>h//gc<left><left><left>", { desc = "Replace word visual selection" })
+
 -- Help
 vim.keymap.set("n", "gh", ":help <C-r><C-w><CR>", { desc = "Help under cursor" })
 
+-- Quickfix
 vim.keymap.set("n", "<leader>j", ":cn<cr>", { desc = "Jump to next error" })
 vim.keymap.set("n", "<leader>k", ":cp<cr>", { desc = "Jump to previous error" })
 

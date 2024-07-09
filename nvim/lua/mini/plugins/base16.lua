@@ -41,7 +41,7 @@ return {
       base0F = '#333333',
     }
     require("mini.base16").setup({
-      palette = darkPalette,
+      palette = lightPalette,
     })
   end,
 }
