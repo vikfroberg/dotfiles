@@ -84,6 +84,8 @@ alias grc="git rebase --continue"
 alias vbox="ssh $USER@virtual-box"
 
 
+# Git rebase/merge helpers
+# -----------------------
 # Vim
 # -------------
 
@@ -100,22 +102,6 @@ vimmer() {
   fi
   nvim +$2 $1
   return
-}
-
-# Search backwards in history for the first commit that is in a branch other than $1
-# and output that branch's name.
-parent_branch() {
-    local result rev child_branch=$1
-    rev=$(git rev-parse --revs-only $child_branch)
-    while [[ -n $rev ]]; do
-        result=$(git branch --contains $rev | grep -v " $child_branch$")
-        if [[ -n $result ]]; then
-            echo $result
-            return 0
-        fi
-        rev=$(git rev-parse --revs-only $rev^)
-    done
-    return 1
 }
 
 # Git
@@ -155,6 +141,39 @@ gsl() {
   git stash list | fzf --reverse -d: --preview 'git show --color=always {1}' |
   cut -d: -f1
 }
+
+git-is-rebasing() {
+  if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+    echo 1
+  fi
+}
+
+git-is-merging() {
+  if [ -f .git/MERGE_HEAD ]; then
+    echo 1
+  fi
+}
+
+gabort() {
+  if [ $(git-is-rebasing) ]; then
+    git rebase --abort
+  elif [ $(git-is-merging) ]; then
+    git merge --abort
+  else
+    echo "No rebase or merge in progress."
+  fi
+}
+
+gcontinue() {
+  if [ $(git-is-rebasing) ]; then
+    git rebase --continue
+  elif [ $(git-is-merging) ]; then
+    git merge --continue
+  else
+    echo "No rebase or merge in progress."
+  fi
+}
+
 
 
 # iTerm shell integration

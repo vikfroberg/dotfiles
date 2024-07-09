@@ -14,9 +14,8 @@
   conflicts = !git diff --name-only --diff-filter=U | uniq
   is-rebasing = !if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then echo rebase; fi
   is-merging = !if [ -f .git/MERGE_HEAD ]; then echo merge; fi
-  abort = !if [ $(git is-rebase) ]; then git rebase --abort; elif [ $(git is-merge) ]; then git merge --abort; else echo \"No rebase or merge in progress.\"; fi
-  continue = !if [ $(git is-rebase) ]; then git rebase --continue; elif [ $(git is-merge) ]; then git merge --continue; else echo \"No rebase or merge in progress.\"; fi
-  con = !git continue
+  abort = !gabort
+  continue = !gcontinue
 [user]
   email = vikfroberg@gmail.com
   [includeIf "gitdir:~/Code/Carla"]
