@@ -55,29 +55,10 @@ return {
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           require("lsp-format").on_attach(client)
           vim.keymap.set('n', '<leader>h', vim.lsp.buf.hover, { buffer = args.buf })
-          -- vim.keymap.set('n', '<leader>k', vim.diagnostic.goto_prev, { buffer = args.buf })
-          -- vim.keymap.set('n', '<leader>j', vim.diagnostic.goto_next, { buffer = args.buf })
           vim.keymap.set('n', '<leader>d', vim.lsp.buf.definition, { buffer = args.buf })
           vim.keymap.set("n", "<leader>a", function() vim.lsp.buf.code_action() end, { desc = "Code action" })
         end,
       })
     end
   },
-  {
-    "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
-    cmd = "Trouble",
-    keys = {
-      {
-        "<leader>j",
-        "<cmd>Trouble diagnostics next<cr>",
-        desc = "Next diagnostic",
-      },
-      {
-        "<leader>k",
-        "<cmd>Trouble diagnostics prev<cr>",
-        desc = "Next diagnostic",
-      },
-    },
-  }
 }

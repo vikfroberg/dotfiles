@@ -52,5 +52,8 @@ vim.keymap.set("x", "<S-Tab>", "<gv", { desc = "Indent left" })
 -- Help
 vim.keymap.set("n", "gh", ":help <C-r><C-w><CR>", { desc = "Help under cursor" })
 
+vim.keymap.set("n", "<leader>j", ":cn<cr>", { desc = "Jump to next error" })
+vim.keymap.set("n", "<leader>k", ":cp<cr>", { desc = "Jump to previous error" })
+
 -- Join lines
 vim.keymap.set("n", "gj", "J", { desc = "Join lines" })
