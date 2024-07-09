@@ -1,4 +1,4 @@
-dotfiles2
+dotfiles
 ========
 
 - [ ] Autocomplete working correctly with tab
