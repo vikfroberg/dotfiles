@@ -142,40 +142,6 @@ gsl() {
   cut -d: -f1
 }
 
-git-is-rebasing() {
-  if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
-    echo 1
-  fi
-}
-
-git-is-merging() {
-  if [ -f .git/MERGE_HEAD ]; then
-    echo 1
-  fi
-}
-
-gabort() {
-  if [ $(git-is-rebasing) ]; then
-    git rebase --abort
-  elif [ $(git-is-merging) ]; then
-    git merge --abort
-  else
-    echo "No rebase or merge in progress."
-  fi
-}
-
-gcontinue() {
-  if [ $(git-is-rebasing) ]; then
-    git rebase --continue
-  elif [ $(git-is-merging) ]; then
-    git merge --continue
-  else
-    echo "No rebase or merge in progress."
-  fi
-}
-
-
-
 # iTerm shell integration
 # -------------
 
