@@ -1,7 +1,7 @@
 return {
   "beloglazov/vim-textobj-quotes",
   dependencies = { "kana/vim-textobj-user" },
-  init = function()
-    vim.keymap.set({ "x", "o" }, "q", "iq", { desc = "Inside quotes", remap = true })
-  end,
+  keys = {
+    { "q", "iq", mode = { "x", "o" }, desc = "Inside quotes", remap = true },
+  },
 }

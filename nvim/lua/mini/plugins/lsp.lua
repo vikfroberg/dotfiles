@@ -4,12 +4,14 @@ return {
     dependencies = {
       "lukas-reineke/lsp-format.nvim",
     },
+    ft = { "rescript", "lua" },
     config = function()
-      require("lsp-format").setup()
+      local lsp_group = vim.api.nvim_create_augroup('lsp', { clear = true })
 
       vim.api.nvim_create_autocmd(
         { "BufNewFile", "BufRead" },
         {
+          group = lsp_group,
           pattern = "*.res,*.resi",
           callback = function()
             local root_dir = vim.fs.dirname(
@@ -28,6 +30,7 @@ return {
       vim.api.nvim_create_autocmd(
         { "BufNewFile", "BufRead" },
         {
+          group = lsp_group,
           pattern = "*.lua",
           callback = function()
             local root_dir = vim.fs.dirname(
@@ -38,8 +41,8 @@ return {
               cmd = { 'lua-language-server' },
               root_dir = root_dir,
               settings = {
-                diagnostics = {
-                  Lua = {
+                Lua = {
+                  diagnostics = {
                     globals = { 'vim' }
                   }
                 }
@@ -51,6 +54,7 @@ return {
       )
 
       vim.api.nvim_create_autocmd('LspAttach', {
+        group = lsp_group,
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           require("lsp-format").on_attach(client)

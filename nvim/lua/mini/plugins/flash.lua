@@ -1,5 +1,8 @@
 return {
   "folke/flash.nvim",
+  keys = {
+    { "<C-f>", "<cmd>lua require('flash').jump()<cr>", desc = "Jump to" },
+  },
   opts = {
     modes = {
       char = {
@@ -7,7 +10,4 @@ return {
       },
     },
   },
-  config = function()
-    vim.keymap.set("n", "<C-f>", "<cmd>lua require('flash').jump()<cr>", { desc = "Jump to" })
-  end
 }

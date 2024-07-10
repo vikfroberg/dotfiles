@@ -1,7 +1,6 @@
 {
   "flash.nvim": { "branch": "main", "commit": "ec0bf2842189f65f60fd40bf3557cac1029cc932" },
   "fzf-lua": { "branch": "main", "commit": "3b91c1a471160bd8620bdca8f18743d954994daa" },
-  "inc-rename.nvim": { "branch": "main", "commit": "8ba77017ca468f3029bf88ef409c2d20476ea66b" },
   "lazy.nvim": { "branch": "main", "commit": "57cce98dfdb2f2dd05a0567d89811e6d0505e13b" },
   "lsp-format.nvim": { "branch": "master", "commit": "3612642b0e2eb85015838df5dcfbacb61f15db98" },
   "mini.base16": { "branch": "main", "commit": "9cfc778e929bb0e17f2f528ce24bffd551a2941a" },
@@ -12,6 +11,7 @@
   "supermaven-nvim": { "branch": "main", "commit": "ec7ae4c8190c96002aa466b1eb4a23aa51e24812" },
   "supertab": { "branch": "main", "commit": "8c638fe17b470f4a27554cdf8e641bafa5e2a7a4" },
   "tree-sitter-rescript": { "branch": "main", "commit": "5e2a44a9d886b0a509f5bfd0437d33b4871fbac5" },
+  "vim-repeat": { "branch": "master", "commit": "65846025c15494983dafe5e3b46c8f88ab2e9635" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "vim-textobj-quotes": { "branch": "master", "commit": "cca9686acf7b21d930ced1801120ecf23fb2f995" },
   "vim-textobj-user": { "branch": "master", "commit": "41a675ddbeefd6a93664a4dc52f302fe3086a933" },

@@ -14,6 +14,25 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("mini.plugins", {
+  defaults = { lazy = true },
   checker = { enabled = false },
   change_detection = { enabled = false },
+  dev = {
+    path = "~/dotfiles/vimplugins",
+    patterns = { "vikfroberg" },
+  },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
 })

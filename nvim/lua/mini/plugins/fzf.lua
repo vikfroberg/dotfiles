@@ -57,28 +57,26 @@ local function mru_files()
   local files_without_mru = vim.tbl_filter(function(file)
     return not vim.tbl_contains(mru, file)
   end, files)
-  return vim.fn.extend(relative_mru_without_current, files_without_mru)
+  local source = vim.fn.extend(relative_mru_without_current, files_without_mru)
+  require 'fzf-lua'.fzf_exec(source, {
+    actions = {
+      ['default'] = require 'fzf-lua'.actions.file_edit,
+    },
+  })
 end
 
 return {
   "ibhagwan/fzf-lua",
-  config = function()
-    require("fzf-lua").setup({
-      blines = {
-        previewer = false,
-      },
-    })
-    vim.keymap.set("n", "<leader>o", function() require 'fzf-lua'.lsp_document_symbols() end, { desc = "LSP symbols" })
-    vim.keymap.set("n", "<leader>O", function() require 'fzf-lua'.lsp_workspace_symbols() end,
-      { desc = "LSP workspace symbols" })
-    vim.keymap.set("n", "<leader>f", function() require 'fzf-lua'.blines() end, { desc = "Lines" })
-    vim.keymap.set("n", "<leader>F", function() require 'fzf-lua'.live_grep() end, { desc = "Live grep" })
-    vim.keymap.set("n", "<leader>p", function()
-      require 'fzf-lua'.fzf_exec(mru_files(), {
-        actions = {
-          ['default'] = require 'fzf-lua'.actions.file_edit,
-        },
-      })
-    end, { desc = "MRU Files" })
-  end
+  opts = {
+    blines = {
+      previewer = false,
+    },
+  },
+  keys = {
+    { "<leader>o", function() require 'fzf-lua'.lsp_document_symbols() end,  { desc = "LSP symbols" } },
+    { "<leader>O", function() require 'fzf-lua'.lsp_workspace_symbols() end, { desc = "LSP workspace symbols" } },
+    { "<leader>f", function() require 'fzf-lua'.blines() end,                { desc = "Lines" } },
+    { "<leader>F", function() require 'fzf-lua'.live_grep() end,             { desc = "Live grep" } },
+    { "<leader>p", function() mru_files() end,                               { desc = "MRU Files" } },
+  },
 }
