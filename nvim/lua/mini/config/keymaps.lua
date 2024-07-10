@@ -1,5 +1,13 @@
 -- Available mappings
--- g/G z/Z, m/M
+-- z/Z, m/M
+
+_G.vikfroberg = {}
+function vikfroberg.visual_set_search(cmdtype)
+  local tmp = vim.fn.getreg("s")
+  vim.cmd.normal({ args = { 'gv"sy' }, bang = true })
+  vim.fn.setreg("/", "\\V" .. vim.fn.escape(vim.fn.getreg("s"), cmdtype .. "\\"):gsub("\n", "\\n"))
+  vim.fn.setreg("s", tmp)
+end
 
 -- Movement
 vim.keymap.set({ "n", "o", "x" }, "B", "^", { desc = "Move to start of line" })
@@ -50,9 +58,16 @@ vim.keymap.set("x", "<Tab>", ">gv", { desc = "Indent right" })
 vim.keymap.set("x", "<S-Tab>", "<gv", { desc = "Indent left" })
 
 -- Search
+vim.keymap.set("n", "<esc>", "<cmd>nohls<cr>", { desc = "Clear search highlight" })
 vim.keymap.set("n", "<leader>n", "*", { desc = "Search word under cursor forwards" })
 vim.keymap.set("n", "<leader>r", [[:%s/<C-r><C-w>//g<Left><Left>]], { desc = "Replace word under cursor" })
 vim.keymap.set("x", "r", "\"hy:%s/<C-r>h//gc<left><left><left>", { desc = "Replace word visual selection" })
+vim.keymap.set("x", "n", ':lua vikfroberg.visual_set_search("/")<CR>/<C-R>=@/<CR><CR>')
+
+-- Yank registers
+vim.keymap.set({ "n", "x", "o" }, "gy", "\"gy", { desc = "Yank to sacred register" })
+vim.keymap.set({ "n", "x", "o" }, "gp", "\"gp", { desc = "Paste from sacred register below cursor" })
+vim.keymap.set({ "n", "x", "o" }, "gP", "\"gP", { desc = "Paste from sacred register above cursor" })
 
 -- Help
 vim.keymap.set("n", "gh", ":help <C-r><C-w><CR>", { desc = "Help under cursor" })

@@ -54,9 +54,11 @@ return {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           require("lsp-format").on_attach(client)
-          vim.keymap.set('n', '<leader>h', vim.lsp.buf.hover, { buffer = args.buf })
-          vim.keymap.set('n', '<leader>d', vim.lsp.buf.definition, { buffer = args.buf })
-          vim.keymap.set("n", "<leader>a", function() vim.lsp.buf.code_action() end, { desc = "Code action" })
+          vim.keymap.set('n', "<leader>e", vim.diagnostic.setqflist, { buffer = args.buf })
+          vim.keymap.set('n', "<leader>i", vim.lsp.buf.hover, { buffer = args.buf })
+          vim.keymap.set('n', "<leader>d", vim.lsp.buf.definition, { buffer = args.buf })
+          vim.keymap.set('n', "gd", vim.lsp.buf.definition, { buffer = args.buf })
+          vim.keymap.set("n", "<leader>t", function() vim.lsp.buf.code_action() end, { desc = "Code action" })
         end,
       })
     end

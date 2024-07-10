@@ -48,7 +48,7 @@ vim.api.nvim_create_autocmd('BufDelete', {
 })
 
 local function mru_files()
-  local mru = vim.fn.reverse(vim.fn.copy(mru_buffers))
+  local mru = mru_buffers
   local files = vim.fn.split(vim.fn.system('fd -c never -tf'), '\n')
   local current_filename = vim.fn.fnamemodify(vim.fn.expand('%'), ":~:.")
   local relative_mru_without_current = vim.tbl_filter(function(v)
@@ -68,7 +68,11 @@ return {
         previewer = false,
       },
     })
-    vim.keymap.set("n", "<leader>l>", function() require 'fzf-lua'.blines() end, { desc = "Lines" })
+    vim.keymap.set("n", "<leader>o", function() require 'fzf-lua'.lsp_document_symbols() end, { desc = "LSP symbols" })
+    vim.keymap.set("n", "<leader>O", function() require 'fzf-lua'.lsp_workspace_symbols() end,
+      { desc = "LSP workspace symbols" })
+    vim.keymap.set("n", "<leader>f", function() require 'fzf-lua'.blines() end, { desc = "Lines" })
+    vim.keymap.set("n", "<leader>F", function() require 'fzf-lua'.live_grep() end, { desc = "Live grep" })
     vim.keymap.set("n", "<leader>p", function()
       require 'fzf-lua'.fzf_exec(mru_files(), {
         actions = {
