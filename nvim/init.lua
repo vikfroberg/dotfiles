@@ -1,5 +1,6 @@
 -- Leader
-vim.g.mapleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Config
 require("mini.config")
