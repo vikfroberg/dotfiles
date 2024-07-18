@@ -1,48 +1,11 @@
-local darkPalette = {
-  base00 = '#000000',
-  base01 = '#242422',
-  base02 = '#484844',
-  base03 = '#6c6c66',
-  base04 = '#918f88',
-  base05 = '#b5b3aa',
-  base06 = '#d9d7cc',
-  base07 = '#fdfbee',
-  base08 = '#ff6c60',
-  base09 = '#e9c062',
-  base0A = '#ffffb6',
-  base0B = '#a8ff60',
-  base0C = '#c6c5fe',
-  base0D = '#96cbfe',
-  base0E = '#ff73fd',
-  base0F = '#b18a3d',
-}
-
-local lightPalette = {
-  base00 = '#ffffff',
-  base01 = '#f5f5f5',
-  base02 = '#c8c8fa',
-  base03 = '#969896',
-  base04 = '#e8e8e8',
-  base05 = '#333333',
-  base06 = '#ffffff',
-  base07 = '#ffffff',
-  base08 = '#ed6a43',
-  base09 = '#0086b3',
-  base0A = '#795da3',
-  base0B = '#183691',
-  base0C = '#183691',
-  base0D = '#795da3',
-  base0E = '#a71d5d',
-  base0F = '#333333',
-}
-
 return {
-  "echasnovski/mini.base16",
+  "RRethy/base16-nvim",
   lazy = false,
-  version = false,
-  config = function()
-    require("mini.base16").setup({
-      palette = lightPalette,
-    })
+  init = function()
+    if vim.fn.exists("$BASE16_THEME") == 1 and
+        (not vim.g.colors_name or vim.g.colors_name ~= "base16-" .. vim.fn.getenv("BASE16_THEME")) then
+      vim.g.base16colorspace = 256
+      vim.cmd("colorscheme base16-" .. vim.fn.getenv("BASE16_THEME"))
+    end
   end,
 }

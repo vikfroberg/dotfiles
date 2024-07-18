@@ -2,6 +2,7 @@ return {
   "beloglazov/vim-textobj-quotes",
   dependencies = { "kana/vim-textobj-user" },
   keys = {
-    { "q", "iq", mode = { "x", "o" }, desc = "Inside quotes", remap = true },
+    { "iq", nil,  mode = { "x", "o" }, desc = "[I]nside [q]uotes" },
+    { "q",  "iq", mode = { "x", "o" }, desc = "Inside [q]uotes",  remap = true },
   },
 }

@@ -3,20 +3,19 @@ export PATH="/usr/local/:$PATH"
 export PATH="~/Code/Viktor/roc-js/.roc_nightly-macos_x86_64-2024-06-18-41ea2bf/:$PATH"
 
 export CLICOLOR=1
-export EDITOR=vim
+export EDITOR=nvim
 export NODE_ENV="development"
 export GIT_MERGE_AUTOEDIT=no
 export FZF_DEFAULT_OPTS="--color 16 --reverse"
 export BAT_THEME="base16"
-export BASH_SILENCE_DEPRECATION_WARNING=1
 
 
-# I think these are for linux?
+# Make sure we have en lang
 # ----------------------------
-# export LANGUAGE=en_US.UTF-8
-# export LANG=en_US.UTF-8
-# export LC_ALL=en_US.UTF-8
-# export LC_TYPE=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_TYPE=en_US.UTF-8
 
 
 # Base16 Shell

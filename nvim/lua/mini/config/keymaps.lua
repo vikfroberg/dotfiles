@@ -1,7 +1,7 @@
 -- Available mappings
 -- z/Z, m/M
 
-_G.vikfroberg = {}
+_G.vikfroberg = _G.vikfroberg or {}
 function vikfroberg.visual_set_search(cmdtype)
   local tmp = vim.fn.getreg("s")
   vim.cmd.normal({ args = { 'gv"sy' }, bang = true })
@@ -65,16 +65,19 @@ vim.keymap.set("x", "r", "\"hy:%s/<C-r>h//gc<left><left><left>", { desc = "Repla
 vim.keymap.set("x", "n", ':lua vikfroberg.visual_set_search("/")<CR>/<C-R>=@/<CR><CR>')
 
 -- Yank registers
-vim.keymap.set({ "n", "x", "o" }, "gy", "\"gy", { desc = "Yank to sacred register" })
-vim.keymap.set({ "n", "x", "o" }, "gp", "\"gp", { desc = "Paste from sacred register below cursor" })
-vim.keymap.set({ "n", "x", "o" }, "gP", "\"gP", { desc = "Paste from sacred register above cursor" })
+vim.keymap.set({ "n", "x", "o" }, "gy", "\"y", { desc = "Yank to sacred register" })
+vim.keymap.set({ "n", "x", "o" }, "gp", "\"p", { desc = "Paste from sacred register below cursor" })
+vim.keymap.set({ "n", "x", "o" }, "gP", "\"P", { desc = "Paste from sacred register above cursor" })
 
 -- Help
 vim.keymap.set("n", "gh", ":help <C-r><C-w><CR>", { desc = "Help under cursor" })
 
 -- Quickfix
-vim.keymap.set("n", "<leader>j", ":cn<cr>", { desc = "Jump to next error" })
-vim.keymap.set("n", "<leader>k", ":cp<cr>", { desc = "Jump to previous error" })
+-- vim.keymap.set("n", "<C-j>", function()
+--   vim.diagnostic.setqflist()
+--   vim.cmd('cfirst')
+--   vim.cmd('cclose')
+-- end, { desc = 'Set qflist, jump to first item, and close quickfix' })
 
 -- Join lines
 vim.keymap.set("n", "gj", "J", { desc = "Join lines" })

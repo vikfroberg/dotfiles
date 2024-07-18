@@ -1,0 +1,3 @@
+- Expand and collapse lines
+- Map line to any part of the file, so that we can show a portal per line and not per chunk
+    - Good for presenting search results in one file. Like github does. "Show more matches"

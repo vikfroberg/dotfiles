@@ -2,8 +2,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    event = { "BufEnter *.lua", "BufEnter *.res", "BufEnter *.resi" },
-    dependencies = { "rescript-lang/tree-sitter-rescript" },
+    event = "BufEnter",
     config = function()
       local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
       local configs = require("nvim-treesitter.configs")
@@ -17,10 +16,14 @@ return {
           requires_generate_from_grammar = true,
           use_makefile = true, -- macOS specific instruction
         },
+        filetype = "rescript",
       }
 
       configs.setup({
-        ensure_installed = { "lua", "rescript" },
+        auto_install = true,
+        ignore_install = { "all" },
+        modules = {},
+        ensure_installed = { "lua", "rescript", "javascript", "json", "html" },
         sync_install = false,
         highlight = { enable = true },
         indent = { enable = true },
@@ -41,11 +44,15 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
+    event = "BufEnter",
+  },
+  {
+    "vikfroberg/treesitter-quote",
+    opts = {},
     keys = {
-      { "af" },
-      { "if" },
-      { "aa" },
-      { "ia" },
+      { "\"", function() require("treesitter-quote").change_quote('"') end, desc = "Change to double quotes" },
+      { "'",  function() require("treesitter-quote").change_quote("'") end, desc = "Change to single quotes" },
+      { "`",  function() require("treesitter-quote").change_quote("`") end, desc = "Change to backticks" },
     },
   }
 }
