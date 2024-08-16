@@ -2,9 +2,8 @@
 
 echo "Bootstrapping..."
 
-~/dotfiles/install/brew.sh
-~/dotfiles/install/npm.sh
-~/dotfiles/install/symlink.sh
-~/dotfiles/install/base16.sh
+~/Code/vikfroberg/dotfiles/install/brew.sh
+~/Code/vikfroberg/dotfiles/install/symlink.sh
+~/Code/vikfroberg/dotfiles/install/base16.sh
 
-cat ~/dotfiles/install/enjoy.txt
+cat ~/Code/vikfroberg/dotfiles/install/enjoy.txt

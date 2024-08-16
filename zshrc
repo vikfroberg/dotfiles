@@ -2,5 +2,5 @@ source ~/.profile
 
 # Prompt
 # -------------
-eval "$(starship init bash)"
+eval "$(starship init zsh)"
 

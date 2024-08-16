@@ -1,6 +1,6 @@
 # Create symbolic links
 
-files="bash_profile ctags bashrc vimrc gitconfig gitmessage gitignore hammerspoon"
+files="zshrc bashrc profile gitconfig gitmessage gitignore"
 
 echo "Moving existing dotfiles to ~/.dotfiles_old..."
 mkdir -p ~/.dotfiles_old
@@ -12,10 +12,18 @@ done
 
 echo "Creating symlinks for dotfiles..."
 for file in $files; do
-    ln -s ~/dotfiles/$file ~/.$file
+    ln -s ~/Code/vikfroberg/dotfiles/$file ~/.$file
 done
 
 echo "Creating symlinks for nvim..."
-ln -s ~/dotfiles/nvim ~/.config/nvim
+ln -s ~/Code/vikfroberg/dotfiles/nvim ~/.config/nvim
 
-source ~/.bash_profile
+
+# Check if zsh version is present from $ZSH_VERSION
+if [ -n "$ZSH_VERSION" ]; then
+    source ~/.zshrc
+fi
+
+if [ -n "$BASH_VERSION" ]; then
+    source ~/.bashrc
+fi

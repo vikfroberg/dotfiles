@@ -11,13 +11,10 @@ brew update
 # Installs
 echo "Installing brew packages..."
 brew install git
-brew install vim
 brew install node
 brew install fzf
-brew install ag
-brew install gsed
-brew install sd
 brew install fd
-brew install ctags
+brew install ag
+brew install neovim
 brew install python
 brew install coreutils

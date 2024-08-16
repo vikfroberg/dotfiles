@@ -18,7 +18,7 @@ require("lazy").setup("mini.plugins", {
   checker = { enabled = false },
   change_detection = { enabled = false },
   dev = {
-    path = "~/dotfiles/vimplugins",
+    path = "~/Code/vikfroberg/dotfiles/vimplugins",
     patterns = { "vikfroberg" },
   },
   performance = {
