@@ -14,6 +14,7 @@ M.find_open_buffers = function(file_name)
 
   return buffers
 end
+
 M.prettify_file_name = function(file_name)
   -- Get the base name of the file
   local base_name = vim.fn.fnamemodify(file_name, ":t")

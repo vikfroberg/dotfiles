@@ -3,11 +3,14 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = "BufEnter",
+    dependencies = {
+      "rescript-lang/tree-sitter-rescript"
+    },
     config = function()
-      local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
       local configs = require("nvim-treesitter.configs")
 
-      parser_configs.rescript = {
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      parser_config.rescript = {
         install_info = {
           url = "https://github.com/rescript-lang/tree-sitter-rescript",
           branch = "main",
@@ -16,13 +19,12 @@ return {
           requires_generate_from_grammar = true,
           use_makefile = true, -- macOS specific instruction
         },
-        filetype = "rescript",
       }
 
       configs.setup({
-        auto_install = true,
-        ignore_install = { "all" },
-        modules = {},
+        -- auto_install = true,
+        -- ignore_install = { "all" },
+        -- modules = {},
         ensure_installed = { "lua", "rescript", "javascript", "json", "html" },
         sync_install = false,
         highlight = { enable = true },

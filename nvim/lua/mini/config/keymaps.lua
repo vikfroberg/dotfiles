@@ -9,6 +9,9 @@ function vikfroberg.visual_set_search(cmdtype)
   vim.fn.setreg("s", tmp)
 end
 
+-- Remove default gc
+vim.keymap.del("n", "gc")
+
 -- Movement
 vim.keymap.set({ "n", "o", "x" }, "B", "^", { desc = "Move to start of line" })
 vim.keymap.set({ "n", "o", "x" }, "E", "$", { desc = "Move to end of line" })
@@ -71,6 +74,15 @@ vim.keymap.set({ "n", "x", "o" }, "gP", "\"P", { desc = "Paste from sacred regis
 
 -- Help
 vim.keymap.set("n", "gh", ":help <C-r><C-w><CR>", { desc = "Help under cursor" })
+
+-- Diagnostics
+vim.keymap.set("n", "<leader>e", vim.diagnostic.setqflist, { desc = "Show diagnostics" })
+vim.keymap.set("n", "<leader>j", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "<leader>k", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+
+-- LSP
+vim.keymap.set("n", "<leader>i", vim.lsp.buf.hover, { desc = "Hover" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 
 -- Quickfix
 -- vim.keymap.set("n", "<C-j>", function()

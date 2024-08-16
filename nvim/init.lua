@@ -14,7 +14,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("mini.plugins", {
-  defaults = { lazy = true },
+  defaults = { lazy = false },
   checker = { enabled = false },
   change_detection = { enabled = false },
   dev = {
