@@ -1,4 +1,4 @@
-export PATH=":$HOME/Code/vikfroberg/dotfiles/bin:$PATH"
+export PATH=":$HOME/Developer/dotfiles/bin:$PATH"
 export PATH="/usr/local/:$PATH"
 
 export CLICOLOR=1
@@ -41,7 +41,7 @@ alias la="ls -la"
 
 # 
 alias c="clear"
-alias r="source ~/Code/vikfroberg/dotfiles/profile"
+alias r="source ~/Developer/dotfiles/profile"
 
 # Vim
 # -------------
