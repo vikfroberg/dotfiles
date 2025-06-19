@@ -38,7 +38,7 @@ REPLY=${REPLY:-Y}
     echo
     if test ! $(which brew); then
       echo -e "${YELLOW}📥 Downloading and installing Homebrew...${NC}"
-      # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       INSTALLED_BREW=true
     else
       echo -e "${GREEN}✅ Homebrew is already installed, skipping...${NC}"
@@ -61,7 +61,7 @@ REPLY=${REPLY:-Y}
       exit 1
     else
       echo -e "${YELLOW}🔄 Updating Homebrew...${NC}"
-      # brew update
+      brew update
       UPDATED_BREW=true
     fi
   fi
@@ -97,7 +97,7 @@ done
 echo
 for package in ${PACKAGES_TO_INSTALL[@]}; do
     echo -e "${YELLOW}📦 Installing $package...${NC}"
-    # brew install $package
+    brew install $package
     INSTALLED_PACKAGES+=($package)
 done
 echo
