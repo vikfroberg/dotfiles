@@ -12,11 +12,11 @@ done
 
 echo "Creating symlinks for dotfiles..."
 for file in $files; do
-    ln -s ~/Code/vikfroberg/dotfiles/$file ~/.$file
+    ln -s ~/Developer/dotfiles/$file ~/.$file
 done
 
 echo "Creating symlinks for nvim..."
-ln -s ~/Code/vikfroberg/dotfiles/nvim ~/.config/nvim
+ln -s ~/Developer/dotfiles/nvim ~/.config/nvim
 
 
 # Check if zsh version is present from $ZSH_VERSION

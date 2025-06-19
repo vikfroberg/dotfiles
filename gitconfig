@@ -9,15 +9,9 @@
   conflicts = !git diff --name-only --diff-filter=U | uniq
   is-rebasing = !if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then echo rebase; fi
   is-merging = !if [ -f .git/MERGE_HEAD ]; then echo merge; fi
-  abort = !gbort
-  ab = !gbort
-  bort = !gbort
-  bor = !gbort
-  continue = !gcon
-  con = !gcon
 [user]
   email = vikfroberg@gmail.com
-  [includeIf "gitdir:~/Code/Carla"]
+  [includeIf "gitdir:~/Developer/carla"]
     email = viktor.froberg@carla.se
   name = Viktor Froberg
 [commit]

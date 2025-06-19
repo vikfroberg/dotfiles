@@ -15,6 +15,7 @@ brew install node
 brew install fzf
 brew install fd
 brew install ag
+brew install ripgrep
 brew install neovim
 brew install python
 brew install coreutils

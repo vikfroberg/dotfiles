@@ -9,6 +9,7 @@ return {
     local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+    -- Rescript
     vim.api.nvim_create_autocmd(
       { "BufNewFile", "BufRead" },
       {
@@ -31,20 +32,34 @@ return {
       }
     )
 
+    -- TypeScript
     vim.api.nvim_create_autocmd(
       { "BufNewFile", "BufRead" },
       {
         group = lsp_group,
-        pattern = "*.html,*.json,*.js",
+        pattern = "*.ts,*.tsx",
         callback = function()
           local root_dir = vim.fs.dirname(
             vim.fs.find({ ".git" }, { upward = true })[1]
           )
           local client = vim.lsp.start_client({
             capabilities = capabilities,
-            name = "prettier",
-            cmd = { "prettier", "--stdin-filepath", "${INPUT}" },
+            name = "typescript-language-server",
+            cmd = { "typescript-language-server", "--stdio" },
             root_dir = root_dir,
+            settings = {
+              typescript = {
+                inlayHints = {
+                  includeInlayParameterNameHints = "all",
+                  includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                  includeInlayFunctionParameterTypeHints = true,
+                  includeInlayVariableTypeHints = true,
+                  includeInlayPropertyDeclarationTypeHints = true,
+                  includeInlayFunctionLikeReturnTypeHints = true,
+                  includeInlayEnumMemberValueHints = true,
+                },
+              },
+            },
           })
           if client then
             vim.lsp.buf_attach_client(0, client)
@@ -53,6 +68,7 @@ return {
       }
     )
 
+    -- Lua
     vim.api.nvim_create_autocmd(
       { "BufNewFile", "BufRead" },
       {

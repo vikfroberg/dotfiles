@@ -9,3 +9,4 @@ tags
 *.dump
 ngrok
 .unisonHistory
+.claude

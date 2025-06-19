@@ -2,8 +2,18 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Colorscheme
+require("themes.ansi").setup()
+vim.api.nvim_create_autocmd("OptionSet", {
+  pattern = "background",
+  callback = function()
+    require("themes.ansi").setup()
+  end,
+})
+
+
 -- Config
-require("mini.config")
+require("config")
 
 -- Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -13,12 +23,12 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("mini.plugins", {
+require("lazy").setup("plugins", {
   defaults = { lazy = false },
   checker = { enabled = false },
   change_detection = { enabled = false },
   dev = {
-    path = "~/Code/vikfroberg/dotfiles/vimplugins",
+    path = "~/Developer/vimplugins",
     patterns = { "vikfroberg" },
   },
   performance = {

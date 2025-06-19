@@ -1,6 +1,5 @@
 export PATH=":$HOME/Code/vikfroberg/dotfiles/bin:$PATH"
 export PATH="/usr/local/:$PATH"
-export PATH="~/Code/Viktor/roc-js/.roc_nightly-macos_x86_64-2024-06-18-41ea2bf/:$PATH"
 
 export CLICOLOR=1
 export EDITOR=nvim
@@ -16,18 +15,6 @@ export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_TYPE=en_US.UTF-8
-
-
-# Base16 Shell
-# --------------
-# Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        source "$BASE16_SHELL/profile_helper.sh"
-
-alias light='base16_github'
-alias dark='base16_irblack'
 
 # Navigation
 # -------------
@@ -130,7 +117,3 @@ gsl() {
   git stash list | fzf --reverse -d: --preview 'git show --color=always {1}' |
   cut -d: -f1
 }
-
-# iTerm shell integration
-# -------------
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"

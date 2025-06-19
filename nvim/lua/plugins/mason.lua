@@ -4,6 +4,7 @@ return {
   opts = {
     ensure_installed = {
       "rescript-language-server",
+      "prettier",
     },
   },
 }
