@@ -7,6 +7,37 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
+# Parse command line arguments
+ACCEPT_ALL=false
+HELP=false
+
+for arg in "$@"; do
+    case $arg in
+        --accept-all|-a)
+            ACCEPT_ALL=true
+            shift
+            ;;
+        --help|-h)
+            HELP=true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $arg"
+            exit 1
+            ;;
+    esac
+done
+
+if [ "$HELP" = true ]; then
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  -a, --accept-all    Accept all prompts automatically"
+    echo "  -h, --help         Show this help message"
+    echo ""
+    exit 0
+fi
+
 # Track what gets installed/configured
 INSTALLED_BREW=false
 UPDATED_BREW=false
@@ -27,14 +58,37 @@ function resetScreen() {
   echo
 }
 
+function prompt_user() {
+  local question="$1"
+  local default="${2:-Y}"
+  
+  if [ "$ACCEPT_ALL" = true ]; then
+    echo -e "${GREEN}✅ $question [Auto-accepted]${NC}"
+    return 0
+  fi
+  
+  read -p "$question [$default/n]: " REPLY
+  REPLY=${REPLY:-$default}
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function pause_for_continue() {
+  if [ "$ACCEPT_ALL" = false ]; then
+    echo
+    read -p "Press enter to continue"
+  fi
+}
+
 # INSTALL BREW
 # ------------
 resetScreen
 echo -e "${BLUE}🍺 Homebrew Installation${NC}"
 echo
-read -p "Install Homebrew? [Y/n]: " REPLY
-REPLY=${REPLY:-Y}
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
+if prompt_user "❯ Install Homebrew?"; then
     echo
     if test ! $(which brew); then
       echo -e "${YELLOW}📥 Downloading and installing Homebrew...${NC}"
@@ -43,18 +97,15 @@ REPLY=${REPLY:-Y}
     else
       echo -e "${GREEN}✅ Homebrew is already installed, skipping...${NC}"
     fi
-  fi
-echo
-read -p "Press enter to continue"
+fi
+pause_for_continue
 
 # UPDATE BREW
 # -----------
 resetScreen
 echo -e "${BLUE}🔄 Homebrew Update${NC}"
 echo
-read -p "Update brew? (Y/n): " REPLY
-REPLY=${REPLY:-Y}
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
+if prompt_user "❯ Update brew?"; then
     echo
     if test ! $(which brew); then
       echo -e "${RED}❌ Homebrew is not installed, skipping update...${NC}"
@@ -64,9 +115,8 @@ REPLY=${REPLY:-Y}
       brew update
       UPDATED_BREW=true
     fi
-  fi
-echo
-read -p "Press enter to continue"
+fi
+pause_for_continue
 
 # PACKAGES
 # --------
@@ -87,11 +137,9 @@ PACKAGES=(
 
 PACKAGES_TO_INSTALL=()
 for package in ${PACKAGES[@]}; do
-    read -p "📦 Install $package? (Y/n): " REPLY
-      REPLY=${REPLY:-Y}
-      if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if prompt_user "❯ Install $package?"; then
         PACKAGES_TO_INSTALL+=($package)
-      fi
+    fi
 done
 
 echo
@@ -100,8 +148,7 @@ for package in ${PACKAGES_TO_INSTALL[@]}; do
     brew install $package
     INSTALLED_PACKAGES+=($package)
 done
-echo
-read -p "Press enter to continue"
+pause_for_continue
 
 # SYMLINK
 # -------
@@ -122,9 +169,7 @@ for file in $all_files; do
     fi
 done
 
-read -p "🔗 Create symlinks? (Y/n): " REPLY
-  REPLY=${REPLY:-Y}
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
+if prompt_user "❯ Create symlinks?"; then
     echo
     echo -e "${YELLOW}💾 Moving existing dotfiles to ~/.dotfiles_bak...${NC}"
     mkdir -p ~/.dotfiles_bak
@@ -143,9 +188,8 @@ read -p "🔗 Create symlinks? (Y/n): " REPLY
     ln -s "$DOTFILES_DIR/nvim" ~/.config/nvim
     SYMLINKED_FILES+=("~/.config/nvim")
     CREATED_SYMLINKS=true
-  fi
-echo
-read -p "Press enter to continue"
+fi
+pause_for_continue
 
 resetScreen
 echo -e "${GREEN}🎉 Installation Complete!${NC}"
